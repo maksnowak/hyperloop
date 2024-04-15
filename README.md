@@ -6,7 +6,8 @@ Team project for the course "Databases II" at the Warsaw University of Technolog
 
 1. Clone the repository
 2. Go to the `src` directory and run `yarn` (or `npm install`)
-3. Run `yarn start` (or `npm start`) to start the development server
+3. Run `yarn run dev` (or `npm run dev`) to start the development server
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result
 
 ## Useful links
 - [React documentation](https://reactjs.org/docs/getting-started.html) to work with React
