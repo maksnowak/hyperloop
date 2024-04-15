@@ -19,6 +19,18 @@ Team project for the course "Databases II" at the Warsaw University of Technolog
 6. Run `yarn run dev` (or `npm run dev`) to start the development server
 7. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result
 
+## Working with In-Docker PostgreSQL
+
+1. Run `docker compose up` to start the PostgreSQL database
+2. Connect to the database using the following credentials:
+   - Host: `localhost`
+   - Port: `5432`
+    - User: `johndoe`
+    - Password: `randompassword`
+    - Database: `hyperloop`
+
+    For more information, check the `docker-compose.yml` file.
+
 ## Useful links
 
 - [React documentation](https://reactjs.org/docs/getting-started.html) to work with React
