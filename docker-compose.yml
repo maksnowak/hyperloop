@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: database
+    environment:
+      POSTGRES_DB: hyperloop
+      POSTGRES_USER: johndoe
+      POSTGRES_PASSWORD: randompassword
+    volumes:
+      - ./temp/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
