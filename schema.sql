@@ -43,7 +43,6 @@ CREATE TABLE hyperloop.public.Repairs_history (
                                  Repair_ID           serial constraint repairs_history_pk primary key,
                                  Date_start          DATE NOT NULL,
                                  Date_end            DATE NOT NULL DEFAULT (now()),
-                                 Repairs_made        TEXT NOT NULL,
                                  Referred_capsule_ID INTEGER NOT NULL,
                                  Performing_depot_ID INTEGER NOT NULL
 );
@@ -91,12 +90,8 @@ CREATE TABLE hyperloop.public.Tubes (
                       Tube_ID               serial constraint tube_pk primary key,
                       Name                  VARCHAR(32) NOT NULL,
                       Length                NUMERIC NOT NULL check ( Length > 0 ),
-                      Radius                NUMERIC NOT NULL check ( Radius >= 0 ),
                       Max_speed             NUMERIC(7, 3) NOT NULL check ( Max_speed > 0 ),
                       Estimated_travel_time DATE NOT NULL,
-                      Count_20_ft_pylons    INTEGER NOT NULL default(0) check ( count_20_ft_pylons >= 0 ),
-                      Count_50_ft_pylons    INTEGER NOT NULL default(0) check ( count_50_ft_pylons >= 0 ),
-                      Count_100_ft_pylons   INTEGER NOT NULL default(0) check ( count_100_ft_pylons >= 0 ),
                       Starting_station_ID   INTEGER NOT NULL,
                       Ending_station_ID     INTEGER NOT NULL
 );

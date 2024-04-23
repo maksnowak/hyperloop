@@ -7,11 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Trains {
-  id    Int    @id @default(autoincrement())
-  model String
-}
-
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model capsule_location_events {
   event_id            Int                 @id(map: "capsule_location_events_pk") @default(autoincrement())
@@ -73,7 +68,6 @@ model repairs_history {
   repair_id           Int      @id(map: "repairs_history_pk") @default(autoincrement())
   date_start          DateTime @db.Date
   date_end            DateTime @default(now()) @db.Date
-  repairs_made        String
   referred_capsule_id Int
   performing_depot_id Int
   depots              depots   @relation(fields: [performing_depot_id], references: [depot_id], onDelete: NoAction, onUpdate: NoAction, map: "history_performing_depot_fk")
@@ -136,12 +130,8 @@ model tubes {
   tube_id                                      Int                       @id(map: "tube_pk") @default(autoincrement())
   name                                         String                    @db.VarChar(32)
   length                                       Decimal                   @db.Decimal
-  radius                                       Decimal                   @db.Decimal
   max_speed                                    Decimal                   @db.Decimal(7, 3)
   estimated_travel_time                        DateTime                  @db.Date
-  count_20_ft_pylons                           Int                       @default(0)
-  count_50_ft_pylons                           Int                       @default(0)
-  count_100_ft_pylons                          Int                       @default(0)
   starting_station_id                          Int
   ending_station_id                            Int
   capsule_location_events                      capsule_location_events[]
