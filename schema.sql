@@ -65,7 +65,7 @@ CREATE TABLE hyperloop.public.Stations (
                          Name       VARCHAR(32) NOT NULL,
                          Latitude   NUMERIC(9, 6) NOT NULL check ( Latitude >= -90 and Latitude <= 90 ),
                          Longitude  NUMERIC(9, 6) NOT NULL check ( Longitude >= -180 and Longitude <= 180 ),
-                         Platforms  INTEGER NOT NULL check ( Platforms > 0 )
+                         Platforms  INTEGER NOT NULL DEFAULT 0 check ( Platforms >= 0 )
 );
 
 CREATE TABLE hyperloop.public.Station_logs (
@@ -88,10 +88,10 @@ CREATE TABLE hyperloop.public.Trips_history (
 
 CREATE TABLE hyperloop.public.Tubes (
                       Tube_ID               serial constraint tube_pk primary key,
-                      Name                  VARCHAR(32) NOT NULL,
+                      Name                  VARCHAR(65) NOT NULL,
                       Length                NUMERIC NOT NULL check ( Length > 0 ),
-                      Max_speed             NUMERIC(7, 3) NOT NULL check ( Max_speed > 0 ),
-                      Estimated_travel_time DATE NOT NULL,
+                      Max_speed             NUMERIC(7, 3) NOT NULL DEFAULT 1200 check ( Max_speed > 0 ),
+                      Estimated_travel_time TIME NOT NULL,
                       Starting_station_ID   INTEGER NOT NULL,
                       Ending_station_ID     INTEGER NOT NULL
 );
