@@ -51,3 +51,8 @@ CALL connect_stations('Katowice', 'Kielce', 1200);
 CALL connect_stations('Katowice', 'Kraków', 1200);
 CALL connect_stations('Katowice', 'Łódź', 1200);
 CALL connect_stations('Katowice', 'Wrocław', 1200);
+
+-- depoty
+insert into hyperloop.public.depots values (1, 'Wadowice', 49.883353, 19.493670); -- muzeum JP2
+insert into hyperloop.public.depots values (2, 'Częstochowa', 50.811018, 19.120306); -- Jasna Góra
+insert into hyperloop.public.depots values (3, 'Radom', 51.397447, 21.156443); -- Katedra Opieki NMP
