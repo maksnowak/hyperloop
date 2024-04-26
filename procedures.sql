@@ -23,6 +23,10 @@ DECLARE
     lat2 NUMERIC(9,6);
     lon2 NUMERIC(9,6);
     distance INTEGER;
+    tube1_id INTEGER;
+    tube2_id INTEGER;
+    rau_lat_step NUMERIC(9, 7);
+    rau_lon_step NUMERIC(9, 7);
 BEGIN
     -- CHECK PARAMETERS
     IF station1_name = station2_name THEN
@@ -52,13 +56,24 @@ BEGIN
     -- INSERT TUBES
     INSERT INTO tubes (name, length, max_speed, estimated_travel_time, starting_station_id, ending_station_id)
     VALUES (station1_name || ' - ' || station2_name, distance, max_speed,
-            (distance * 3600 / max_speed * '1 second'::interval)::time, station1_id, station2_id);
+            (distance * 3600 / max_speed * '1 second'::interval)::time, station1_id, station2_id) RETURNING tube_id INTO tube1_id;
     INSERT INTO tubes (name, length, max_speed, estimated_travel_time, starting_station_id, ending_station_id)
     VALUES (station2_name || ' - ' || station1_name, distance, max_speed,
-            (distance * 3600 / max_speed * '1 second'::interval)::time, station2_id, station1_id);
+            (distance * 3600 / max_speed * '1 second'::interval)::time, station2_id, station1_id) RETURNING tube_id INTO tube2_id;
 
     -- UPDATE PLATFORM NUMBERS
     UPDATE stations SET platforms = platforms + 1
     WHERE station_id IN (station1_id, station2_id);
+
+    -- ADD RAU
+    rau_lat_step = (lat2 - lat1) / 10;
+    rau_lon_step = (lon2 - lon1) / 10;
+
+    FOR i IN 0..10 LOOP
+        INSERT INTO remote_access_units (latitude, longitude, tube_id)
+        VALUES (lat1 + rau_lat_step * i, lon1 + rau_lon_step * i, tube1_id);
+        INSERT INTO remote_access_units (latitude, longitude, tube_id)
+        VALUES (lat1 + rau_lat_step * i, lon1 + rau_lon_step * i, tube2_id);
+    END LOOP;
 END
 $$;
