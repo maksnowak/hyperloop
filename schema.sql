@@ -50,8 +50,8 @@ CREATE TABLE hyperloop.public.Repairs_history (
 
 CREATE TABLE hyperloop.public.Schedule (
                           Schedule_ID           serial constraint schedule_pk primary key,
-                          Arrival_time          TIMESTAMP NOT NULL,
-                          Departure_time        TIMESTAMP NOT NULL,
+                          Arrival_time          TIME NOT NULL,
+                          Departure_time        TIME NOT NULL,
                           Status                VARCHAR(32) NOT NULL default ('Active') check ( status in ('Active', 'Not used') ),
                           Referred_capsule_ID   INTEGER NOT NULL,
                           Current_station_ID    INTEGER NOT NULL,
