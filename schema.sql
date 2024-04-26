@@ -56,8 +56,7 @@ CREATE TABLE hyperloop.public.Schedule (
                           Referred_capsule_ID   INTEGER NOT NULL,
                           Current_station_ID    INTEGER NOT NULL,
                           Next_station_ID       INTEGER NOT NULL,
-                          Previous_schedule_ID  INTEGER,
-                          Next_schedule_ID      INTEGER
+                          Previous_schedule_ID  INTEGER
 );
 
 ALTER TABLE hyperloop.public.Schedule
@@ -176,10 +175,6 @@ ALTER TABLE hyperloop.public.Tubes
 
 ALTER TABLE hyperloop.public.schedule
     ADD CONSTRAINT schedule_previous_schedule_fk FOREIGN KEY ( Previous_schedule_ID )
-        REFERENCES Schedule ( Schedule_ID );
-
-ALTER TABLE hyperloop.public.schedule
-    ADD CONSTRAINT schedule_next_schedule_fk FOREIGN KEY ( Next_schedule_ID )
         REFERENCES Schedule ( Schedule_ID );
 
 CREATE OR REPLACE VIEW hyperloop.public.Pressure_view ( Data_ID, Time_of_measurement, Pressure, Referred_tube_ID ) AS
