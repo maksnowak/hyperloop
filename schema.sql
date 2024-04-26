@@ -56,7 +56,7 @@ CREATE TABLE hyperloop.public.Schedule (
                           Referred_capsule_ID   INTEGER NOT NULL,
                           Current_station_ID    INTEGER NOT NULL,
                           Next_station_ID       INTEGER NOT NULL,
-                          Previous_schedule_ID  INTEGER
+                          Previous_schedule_ID  INTEGER check ( Previous_schedule_ID != Schedule.Schedule_ID )
 );
 
 ALTER TABLE hyperloop.public.Schedule
