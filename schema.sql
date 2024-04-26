@@ -2,7 +2,7 @@ CREATE TABLE hyperloop.public.Capsules (
                          Capsule_ID         serial constraint capsule_pk primary key,
                          Model              VARCHAR(32) NOT NULL,
                          Producer           VARCHAR(32) NOT NULL,
-                         Status             VARCHAR(32) NOT NULL default ('Operational') check ( status in ('Operational', 'Under repair', 'Out of service') ),
+                         Status             VARCHAR(32) NOT NULL default ('Operational') check ( status in ('In use', 'Operational', 'Under repair') ),
                          Seats              INTEGER NOT NULL check ( Seats >= 0 ),
                          Cargo_space        INTEGER NOT NULL CHECK ( Cargo_space >= 0 ),
                          Servicing_depot_ID INTEGER NOT NULL
