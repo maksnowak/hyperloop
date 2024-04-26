@@ -58,10 +58,7 @@ insert into hyperloop.public.depots values (2, 'Częstochowa', 50.811018, 19.120
 insert into hyperloop.public.depots values (3, 'Radom', 51.397447, 21.156443); -- Katedra Opieki NMP - towarowe
 
 -- kapsuły
--- obecnie w naprawie
-CALL add_capsule('Cargo-in-repair', 'Ever Given', 'Cargo', 3);
-UPDATE hyperloop.public.capsules
-    set status = 'Under repair' where model = 'Cargo-in-repair';
+alter sequence hyperloop.public.capsules_capsule_id_seq restart with 1;
 -- czysto pasażerskie
 CALL add_capsule('Passenger-zero', 'Hindenburg', 'Passenger', 1);
 CALL add_capsule('Passenger-one', 'Hindenburg', 'Passenger', 1);
@@ -101,4 +98,295 @@ insert into hyperloop.public.repairs_history values (1, now() - interval '2 mont
 insert into hyperloop.public.repairs_history values (2, now() - interval '1 month', now() - interval '14 days', 13, 2);
 insert into hyperloop.public.repairs_history values (3, now() - interval '28 days', now(), 27, 3);
 -- naprawa trwająca teraz
+CALL add_capsule('Cargo-in-repair', 'Ever Given', 'Cargo', 3);
+UPDATE hyperloop.public.capsules
+set status = 'Under repair' where model = 'Cargo-in-repair';
 insert into hyperloop.public.repairs_history values (4, now() - interval '14 days', null, (SELECT capsule_id from capsules where model = 'Cargo-in-repair'), 3);
+
+-- rozkłady
+-- =====================
+-- = NIGHTMARE SECTION =
+-- =====================
+-- Szczecin(8) - Bydgoszcz(4) - Olsztyn(13)
+-- ((12 + 1 + 10 + 1)*2 = 48 min, 24 * 60 / 48 = 30 razy)
+DO
+$$
+DECLARE
+    base_time TIME;
+    base_idx integer;
+BEGIN
+    select max(schedule_id) into base_idx from hyperloop.public.schedule;
+    IF base_idx is null THEN
+        base_idx = 0;
+    END IF;
+    base_time = TIME '00:00:00';
+    update hyperloop.public.capsules
+        set status = 'In use' where capsule_id in (1, 11, 21);
+    FOR i IN 1..30 LOOP
+        -- osobowy
+            -- tam
+        insert into hyperloop.public.schedule
+        values (base_idx + 1, base_time, base_time + interval '12 minutes', default, 1, 8, 4, null);
+        insert into hyperloop.public.schedule
+        values (base_idx + 2, base_time + interval '13 minutes', base_time + interval '23 minutes', default, 1, 4, 13, base_idx + 1);
+            -- z powrotem
+        insert into hyperloop.public.schedule
+        values (base_idx + 3, base_time + interval '24 minutes', base_time + interval '34 minutes', default, 1, 13, 4, null);
+        insert into hyperloop.public.schedule
+        values (base_idx + 4, base_time + interval '35 minutes', base_time + interval '47 minutes', default, 1, 4, 8, base_idx + 3);
+        -- hybrydowy (zaczyna z drugiego końca)
+            -- tam
+        insert into hyperloop.public.schedule
+        values (base_idx + 5, base_time, base_time + interval '10 minutes', default, 11, 13, 4, null);
+        insert into hyperloop.public.schedule
+        values (base_idx + 6, base_time + interval '11 minutes', base_time + interval '23 minutes', default, 11, 4, 8, base_idx + 5);
+            -- z powrotem
+        insert into hyperloop.public.schedule
+        values (base_idx + 7, base_time + interval '24 minutes', base_time + interval '36 minutes', default, 11, 8, 4, null);
+        insert into hyperloop.public.schedule
+        values (base_idx + 8, base_time + interval '37 minutes', base_time + interval '47 minutes', default, 11, 4, 13, base_idx + 7);
+        -- cargo (zaczyna jak passenger jest w połowie trasy w jedną stronę)
+            -- tam
+        insert into hyperloop.public.schedule
+        values (base_idx + 9, base_time + interval '12 minutes', base_time + interval '24 minutes', default, 21, 8, 4, null);
+        insert into hyperloop.public.schedule
+        values (base_idx + 10, base_time + interval '25 minutes', base_time + interval '35 minutes', default, 21, 4, 13, base_idx + 9);
+            -- z powrotem
+        insert into hyperloop.public.schedule
+        values (base_idx + 11, base_time + interval '36 minutes', base_time + interval '46 minutes', default, 21, 13, 4, null);
+        insert into hyperloop.public.schedule
+        values (base_idx + 12, base_time + interval '47 minutes', base_time + interval '59 minutes', default, 21, 4, 8, base_idx + 11);
+        -- update parametrów
+        base_idx = base_idx + 12;
+        base_time = base_time + interval '48 minutes';
+    END LOOP;
+end;
+$$;
+
+-- Białystok(12) - Warszawa(2) - Łódź(11) - Poznań(6) - Świebodzin(1)
+-- (9 + 1 + 6 + 1 + 10 + 1 + 5 + 3) * 2 = 72 min, 24 * 60 / 72 = 20 razy)
+DO
+$$
+    DECLARE
+        base_time TIME;
+        base_idx integer;
+    BEGIN
+        select max(schedule_id) into base_idx from hyperloop.public.schedule;
+        IF base_idx is null THEN
+            base_idx = 0;
+        END IF;
+        base_time = TIME '00:00:00';
+        update hyperloop.public.capsules
+        set status = 'In use' where capsule_id in (2, 12, 22);
+        FOR i IN 1..20 LOOP
+                -- osobowy
+                    -- tam
+                insert into hyperloop.public.schedule
+                values (base_idx + 1, base_time, base_time + interval '9 minutes', default, 2, 12, 2, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 2, base_time + interval '10 minutes', base_time + interval '16 minutes', default, 2, 2, 11, base_idx + 1);
+                insert into hyperloop.public.schedule
+                values (base_idx + 3, base_time + interval '17 minutes', base_time + interval '27 minutes', default, 2, 11, 6, base_idx + 2);
+                insert into hyperloop.public.schedule
+                values (base_idx + 4, base_time + interval '28 minutes', base_time + interval '33 minutes', default, 2, 6, 1, base_idx + 3);
+                    -- z powrotem
+                insert into hyperloop.public.schedule
+                values (base_idx + 5, base_time + interval '36 minutes', base_time + interval '41 minutes', default, 2, 1, 6, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 6, base_time + interval '42 minutes', base_time + interval '52 minutes', default, 2, 6, 11, base_idx + 4);
+                insert into hyperloop.public.schedule
+                values (base_idx + 7, base_time + interval '53 minutes', base_time + interval '59 minutes', default, 2, 11, 2, base_idx + 5);
+                insert into hyperloop.public.schedule
+                values (base_idx + 8, base_time + interval '60 minutes', base_time + interval '69 minutes', default, 2, 2, 12, base_idx + 6);
+                -- hybrydowy (zaczyna z drugiego końca)
+                    -- tam
+                insert into hyperloop.public.schedule
+                values (base_idx + 9, base_time, base_time + interval '5 minutes', default, 12, 1, 6, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 10, base_time + interval '6 minutes', base_time + interval '16 minutes', default, 12, 6, 11, base_idx + 9);
+                insert into hyperloop.public.schedule
+                values (base_idx + 11, base_time + interval '17 minutes', base_time + interval '23 minutes', default, 12, 11, 2, base_idx + 10);
+                insert into hyperloop.public.schedule
+                values (base_idx + 12, base_time + interval '24 minutes', base_time + interval '33 minutes', default, 12, 2, 12, base_idx + 11);
+                    -- z powrotem
+                insert into hyperloop.public.schedule
+                values (base_idx + 13, base_time + interval '36 minutes', base_time + interval '45 minutes', default, 12, 12, 2, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 14, base_time + interval '46 minutes', base_time + interval '52 minutes', default, 12, 2, 11, base_idx + 13);
+                insert into hyperloop.public.schedule
+                values (base_idx + 15, base_time + interval '53 minutes', base_time + interval '63 minutes', default, 12, 11, 6, base_idx + 14);
+                insert into hyperloop.public.schedule
+                values (base_idx + 16, base_time + interval '64 minutes', base_time + interval '69 minutes', default, 12, 6, 1, base_idx + 15);
+                -- cargo (zaczyna jak passenger jest w połowie trasy w jedną stronę)
+                    -- tam
+                insert into hyperloop.public.schedule
+                values (base_idx + 17, base_time + interval '18 minutes', base_time + interval '27 minutes', default, 22, 12, 2, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 18, base_time + interval '28 minutes', base_time + interval '34 minutes', default, 22, 2, 11, base_idx + 17);
+                insert into hyperloop.public.schedule
+                values (base_idx + 19, base_time + interval '35 minutes', base_time + interval '45 minutes', default, 22, 11, 6, base_idx + 18);
+                insert into hyperloop.public.schedule
+                values (base_idx + 20, base_time + interval '46 minutes', base_time + interval '51 minutes', default, 22, 6, 1, base_idx + 19);
+                    -- z powrotem
+                insert into hyperloop.public.schedule
+                values (base_idx + 21, base_time + interval '54 minutes', base_time + interval '59 minutes', default, 22, 1, 6, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 22, base_time + interval '60 minutes', base_time + interval '70 minutes', default, 22, 6, 11, base_idx + 21);
+                insert into hyperloop.public.schedule
+                values (base_idx + 23, base_time + interval '71 minutes', base_time + interval '77 minutes', default, 22, 11, 2, base_idx + 22);
+                insert into hyperloop.public.schedule
+                values (base_idx + 24, base_time + interval '78 minutes', base_time + interval '87 minutes', default, 22, 2, 12, base_idx + 23);
+                -- update parametrów
+                base_idx = base_idx + 24;
+                base_time = base_time + interval '72 minutes';
+            END LOOP;
+    end;
+$$;
+
+-- Łódź(11) - Wrocław(7) - Świebodzin(1) - Szczecin(8)
+-- (10 + 1 + 9 + 1 + 8 + 1) * 2 = 60 min, 24 * 60 / 60 = 24 razy)
+DO
+$$
+    DECLARE
+        base_time TIME;
+        base_idx integer;
+    BEGIN
+        select max(schedule_id) into base_idx from hyperloop.public.schedule;
+        IF base_idx is null THEN
+            base_idx = 0;
+        END IF;
+        base_time = TIME '00:00:00';
+        update hyperloop.public.capsules
+        set status = 'In use' where capsule_id in (3, 13, 23);
+        FOR i IN 1..24 LOOP
+            -- osobowy
+                -- tam
+                insert into hyperloop.public.schedule
+                values (base_idx + 1, base_time, base_time + interval '10 minutes', default, 3, 11, 7, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 2, base_time + interval '11 minutes', base_time + interval '20 minutes', default, 3, 7, 1, base_idx + 1);
+                insert into hyperloop.public.schedule
+                values (base_idx + 3, base_time + interval '21 minutes', base_time + interval '29 minutes', default, 3, 1, 8, base_idx + 2);
+                -- z powrotem
+                insert into hyperloop.public.schedule
+                values (base_idx + 4, base_time + interval '30 minutes', base_time + interval '38 minutes', default, 3, 8, 1, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 5, base_time + interval '39 minutes', base_time + interval '48 minutes', default, 3, 1, 7, base_idx + 4);
+                insert into hyperloop.public.schedule
+                values (base_idx + 6, base_time + interval '49 minutes', base_time + interval '59 minutes', default, 3, 7, 11, base_idx + 5);
+                -- hybrydowy (zaczyna z drugiego końca)
+                -- tam
+                insert into hyperloop.public.schedule
+                values (base_idx + 7, base_time, base_time + interval '10 minutes', default, 13, 8, 1, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 8, base_time + interval '11 minutes', base_time + interval '20 minutes', default, 13, 1, 7, base_idx + 7);
+                insert into hyperloop.public.schedule
+                values (base_idx + 9, base_time + interval '21 minutes', base_time + interval '29 minutes', default, 13, 7, 11, base_idx + 8);
+                -- z powrotem
+                insert into hyperloop.public.schedule
+                values (base_idx + 10, base_time + interval '30 minutes', base_time + interval '38 minutes', default, 13, 11, 7, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 11, base_time + interval '39 minutes', base_time + interval '48 minutes', default, 13, 7, 1, base_idx + 10);
+                insert into hyperloop.public.schedule
+                values (base_idx + 12, base_time + interval '49 minutes', base_time + interval '59 minutes', default, 13, 1, 8, base_idx + 11);
+                -- cargo (zaczyna jak passenger jest w połowie trasy w jedną stronę)
+                -- tam
+                insert into hyperloop.public.schedule
+                values (base_idx + 13, base_time + interval '15 minutes', base_time + interval '25 minutes', default, 23, 11, 7, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 14, base_time + interval '26 minutes', base_time + interval '35 minutes', default, 23, 7, 1, base_idx + 13);
+                insert into hyperloop.public.schedule
+                values (base_idx + 15, base_time + interval '36 minutes', base_time + interval '44 minutes', default, 23, 1, 8, base_idx + 14);
+                -- z powrotem
+                insert into hyperloop.public.schedule
+                values (base_idx + 16, base_time + interval '45 minutes', base_time + interval '53 minutes', default, 23, 8, 1, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 17, base_time + interval '58 minutes', base_time + interval '63 minutes', default, 23, 1, 7, base_idx + 16);
+                insert into hyperloop.public.schedule
+                values (base_idx + 18, base_time + interval '64 minutes', base_time + interval '74 minutes', default, 23, 7, 11, base_idx + 17);
+                -- update parametrów
+                base_idx = base_idx + 18;
+                base_time = base_time + interval '60 minutes';
+            END LOOP;
+    end;
+$$;
+
+-- Rzeszów(14) - Kielce(15) - Warszawa(2) - Olsztyn(13) - Gdańsk(5)
+-- (7 + 1 + 8 + 1 + 9 + 1 + 7 + 2) * 2 = 72 min, 24 * 60 / 72 = 20 razy)
+DO
+$$
+    DECLARE
+        base_time TIME;
+        base_idx integer;
+    BEGIN
+        select max(schedule_id) into base_idx from hyperloop.public.schedule;
+        IF base_idx is null THEN
+            base_idx = 0;
+        END IF;
+        base_time = TIME '00:00:00';
+        update hyperloop.public.capsules
+        set status = 'In use' where capsule_id in (4, 14, 24);
+        FOR i IN 1..20 LOOP
+            -- osobowy
+            -- tam
+                insert into hyperloop.public.schedule
+                values (base_idx + 1, base_time, base_time + interval '7 minutes', default, 4, 14, 15, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 2, base_time + interval '8 minutes', base_time + interval '16 minutes', default, 4, 15, 2, base_idx + 1);
+                insert into hyperloop.public.schedule
+                values (base_idx + 3, base_time + interval '17 minutes', base_time + interval '26 minutes', default, 4, 2, 13, base_idx + 2);
+                insert into hyperloop.public.schedule
+                values (base_idx + 4, base_time + interval '27 minutes', base_time + interval '34 minutes', default, 4, 13, 5, base_idx + 3);
+                -- z powrotem
+                insert into hyperloop.public.schedule
+                values (base_idx + 5, base_time + interval '36 minutes', base_time + interval '43 minutes', default, 4, 5, 13, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 6, base_time + interval '44 minutes', base_time + interval '53 minutes', default, 4, 13, 2, base_idx + 4);
+                insert into hyperloop.public.schedule
+                values (base_idx + 7, base_time + interval '54 minutes', base_time + interval '62 minutes', default, 4, 2, 15, base_idx + 5);
+                insert into hyperloop.public.schedule
+                values (base_idx + 8, base_time + interval '63 minutes', base_time + interval '70 minutes', default, 4, 15, 14, base_idx + 6);
+                -- hybrydowy (zaczyna z drugiego końca)
+                -- tam
+                insert into hyperloop.public.schedule
+                values (base_idx + 9, base_time, base_time + interval '7 minutes', default, 14, 5, 13, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 10, base_time + interval '8 minutes', base_time + interval '17 minutes', default, 14, 13, 2, base_idx + 9);
+                insert into hyperloop.public.schedule
+                values (base_idx + 11, base_time + interval '18 minutes', base_time + interval '26 minutes', default, 14, 2, 15, base_idx + 10);
+                insert into hyperloop.public.schedule
+                values (base_idx + 12, base_time + interval '27 minutes', base_time + interval '34 minutes', default, 14, 15, 14, base_idx + 11);
+                -- z powrotem
+                insert into hyperloop.public.schedule
+                values (base_idx + 13, base_time + interval '36 minutes', base_time + interval '43 minutes', default, 14, 14, 15, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 14, base_time + interval '44 minutes', base_time + interval '52 minutes', default, 14, 15, 2, base_idx + 13);
+                insert into hyperloop.public.schedule
+                values (base_idx + 15, base_time + interval '53 minutes', base_time + interval '62 minutes', default, 14, 2, 13, base_idx + 14);
+                insert into hyperloop.public.schedule
+                values (base_idx + 16, base_time + interval '63 minutes', base_time + interval '70 minutes', default, 14, 13, 5, base_idx + 15);
+                -- cargo (zaczyna jak passenger jest w połowie trasy w jedną stronę)
+                -- tam
+                insert into hyperloop.public.schedule
+                values (base_idx + 17, base_time + interval '18 minutes', base_time + interval '25 minutes', default, 24, 14, 15, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 18, base_time + interval '26 minutes', base_time + interval '34 minutes', default, 24, 15, 2, base_idx + 17);
+                insert into hyperloop.public.schedule
+                values (base_idx + 19, base_time + interval '35 minutes', base_time + interval '44 minutes', default, 24, 2, 13, base_idx + 18);
+                insert into hyperloop.public.schedule
+                values (base_idx + 20, base_time + interval '45 minutes', base_time + interval '52 minutes', default, 24, 13, 5, base_idx + 19);
+                -- z powrotem
+                insert into hyperloop.public.schedule
+                values (base_idx + 21, base_time + interval '54 minutes', base_time + interval '61 minutes', default, 24, 5, 13, null);
+                insert into hyperloop.public.schedule
+                values (base_idx + 22, base_time + interval '62 minutes', base_time + interval '71 minutes', default, 24, 13, 2, base_idx + 21);
+                insert into hyperloop.public.schedule
+                values (base_idx + 23, base_time + interval '72 minutes', base_time + interval '80 minutes', default, 24, 2, 15, base_idx + 22);
+                insert into hyperloop.public.schedule
+                values (base_idx + 24, base_time + interval '81 minutes', base_time + interval '88 minutes', default, 24, 15, 14, base_idx + 23);
+                -- update parametrów
+                base_idx = base_idx + 24;
+                base_time = base_time + interval '72 minutes';
+            END LOOP;
+    end;
+$$;
