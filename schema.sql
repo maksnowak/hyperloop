@@ -41,8 +41,8 @@ CREATE TABLE hyperloop.public.Remote_access_units (
 
 CREATE TABLE hyperloop.public.Repairs_history (
                                  Repair_ID           serial constraint repairs_history_pk primary key,
-                                 Date_start          DATE NOT NULL,
-                                 Date_end            DATE NOT NULL DEFAULT (now()),
+                                 Date_start          DATE NOT NULL DEFAULT (now()),
+                                 Date_end            DATE,
                                  Referred_capsule_ID INTEGER NOT NULL,
                                  Performing_depot_ID INTEGER NOT NULL
 );
