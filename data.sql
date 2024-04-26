@@ -58,44 +58,47 @@ insert into hyperloop.public.depots values (2, 'Częstochowa', 50.811018, 19.120
 insert into hyperloop.public.depots values (3, 'Radom', 51.397447, 21.156443); -- Katedra Opieki NMP - towarowe
 
 -- kapsuły
+-- obecnie w naprawie
+CALL add_capsule('Cargo-in-repair', 'Ever Given', 'Cargo', 3);
+UPDATE hyperloop.public.capsules
+    set status = 'Under repair' where model = 'Cargo-in-repair';
 -- czysto pasażerskie
-insert into hyperloop.public.capsules values (1, 'Passenger-zero', 'Hindenburg', default, 40, 200, 1);
-insert into hyperloop.public.capsules values (2, 'Passenger-one', 'Hindenburg', default, 40, 200, 1);
-insert into hyperloop.public.capsules values (3, 'Passenger-two', 'Hindenburg', default, 40, 200, 1);
-insert into hyperloop.public.capsules values (4, 'Passenger-three', 'Hindenburg', default, 40, 200, 1);
-insert into hyperloop.public.capsules values (5, 'Passenger-four', 'Hindenburg', default, 40, 200, 1);
-insert into hyperloop.public.capsules values (6, 'Passenger-five', 'Hindenburg', default, 40, 200, 1);
-insert into hyperloop.public.capsules values (7, 'Passenger-six', 'Hindenburg', default, 40, 200, 1);
-insert into hyperloop.public.capsules values (8, 'Passenger-seven', 'Hindenburg', default, 40, 200, 1);
-insert into hyperloop.public.capsules values (9, 'Passenger-eight', 'Hindenburg', default, 40, 200, 1);
-insert into hyperloop.public.capsules values (10, 'Passenger-nine', 'Hindenburg', default, 40, 200, 1);
+CALL add_capsule('Passenger-zero', 'Hindenburg', 'Passenger', 1);
+CALL add_capsule('Passenger-one', 'Hindenburg', 'Passenger', 1);
+CALL add_capsule('Passenger-two', 'Hindenburg', 'Passenger', 1);
+CALL add_capsule('Passenger-three', 'Hindenburg', 'Passenger', 1);
+CALL add_capsule('Passenger-four', 'Hindenburg', 'Passenger', 1);
+CALL add_capsule('Passenger-five', 'Hindenburg', 'Passenger', 1);
+CALL add_capsule('Passenger-six', 'Hindenburg', 'Passenger', 1);
+CALL add_capsule('Passenger-seven', 'Hindenburg', 'Passenger', 1);
+CALL add_capsule('Passenger-eight', 'Hindenburg', 'Passenger', 1);
+CALL add_capsule('Passenger-nine', 'Hindenburg', 'Passenger', 1);
 -- hybrydowe
-insert into hyperloop.public.capsules values (11, 'Hybrid-zero', 'Challenger', default, 28, 3000, 2);
-insert into hyperloop.public.capsules values (12, 'Hybrid-one', 'Challenger', default, 28, 3000, 2);
-insert into hyperloop.public.capsules values (13, 'Hybrid-two', 'Challenger', default, 28, 3000, 2);
-insert into hyperloop.public.capsules values (14, 'Hybrid-three', 'Challenger', default, 28, 3000, 2);
-insert into hyperloop.public.capsules values (15, 'Hybrid-four', 'Challenger', default, 28, 3000, 2);
-insert into hyperloop.public.capsules values (16, 'Hybrid-five', 'Challenger', default, 28, 3000, 2);
-insert into hyperloop.public.capsules values (17, 'Hybrid-six', 'Challenger', default, 28, 3000, 2);
-insert into hyperloop.public.capsules values (18, 'Hybrid-seven', 'Challenger', default, 28, 3000, 2);
-insert into hyperloop.public.capsules values (19, 'Hybrid-eight', 'Challenger', default, 28, 3000, 2);
-insert into hyperloop.public.capsules values (20, 'Hybrid-nine', 'Challenger', default, 28, 3000, 2);
+CALL add_capsule('Hybrid-zero', 'Challenger', 'Hybrid', 2);
+CALL add_capsule('Hybrid-one', 'Challenger', 'Hybrid', 2);
+CALL add_capsule('Hybrid-two', 'Challenger', 'Hybrid', 2);
+CALL add_capsule('Hybrid-three', 'Challenger', 'Hybrid', 2);
+CALL add_capsule('Hybrid-four', 'Challenger', 'Hybrid', 2);
+CALL add_capsule('Hybrid-five', 'Challenger', 'Hybrid', 2);
+CALL add_capsule('Hybrid-six', 'Challenger', 'Hybrid', 2);
+CALL add_capsule('Hybrid-seven', 'Challenger', 'Hybrid', 2);
+CALL add_capsule('Hybrid-eight', 'Challenger', 'Hybrid', 2);
+CALL add_capsule('Hybrid-nine', 'Challenger', 'Hybrid', 2);
 -- towarowe
-insert into hyperloop.public.capsules values (21, 'Cargo-zero', 'Ever Given', default, 4, 10000, 3);
-insert into hyperloop.public.capsules values (22, 'Cargo-one', 'Ever Given', default, 4, 10000, 3);
-insert into hyperloop.public.capsules values (23, 'Cargo-two', 'Ever Given', default, 4, 10000, 3);
-insert into hyperloop.public.capsules values (24, 'Cargo-three', 'Ever Given', default, 4, 10000, 3);
-insert into hyperloop.public.capsules values (25, 'Cargo-four', 'Ever Given', default, 4, 10000, 3);
-insert into hyperloop.public.capsules values (26, 'Cargo-five', 'Ever Given', default, 4, 10000, 3);
-insert into hyperloop.public.capsules values (27, 'Cargo-six', 'Ever Given', default, 4, 10000, 3);
-insert into hyperloop.public.capsules values (28, 'Cargo-seven', 'Ever Given', default, 4, 10000, 3);
-insert into hyperloop.public.capsules values (29, 'Cargo-eight', 'Ever Given', default, 4, 10000, 3);
-insert into hyperloop.public.capsules values (30, 'Cargo-nine', 'Ever Given', default, 4, 10000, 3);
+CALL add_capsule('Cargo-zero', 'Ever Given', 'Cargo', 3);
+CALL add_capsule('Cargo-one', 'Ever Given', 'Cargo', 3);
+CALL add_capsule('Cargo-two', 'Ever Given', 'Cargo', 3);
+CALL add_capsule('Cargo-three', 'Ever Given', 'Cargo', 3);
+CALL add_capsule('Cargo-four', 'Ever Given', 'Cargo', 3);
+CALL add_capsule('Cargo-five', 'Ever Given', 'Cargo', 3);
+CALL add_capsule('Cargo-six', 'Ever Given', 'Cargo', 3);
+CALL add_capsule('Cargo-seven', 'Ever Given', 'Cargo', 3);
+CALL add_capsule('Cargo-eight', 'Ever Given', 'Cargo', 3);
+CALL add_capsule('Cargo-nine', 'Ever Given', 'Cargo', 3);
 
 -- kilka napraw
 insert into hyperloop.public.repairs_history values (1, now() - interval '2 months', now() - interval '1 month', 1, 1);
 insert into hyperloop.public.repairs_history values (2, now() - interval '1 month', now() - interval '14 days', 13, 2);
 insert into hyperloop.public.repairs_history values (3, now() - interval '28 days', now(), 27, 3);
 -- naprawa trwająca teraz
-insert into hyperloop.public.capsules values (31, 'Cargo-in-repair', 'Ever Given', 'Under repair', 4, 10000, 3);
-insert into hyperloop.public.repairs_history values (4, now() - interval '14 days', null, 31, 3);
+insert into hyperloop.public.repairs_history values (4, now() - interval '14 days', null, (SELECT capsule_id from capsules where model = 'Cargo-in-repair'), 3);
