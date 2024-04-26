@@ -53,6 +53,42 @@ CALL connect_stations('Katowice', 'Łódź', 1200);
 CALL connect_stations('Katowice', 'Wrocław', 1200);
 
 -- depoty
-insert into hyperloop.public.depots values (1, 'Wadowice', 49.883353, 19.493670); -- muzeum JP2
-insert into hyperloop.public.depots values (2, 'Częstochowa', 50.811018, 19.120306); -- Jasna Góra
-insert into hyperloop.public.depots values (3, 'Radom', 51.397447, 21.156443); -- Katedra Opieki NMP
+insert into hyperloop.public.depots values (1, 'Wadowice', 49.883353, 19.493670); -- muzeum JP2 - pasażerskie
+insert into hyperloop.public.depots values (2, 'Częstochowa', 50.811018, 19.120306); -- Jasna Góra - hybrydowe
+insert into hyperloop.public.depots values (3, 'Radom', 51.397447, 21.156443); -- Katedra Opieki NMP - towarowe
+
+-- kapsuły
+-- czysto pasażerskie
+insert into hyperloop.public.capsules values (1, 'Passenger-zero', 'Hindenburg', default, 40, 200, 1);
+insert into hyperloop.public.capsules values (2, 'Passenger-one', 'Hindenburg', default, 40, 200, 1);
+insert into hyperloop.public.capsules values (3, 'Passenger-two', 'Hindenburg', default, 40, 200, 1);
+insert into hyperloop.public.capsules values (4, 'Passenger-three', 'Hindenburg', default, 40, 200, 1);
+insert into hyperloop.public.capsules values (5, 'Passenger-four', 'Hindenburg', default, 40, 200, 1);
+insert into hyperloop.public.capsules values (6, 'Passenger-five', 'Hindenburg', default, 40, 200, 1);
+insert into hyperloop.public.capsules values (7, 'Passenger-six', 'Hindenburg', default, 40, 200, 1);
+insert into hyperloop.public.capsules values (8, 'Passenger-seven', 'Hindenburg', default, 40, 200, 1);
+insert into hyperloop.public.capsules values (9, 'Passenger-eight', 'Hindenburg', default, 40, 200, 1);
+insert into hyperloop.public.capsules values (10, 'Passenger-nine', 'Hindenburg', default, 40, 200, 1);
+-- hybrydowe
+insert into hyperloop.public.capsules values (11, 'Hybrid-zero', 'Challenger', default, 28, 3000, 2);
+insert into hyperloop.public.capsules values (12, 'Hybrid-one', 'Challenger', default, 28, 3000, 2);
+insert into hyperloop.public.capsules values (13, 'Hybrid-two', 'Challenger', default, 28, 3000, 2);
+insert into hyperloop.public.capsules values (14, 'Hybrid-three', 'Challenger', default, 28, 3000, 2);
+insert into hyperloop.public.capsules values (15, 'Hybrid-four', 'Challenger', default, 28, 3000, 2);
+insert into hyperloop.public.capsules values (16, 'Hybrid-five', 'Challenger', default, 28, 3000, 2);
+insert into hyperloop.public.capsules values (17, 'Hybrid-six', 'Challenger', default, 28, 3000, 2);
+insert into hyperloop.public.capsules values (18, 'Hybrid-seven', 'Challenger', default, 28, 3000, 2);
+insert into hyperloop.public.capsules values (19, 'Hybrid-eight', 'Challenger', default, 28, 3000, 2);
+insert into hyperloop.public.capsules values (20, 'Hybrid-nine', 'Challenger', default, 28, 3000, 2);
+-- towarowe
+insert into hyperloop.public.capsules values (21, 'Cargo-zero', 'Ever Given', default, 4, 10000, 3);
+insert into hyperloop.public.capsules values (22, 'Cargo-one', 'Ever Given', default, 4, 10000, 3);
+insert into hyperloop.public.capsules values (23, 'Cargo-two', 'Ever Given', default, 4, 10000, 3);
+insert into hyperloop.public.capsules values (24, 'Cargo-three', 'Ever Given', default, 4, 10000, 3);
+insert into hyperloop.public.capsules values (25, 'Cargo-four', 'Ever Given', default, 4, 10000, 3);
+insert into hyperloop.public.capsules values (26, 'Cargo-five', 'Ever Given', default, 4, 10000, 3);
+insert into hyperloop.public.capsules values (27, 'Cargo-six', 'Ever Given', default, 4, 10000, 3);
+insert into hyperloop.public.capsules values (28, 'Cargo-seven', 'Ever Given', default, 4, 10000, 3);
+insert into hyperloop.public.capsules values (29, 'Cargo-eight', 'Ever Given', default, 4, 10000, 3);
+insert into hyperloop.public.capsules values (30, 'Cargo-nine', 'Ever Given', default, 4, 10000, 3);
+
