@@ -1,13 +1,3 @@
-CREATE OR REPLACE VIEW hyperloop.public.Solar_panel_view ( Data_ID, Time_of_measurement, Generated_power, Referred_tube_ID ) AS
-SELECT
-    Tubes_data.Data_ID,
-    Tubes_data.Time_of_measurement,
-    Tubes_data.Generated_power,
-    Tubes_data.Referred_tube_ID
-FROM
-    Tubes_data
-;
-
 CREATE OR REPLACE PROCEDURE connect_stations(
     IN station1_name VARCHAR(32),
     IN station2_name VARCHAR(32),
@@ -76,4 +66,41 @@ BEGIN
         VALUES (lat1 + rau_lat_step * i, lon1 + rau_lon_step * i, tube2_id);
     END LOOP;
 END
+$$;
+
+CREATE OR REPLACE PROCEDURE add_capsule(
+    IN capsule_model varchar(32),
+    IN capsule_producer varchar(32),
+    IN capsule_type varchar(32),
+    IN capsule_servicing_depot_id integer
+)
+    LANGUAGE plpgsql
+AS $$
+DECLARE
+    capsule_seats INTEGER;
+    capsule_cargo_space INTEGER;
+BEGIN
+    -- CHECK PARAMETERS
+    IF capsule_model IS NULL OR capsule_producer IS NULL OR capsule_type IS NULL THEN
+        RAISE EXCEPTION 'All parameters must be not null';
+    END IF;
+
+    -- SET CAPSULE PARAMETERS BASED ON IT'S TYPE
+    IF capsule_type = 'Passenger' THEN
+        capsule_seats = 40;
+        capsule_cargo_space = 200;
+    ELSIF capsule_type = 'Hybrid' THEN
+        capsule_seats = 28;
+        capsule_cargo_space = 3000;
+    ELSIF capsule_type = 'Cargo' THEN
+        capsule_seats = 4;
+        capsule_cargo_space = 10000;
+    ELSE
+        RAISE EXCEPTION 'Invalid capsule type';
+    END IF;
+
+    -- INSERT CAPSULE
+    INSERT INTO capsules (model, producer, type, seats, cargo_space, servicing_depot_id)
+    VALUES (capsule_model, capsule_producer, capsule_type, capsule_seats, capsule_cargo_space, capsule_servicing_depot_id);
+END;
 $$;
