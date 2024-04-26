@@ -92,3 +92,10 @@ insert into hyperloop.public.capsules values (28, 'Cargo-seven', 'Ever Given', d
 insert into hyperloop.public.capsules values (29, 'Cargo-eight', 'Ever Given', default, 4, 10000, 3);
 insert into hyperloop.public.capsules values (30, 'Cargo-nine', 'Ever Given', default, 4, 10000, 3);
 
+-- kilka napraw
+insert into hyperloop.public.repairs_history values (1, now() - interval '2 months', now() - interval '1 month', 1, 1);
+insert into hyperloop.public.repairs_history values (2, now() - interval '1 month', now() - interval '14 days', 13, 2);
+insert into hyperloop.public.repairs_history values (3, now() - interval '28 days', now(), 27, 3);
+-- naprawa trwająca teraz
+insert into hyperloop.public.capsules values (31, 'Cargo-in-repair', 'Ever Given', 'Under repair', 4, 10000, 3);
+insert into hyperloop.public.repairs_history values (4, now() - interval '14 days', null, 31, 3);
