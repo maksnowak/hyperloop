@@ -161,7 +161,7 @@ BEGIN
         -- CHECK FOR COLLISION
         SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i]
         AND next_station_id = station_ids[i + 1] AND departure_time = departure_times[i];
-        FOR _ in 1..1440 LOOP
+        FOR _ in 1..1440 LOOP -- NUMBER OF MINUTES IN A DAY
             EXIT WHEN curr_station_id IS NULL;
             -- MOVE DEPARTURE TIME BY 1 MINUTE
             departure_times[i] = departure_times[i] + interval '1 minute';
@@ -183,7 +183,7 @@ BEGIN
             -- CHECK FOR COLLISION
             SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i + 1]
                                                                     AND next_station_id = station_ids[i] AND departure_time = departure_times[i + station_count - 1];
-            FOR _ in 1..1440 LOOP
+            FOR _ in 1..1440 LOOP  -- NUMBER OF MINUTES IN A DAY
                     EXIT WHEN curr_station_id IS NULL;
                     -- MOVE DEPARTURE TIME BY 1 MINUTE
                     departure_times[i + station_count - 1] = departure_times[i + station_count - 1] + interval '1 minute';
