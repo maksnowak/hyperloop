@@ -834,3 +834,6 @@ $$
             END LOOP;
     end;
 $$;
+
+-- FIX SEQUENCE
+SELECT setval('schedule_schedule_id_seq',(SELECT GREATEST(MAX(schedule_id)+1,nextval('schedule_schedule_id_seq'))-1 FROM schedule));
