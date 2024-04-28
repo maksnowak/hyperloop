@@ -15,6 +15,8 @@ insert into hyperloop.public.stations values (13, 'Olsztyn', 53.778422, 20.48011
 insert into hyperloop.public.stations values (14, 'Rzeszów', 50.041187, 21.999121); --Zamek Lubomirskich
 insert into hyperloop.public.stations values (15, 'Kielce', 50.866077, 20.628568); --Pałac Biskupów Krakowskich
 insert into hyperloop.public.stations values (16, 'Jarosławiec', 54.539833, 16.542434); -- Latarnia w Jarosławcu
+--FIX SEQUENCE
+SELECT setval('stations_station_id_seq',(SELECT GREATEST(MAX(station_id)+1,nextval('stations_station_id_seq'))-1 FROM stations));
 
 -- tuby
 CALL connect_stations('Warszawa', 'Olsztyn', 1200);
@@ -56,6 +58,8 @@ CALL connect_stations('Katowice', 'Wrocław', 1200);
 insert into hyperloop.public.depots values (1, 'Wadowice', 49.883353, 19.493670); -- muzeum JP2 - pasażerskie
 insert into hyperloop.public.depots values (2, 'Częstochowa', 50.811018, 19.120306); -- Jasna Góra - hybrydowe
 insert into hyperloop.public.depots values (3, 'Radom', 51.397447, 21.156443); -- Katedra Opieki NMP - towarowe
+-- FIX SEQUENCE
+SELECT setval('depots_depot_id_seq',(SELECT GREATEST(MAX(depot_id)+1,nextval('depots_depot_id_seq'))-1 FROM depots));
 
 -- kapsuły
 alter sequence hyperloop.public.capsules_capsule_id_seq restart with 1;
@@ -102,6 +106,8 @@ CALL add_capsule('Cargo-in-repair', 'Ever Given', 'Cargo', 3);
 UPDATE hyperloop.public.capsules
 set status = 'Under repair' where model = 'Cargo-in-repair';
 insert into hyperloop.public.repairs_history values (4, now() - interval '14 days', null, (SELECT capsule_id from capsules where model = 'Cargo-in-repair'), 3);
+-- FIX SEQUENCE
+SELECT setval('repairs_history_repair_id_seq',(SELECT GREATEST(MAX(repair_id)+1,nextval('repairs_history_repair_id_seq'))-1 FROM repairs_history));
 
 -- rozkłady
 -- =====================
