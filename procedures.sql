@@ -309,3 +309,66 @@ BEGIN
     VALUES (the_capsule_id, current_date, repairer_id);
 END;
 $$;
+
+CREATE OR REPLACE PROCEDURE create_trip_history (
+    IN referred_schedule_id INTEGER,
+    IN sold_tickets INTEGER,
+    IN weight_of_cargo INTEGER,
+    IN cargo_content TEXT,
+    IN trip_end_date TIMESTAMP DEFAULT current_timestamp
+)
+    LANGUAGE plpgsql
+AS $$
+DECLARE
+    the_capsule_id INTEGER;
+    the_departure_time TIME;
+    the_arrival_time TIME;
+    the_start_date TIMESTAMP;
+    the_end_date TIMESTAMP;
+    the_start_station_id INTEGER;
+    the_end_station_id INTEGER;
+    the_tube_id INTEGER;
+BEGIN
+    -- GET CAPSULE ID
+    SELECT referred_capsule_id, departure_time, arrival_time, current_station_id, next_station_id
+    INTO the_capsule_id, the_departure_time, the_arrival_time, the_start_station_id, the_end_station_id
+    FROM schedule WHERE schedule_id = referred_schedule_id;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Schedule with id % not found', referred_schedule_id;
+    END IF;
+
+    -- GET TUBE ID
+    SELECT tube_id INTO the_tube_id FROM tubes WHERE starting_station_id = the_start_station_id AND ending_station_id = the_end_station_id;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Tube between stations % and % not found', the_start_station_id, the_end_station_id;
+    END IF;
+
+    -- CHECK IF NUMBER OF TICKETS SOLD IS VALID
+    IF sold_tickets < 0 THEN
+        RAISE EXCEPTION 'Number of sold tickets must be greater or equal to 0';
+    END IF;
+    IF sold_tickets > (SELECT seats FROM capsules WHERE capsule_id = the_capsule_id) THEN
+        RAISE EXCEPTION 'Number of sold tickets exceeds the number of seats in the capsule';
+    END IF;
+
+    -- CHECK IF WEIGHT OF CARGO IS VALID
+    IF weight_of_cargo < 0 THEN
+        RAISE EXCEPTION 'Weight of cargo must be greater or equal to 0';
+    END IF;
+    IF weight_of_cargo > (SELECT cargo_space FROM capsules WHERE capsule_id = the_capsule_id) THEN
+        RAISE EXCEPTION 'Weight of cargo exceeds the cargo space in the capsule';
+    END IF;
+
+    -- SET TIMESTAMPS
+    the_end_date = date_trunc('day', trip_end_date) + the_arrival_time::interval;
+    IF the_arrival_time > the_departure_time THEN
+        the_start_date = date_trunc('day', trip_end_date) + the_departure_time::interval;
+    ELSE
+        the_start_date = date_trunc('day', trip_end_date - interval '1 day') + the_departure_time::interval;
+    END IF;
+
+    -- INSERT TRIP HISTORY
+    INSERT INTO trips_history (date_start, date_end, tickets_sold, cargo, cargo_weight, referred_capsule_id, referred_tube_id)
+    VALUES (the_start_date, the_end_date, sold_tickets, cargo_content, weight_of_cargo, the_capsule_id, the_tube_id);
+END;
+$$;
