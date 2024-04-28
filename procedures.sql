@@ -168,13 +168,16 @@ BEGIN
         -- CHECK FOR COLLISION
         SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i]
         AND next_station_id = station_ids[i + 1] AND departure_time = departure_times[i];
-        LOOP
+        FOR _ in 1..1440 LOOP
             EXIT WHEN curr_station_id IS NULL;
             -- MOVE DEPARTURE TIME BY 1 MINUTE
             departure_times[i] = departure_times[i] + interval '1 minute';
             SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i]
             AND next_station_id = station_ids[i + 1] AND departure_time = departure_times[i];
         END LOOP;
+        IF curr_station_id IS NOT NULL THEN
+            RAISE EXCEPTION 'Unable to find free time slot for section % - %', station_names[i], station_names[i + 1];
+        END IF;
         -- ADD ARRIVAL TIME
         arrival_times = arrival_times || (departure_times[i] + travel_times[i]::interval);
         -- UPDATE TRAVEL TIME
@@ -198,13 +201,16 @@ BEGIN
             -- CHECK FOR COLLISION
             SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i + 1]
             AND next_station_id = station_ids[i] AND departure_time = departure_times[i + station_count - 1];
-            LOOP
+            FOR _ in 1..1440 LOOP
                 EXIT WHEN curr_station_id IS NULL;
                 -- MOVE DEPARTURE TIME BY 1 MINUTE
                 departure_times[i + station_count - 1] = departure_times[i + station_count - 1] + interval '1 minute';
                 SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i + 1]
                 AND next_station_id = station_ids[i] AND departure_time = departure_times[i + station_count - 1];
             END LOOP;
+            IF curr_station_id IS NOT NULL THEN
+                RAISE EXCEPTION 'Unable to find free time slot for section % - %', station_names[i + 1], station_names[i];
+            END IF;
             -- ADD ARRIVAL TIME
             arrival_times = arrival_times || (departure_times[i + station_count - 1] + travel_times[station_count - i]::interval);
             -- UPDATE TRAVEL TIME
