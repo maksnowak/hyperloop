@@ -134,13 +134,6 @@ BEGIN
         RAISE EXCEPTION 'Invalid capsule type';
     END IF;
 
-    -- CHECK FOR FREE CAPSULE
-    SELECT capsule_id INTO picked_capsule_id FROM capsules
-    WHERE type = capsule_type AND status = 'Operational';
-    IF NOT FOUND THEN
-        RAISE EXCEPTION 'No free capsule of type % found', capsule_type;
-    END IF;
-
     -- SELECT station IDS
     station_count = array_length(station_names, 1);
     FOR i IN 1..station_count LOOP
@@ -184,8 +177,50 @@ BEGIN
         travel_time = arrival_times[i] + interval '1 minute';
     END LOOP;
 
-    -- UPDATE CAPSULE STATUS
-    UPDATE capsules SET status = 'In use' WHERE capsule_id = picked_capsule_id;
+    IF both_ways IS TRUE THEN
+        FOR i in 1..station_count - 1 LOOP
+            departure_times = departure_times || travel_time;
+            -- CHECK FOR COLLISION
+            SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i + 1]
+                                                                    AND next_station_id = station_ids[i] AND departure_time = departure_times[i + station_count - 1];
+            FOR _ in 1..1440 LOOP
+                    EXIT WHEN curr_station_id IS NULL;
+                    -- MOVE DEPARTURE TIME BY 1 MINUTE
+                    departure_times[i + station_count - 1] = departure_times[i + station_count - 1] + interval '1 minute';
+                    SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i + 1]
+                                                                            AND next_station_id = station_ids[i] AND departure_time = departure_times[i + station_count - 1];
+                END LOOP;
+            IF curr_station_id IS NOT NULL THEN
+                RAISE EXCEPTION 'Unable to find free time slot for section % - %', station_names[i + 1], station_names[i];
+            END IF;
+            -- ADD ARRIVAL TIME
+            arrival_times = arrival_times || (departure_times[i + station_count - 1] + travel_times[station_count - i]::interval);
+            -- UPDATE TRAVEL TIME
+            travel_time = arrival_times[i + station_count - 1] + interval '1 minute';
+        END LOOP;
+    end if;
+
+    -- SELECT CAPSULE (PRIORITIZE IN USE)
+    SELECT referred_capsule_id INTO picked_capsule_id FROM schedule s1 JOIN capsules ON referred_capsule_id = capsule_id
+    WHERE type = capsule_type AND NOT EXISTS (
+        SELECT 1 FROM schedule s2 WHERE s2.referred_capsule_id = s1.referred_capsule_id
+            AND ((s2.departure_time BETWEEN departure_times[1] AND arrival_times[array_length(arrival_times, 1)]) -- DEPARTS IN GIVEN TIME PERIOD
+            OR (s2.arrival_time BETWEEN departure_times[1] AND arrival_times[array_length(arrival_times, 1)])   -- ARRIVES IN GIVEN TIME PERIOD
+            OR (s2.departure_time <= departure_times[1] AND s2.arrival_time >= arrival_times[array_length(arrival_times, 1)])) -- TRAVELS IN GIVEN TIME PERIOD
+    ) LIMIT 1;
+
+    -- IF THERE ARE NO USED CAPSULES THAT CAN BE APPLIED, CHECK FOR FREE CAPSULE
+    IF NOT FOUND THEN
+        -- CHECK FOR FREE CAPSULE
+        SELECT capsule_id INTO picked_capsule_id FROM capsules
+        WHERE type = capsule_type AND status = 'Operational';
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No free capsule of type % found', capsule_type;
+        END IF;
+        -- UPDATE CAPSULE STATUS
+        UPDATE capsules SET status = 'In use' WHERE capsule_id = picked_capsule_id;
+    end if;
+
     -- INSERT SCHEDULE
     last_schedule_id = NULL;
     FOR i IN 1..station_count - 1 LOOP
@@ -196,27 +231,6 @@ BEGIN
 
     -- ANALOGICALLY CREATE RETURN TRIP
     IF both_ways IS TRUE THEN
-        FOR i in 1..station_count - 1 LOOP
-            departure_times = departure_times || travel_time;
-            -- CHECK FOR COLLISION
-            SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i + 1]
-            AND next_station_id = station_ids[i] AND departure_time = departure_times[i + station_count - 1];
-            FOR _ in 1..1440 LOOP
-                EXIT WHEN curr_station_id IS NULL;
-                -- MOVE DEPARTURE TIME BY 1 MINUTE
-                departure_times[i + station_count - 1] = departure_times[i + station_count - 1] + interval '1 minute';
-                SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i + 1]
-                AND next_station_id = station_ids[i] AND departure_time = departure_times[i + station_count - 1];
-            END LOOP;
-            IF curr_station_id IS NOT NULL THEN
-                RAISE EXCEPTION 'Unable to find free time slot for section % - %', station_names[i + 1], station_names[i];
-            END IF;
-            -- ADD ARRIVAL TIME
-            arrival_times = arrival_times || (departure_times[i + station_count - 1] + travel_times[station_count - i]::interval);
-            -- UPDATE TRAVEL TIME
-            travel_time = arrival_times[i + station_count - 1] + interval '1 minute';
-        END LOOP;
-
         last_schedule_id = NULL;
         FOR i IN 1..station_count - 1 LOOP
             INSERT INTO schedule (departure_time, arrival_time, referred_capsule_id, current_station_id, next_station_id, previous_schedule_id)
