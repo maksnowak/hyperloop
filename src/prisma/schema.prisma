@@ -39,6 +39,7 @@ model capsules {
   capsule_location_events capsule_location_events[]
   depots                  depots                    @relation(fields: [servicing_depot_id], references: [depot_id], onDelete: NoAction, onUpdate: NoAction, map: "capsule_servicing_depot_fk")
   repairs_history         repairs_history[]
+  schedule                schedule[]
   trips_history           trips_history[]
 }
 
@@ -76,14 +77,19 @@ model repairs_history {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model schedule {
-  schedule_id          Int      @id(map: "schedule_pk") @default(autoincrement())
-  departure_time       DateTime @db.Time(6)
-  arrival_time         DateTime @db.Time(6)
-  status               String   @default("Active") @db.VarChar(32)
-  referred_capsule_id  Int
-  current_station_id   Int
-  next_station_id      Int
-  previous_schedule_id Int?
+  schedule_id                                    Int        @id(map: "schedule_pk") @default(autoincrement())
+  departure_time                                 DateTime   @db.Time(6)
+  arrival_time                                   DateTime   @db.Time(6)
+  status                                         String     @default("Active") @db.VarChar(32)
+  referred_capsule_id                            Int
+  current_station_id                             Int
+  next_station_id                                Int
+  previous_schedule_id                           Int?
+  stations_schedule_current_station_idTostations stations   @relation("schedule_current_station_idTostations", fields: [current_station_id], references: [station_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_current_station_fk")
+  stations_schedule_next_station_idTostations    stations   @relation("schedule_next_station_idTostations", fields: [next_station_id], references: [station_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_next_station_fk")
+  schedule                                       schedule?  @relation("scheduleToschedule", fields: [previous_schedule_id], references: [schedule_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_previous_schedule_fk")
+  other_schedule                                 schedule[] @relation("scheduleToschedule")
+  capsules                                       capsules   @relation(fields: [referred_capsule_id], references: [capsule_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_referred_capsule_fk")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -97,21 +103,23 @@ model station_logs {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model stations {
-  station_id                                Int            @id(map: "station_pk") @default(autoincrement())
-  name                                      String         @db.VarChar(32)
-  latitude                                  Decimal        @db.Decimal(9, 6)
-  longitude                                 Decimal        @db.Decimal(9, 6)
-  platforms                                 Int            @default(0)
-  station_logs                              station_logs[]
-  tubes_tubes_ending_station_idTostations   tubes[]        @relation("tubes_ending_station_idTostations")
-  tubes_tubes_starting_station_idTostations tubes[]        @relation("tubes_starting_station_idTostations")
+  station_id                                     Int            @id(map: "station_pk") @default(autoincrement())
+  name                                           String         @db.VarChar(32)
+  latitude                                       Decimal        @db.Decimal(9, 6)
+  longitude                                      Decimal        @db.Decimal(9, 6)
+  platforms                                      Int            @default(0)
+  schedule_schedule_current_station_idTostations schedule[]     @relation("schedule_current_station_idTostations")
+  schedule_schedule_next_station_idTostations    schedule[]     @relation("schedule_next_station_idTostations")
+  station_logs                                   station_logs[]
+  tubes_tubes_ending_station_idTostations        tubes[]        @relation("tubes_ending_station_idTostations")
+  tubes_tubes_starting_station_idTostations      tubes[]        @relation("tubes_starting_station_idTostations")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model trips_history {
   ride_id             Int      @id(map: "trips_history_pk") @default(autoincrement())
-  date_start          DateTime @db.Date
-  date_end            DateTime @db.Date
+  date_start          DateTime @db.Timestamp(6)
+  date_end            DateTime @db.Timestamp(6)
   tickets_sold        Int
   cargo               String?
   cargo_weight        Int
