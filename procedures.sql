@@ -262,3 +262,50 @@ BEGIN
     UPDATE repairs_history SET date_end = current_date WHERE referred_capsule_id = the_capsule_id AND date_end IS NULL;
 END;
 $$;
+
+CREATE OR REPLACE PROCEDURE start_repair(
+    IN the_capsule_id INTEGER,
+    IN repairer_id INTEGER DEFAULT NULL
+)
+    LANGUAGE plpgsql
+AS $$
+DECLARE
+    the_capsule_status VARCHAR(16);
+    the_capsule_type VARCHAR(16);
+    replacement_capsule_id INTEGER;
+BEGIN
+    -- CHECK CAPSULE STATUS
+    SELECT status INTO the_capsule_status FROM capsules WHERE capsule_id = the_capsule_id;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Capsule with id % not found', the_capsule_id;
+    END IF;
+
+    IF the_capsule_status = 'Under repair' THEN
+        RAISE EXCEPTION 'Capsule with id % is already under repair', the_capsule_id;
+    END IF;
+
+    -- IF CAPSULE IS IN USE, CHECK FOR REPLACEMENT CAPSULE (HAS TO BE FREE)
+    IF the_capsule_status = 'In use' THEN
+        SELECT type INTO the_capsule_type FROM capsules WHERE capsule_id = the_capsule_id;
+        SELECT capsule_id INTO replacement_capsule_id FROM capsules
+        WHERE type = the_capsule_type AND status = 'Operational' LIMIT 1;
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No replacement capsule of type % found', the_capsule_type;
+        END IF;
+        -- UPDATE REPLACEMENT CAPSULE STATUS
+        UPDATE capsules SET status = 'In use' WHERE capsule_id = replacement_capsule_id;
+        -- UPDATE SCHEDULE
+        UPDATE schedule SET referred_capsule_id = replacement_capsule_id WHERE referred_capsule_id = the_capsule_id;
+    END IF;
+
+    -- IF REPARIER ID IS NULL, ASSIGN THE CAPSULE SERVICING DEPOT
+    IF repairer_id IS NULL THEN
+        SELECT servicing_depot_id INTO repairer_id FROM capsules WHERE capsule_id = the_capsule_id;
+    END IF;
+
+    -- UPDATE CAPSULE STATUS
+    UPDATE capsules SET status = 'Under repair' WHERE capsule_id = the_capsule_id;
+    INSERT INTO repairs_history (referred_capsule_id, date_start, performing_depot_id)
+    VALUES (the_capsule_id, current_date, repairer_id);
+END;
+$$;
