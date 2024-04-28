@@ -104,3 +104,119 @@ BEGIN
     VALUES (capsule_model, capsule_producer, capsule_type, capsule_seats, capsule_cargo_space, capsule_servicing_depot_id);
 END;
 $$;
+
+CREATE OR REPLACE PROCEDURE add_schedule (
+    IN station_names VARCHAR(32)[],
+    IN starting_time TIME,
+    IN capsule_type VARCHAR(16),
+    IN both_ways BOOLEAN DEFAULT TRUE
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    picked_capsule_id INTEGER;
+    station_ids INTEGER[];
+    curr_station_id INTEGER;
+    station_count INTEGER;
+    travel_times TIME[];
+    travel_time TIME;
+    departure_times TIME[];
+    arrival_times TIME[];
+    last_schedule_id INTEGER;
+BEGIN
+    -- CHECK PARAMETERS
+    IF station_names IS NULL OR array_length(station_names, 1) < 2 THEN
+        RAISE EXCEPTION 'At least two cities must be provided';
+    END IF;
+
+    -- CHECK IF TYPE IS CORRECT
+    IF capsule_type NOT IN ('Passenger', 'Hybrid', 'Cargo') THEN
+        RAISE EXCEPTION 'Invalid capsule type';
+    END IF;
+
+    -- CHECK FOR FREE CAPSULE
+    SELECT capsule_id INTO picked_capsule_id FROM capsules
+    WHERE type = capsule_type AND status = 'Operational';
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'No free capsule of type % found', capsule_type;
+    END IF;
+
+    -- SELECT station IDS
+    station_count = array_length(station_names, 1);
+    FOR i IN 1..station_count LOOP
+        SELECT station_id INTO curr_station_id FROM stations WHERE name = station_names[i];
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'station % not found', station_names[i];
+        END IF;
+        station_ids = station_ids || curr_station_id;
+    END LOOP;
+
+    -- CHECK IF STATIONS ARE CONNECTED BY TUBES + GET TIMES
+    FOR i IN 1..station_count - 1 LOOP
+        SELECT date_trunc('minute', estimated_travel_time + interval '1 minute') INTO travel_time FROM tubes
+        WHERE starting_station_id = station_ids[i] AND ending_station_id = station_ids[i + 1];
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'Stations % and % are not connected', station_names[i], station_names[i + 1];
+        END IF;
+        travel_times = travel_times || travel_time;
+    end loop;
+
+    travel_time = starting_time;
+    -- CONSTRUCT DEPARTURE AND ARRIVAL TIMES
+    FOR i in 1..station_count - 1 LOOP
+        departure_times = departure_times || travel_time;
+        -- CHECK FOR COLLISION
+        SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i]
+        AND next_station_id = station_ids[i + 1] AND departure_time = departure_times[i];
+        LOOP
+            EXIT WHEN curr_station_id IS NULL;
+            -- MOVE DEPARTURE TIME BY 1 MINUTE
+            departure_times[i] = departure_times[i] + interval '1 minute';
+            SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i]
+            AND next_station_id = station_ids[i + 1] AND departure_time = departure_times[i];
+        END LOOP;
+        -- ADD ARRIVAL TIME
+        arrival_times = arrival_times || (departure_times[i] + travel_times[i]::interval);
+        -- UPDATE TRAVEL TIME
+        travel_time = arrival_times[i] + interval '1 minute';
+    END LOOP;
+
+    -- UPDATE CAPSULE STATUS
+    UPDATE capsules SET status = 'In use' WHERE capsule_id = picked_capsule_id;
+    -- INSERT SCHEDULE
+    last_schedule_id = NULL;
+    FOR i IN 1..station_count - 1 LOOP
+        INSERT INTO schedule (departure_time, arrival_time, referred_capsule_id, current_station_id, next_station_id, previous_schedule_id)
+        values (departure_times[i], arrival_times[i], picked_capsule_id, station_ids[i], station_ids[i + 1], last_schedule_id)
+        RETURNING schedule_id INTO last_schedule_id;
+    END LOOP;
+
+    -- ANALOGICALLY CREATE RETURN TRIP
+    IF both_ways IS TRUE THEN
+        FOR i in 1..station_count - 1 LOOP
+            departure_times = departure_times || travel_time;
+            -- CHECK FOR COLLISION
+            SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i + 1]
+            AND next_station_id = station_ids[i] AND departure_time = departure_times[i + station_count - 1];
+            LOOP
+                EXIT WHEN curr_station_id IS NULL;
+                -- MOVE DEPARTURE TIME BY 1 MINUTE
+                departure_times[i + station_count - 1] = departure_times[i + station_count - 1] + interval '1 minute';
+                SELECT schedule_id INTO curr_station_id FROM schedule WHERE current_station_id = station_ids[i + 1]
+                AND next_station_id = station_ids[i] AND departure_time = departure_times[i + station_count - 1];
+            END LOOP;
+            -- ADD ARRIVAL TIME
+            arrival_times = arrival_times || (departure_times[i + station_count - 1] + travel_times[station_count - i]::interval);
+            -- UPDATE TRAVEL TIME
+            travel_time = arrival_times[i + station_count - 1] + interval '1 minute';
+        END LOOP;
+
+        last_schedule_id = NULL;
+        FOR i IN 1..station_count - 1 LOOP
+            INSERT INTO schedule (departure_time, arrival_time, referred_capsule_id, current_station_id, next_station_id, previous_schedule_id)
+            values (departure_times[i + station_count - 1], arrival_times[i + station_count - 1], picked_capsule_id, station_ids[station_count - i + 1], station_ids[station_count - i], last_schedule_id)
+            RETURNING schedule_id INTO last_schedule_id;
+        END LOOP;
+    END IF;
+END;
+$$;
