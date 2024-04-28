@@ -240,3 +240,25 @@ BEGIN
     END IF;
 END;
 $$;
+
+CREATE OR REPLACE PROCEDURE finish_repair(
+    IN the_capsule_id INTEGER
+)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- CHECK IF CAPSULE EXISTS
+    IF NOT EXISTS (SELECT 1 FROM capsules WHERE capsule_id = the_capsule_id) THEN
+        RAISE EXCEPTION 'Capsule with id % not found', the_capsule_id;
+    END IF;
+
+    -- CHECK IF CAPSULE IS IN REPAIR
+    IF NOT EXISTS (SELECT 1 FROM capsules WHERE capsule_id = the_capsule_id AND status = 'Under repair') THEN
+        RAISE EXCEPTION 'Capsule with id % is not in repair', the_capsule_id;
+    END IF;
+
+    -- UPDATE CAPSULE STATUS
+    UPDATE capsules SET status = 'Operational' WHERE capsule_id = the_capsule_id;
+    UPDATE repairs_history SET date_end = current_date WHERE referred_capsule_id = the_capsule_id AND date_end IS NULL;
+END;
+$$;
