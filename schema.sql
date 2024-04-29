@@ -79,8 +79,8 @@ CREATE TABLE hyperloop.public.Station_logs (
 
 CREATE TABLE hyperloop.public.Trips_history (
                                Ride_ID             serial constraint trips_history_pk primary key,
-                               Date_start          DATE NOT NULL,
-                               Date_end            DATE NOT NULL,
+                               Date_start          TIMESTAMP NOT NULL,
+                               Date_end            TIMESTAMP NOT NULL,
                                Tickets_sold        INTEGER NOT NULL check ( tickets_sold >= 0 ),
                                Cargo               TEXT,
                                Cargo_weight        INTEGER NOT NULL check ( cargo_weight >= 0 ),
