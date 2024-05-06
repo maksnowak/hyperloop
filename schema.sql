@@ -2,7 +2,8 @@ CREATE TABLE hyperloop.public.Capsules (
                          Capsule_ID         serial constraint capsule_pk primary key,
                          Model              VARCHAR(32) NOT NULL,
                          Producer           VARCHAR(32) NOT NULL,
-                         Status             VARCHAR(32) NOT NULL,
+                         Status             VARCHAR(16) NOT NULL default ('Operational') check ( status in ('In use', 'Operational', 'Under repair') ),
+                         Type               VARCHAR(16) NOT NULL check ( type in ('Passenger', 'Hybrid', 'Cargo') ),
                          Seats              INTEGER NOT NULL check ( Seats >= 0 ),
                          Cargo_space        INTEGER NOT NULL CHECK ( Cargo_space >= 0 ),
                          Servicing_depot_ID INTEGER NOT NULL
@@ -41,20 +42,21 @@ CREATE TABLE hyperloop.public.Remote_access_units (
 
 CREATE TABLE hyperloop.public.Repairs_history (
                                  Repair_ID           serial constraint repairs_history_pk primary key,
-                                 Date_start          DATE NOT NULL,
-                                 Date_end            DATE NOT NULL DEFAULT (now()),
+                                 Date_start          DATE NOT NULL DEFAULT (now()),
+                                 Date_end            DATE,
                                  Referred_capsule_ID INTEGER NOT NULL,
                                  Performing_depot_ID INTEGER NOT NULL
 );
 
 CREATE TABLE hyperloop.public.Schedule (
-                          Schedule_ID         serial constraint schedule_pk primary key,
-                          Arrival_time        TIMESTAMP NOT NULL,
-                          Departure_time      TIMESTAMP NOT NULL,
-                          Status              VARCHAR(32) NOT NULL default ('Active') check ( status in ('Active', 'Not used') ),
-                          Referred_capsule_ID INTEGER NOT NULL,
-                          Current_station_ID  INTEGER NOT NULL,
-                          Next_station_ID     INTEGER NOT NULL
+                          Schedule_ID           serial constraint schedule_pk primary key,
+                          Departure_time        TIME NOT NULL,
+                          Arrival_time          TIME NOT NULL,
+                          Status                VARCHAR(32) NOT NULL default ('Active') check ( status in ('Active', 'Not used') ),
+                          Referred_capsule_ID   INTEGER NOT NULL,
+                          Current_station_ID    INTEGER NOT NULL,
+                          Next_station_ID       INTEGER NOT NULL,
+                          Previous_schedule_ID  INTEGER check ( Previous_schedule_ID != Schedule.Schedule_ID )
 );
 
 ALTER TABLE hyperloop.public.Schedule
@@ -65,7 +67,7 @@ CREATE TABLE hyperloop.public.Stations (
                          Name       VARCHAR(32) NOT NULL,
                          Latitude   NUMERIC(9, 6) NOT NULL check ( Latitude >= -90 and Latitude <= 90 ),
                          Longitude  NUMERIC(9, 6) NOT NULL check ( Longitude >= -180 and Longitude <= 180 ),
-                         Platforms  INTEGER NOT NULL check ( Platforms > 0 )
+                         Platforms  INTEGER NOT NULL DEFAULT 0 check ( Platforms >= 0 )
 );
 
 CREATE TABLE hyperloop.public.Station_logs (
@@ -77,8 +79,8 @@ CREATE TABLE hyperloop.public.Station_logs (
 
 CREATE TABLE hyperloop.public.Trips_history (
                                Ride_ID             serial constraint trips_history_pk primary key,
-                               Date_start          DATE NOT NULL,
-                               Date_end            DATE NOT NULL,
+                               Date_start          TIMESTAMP NOT NULL,
+                               Date_end            TIMESTAMP NOT NULL,
                                Tickets_sold        INTEGER NOT NULL check ( tickets_sold >= 0 ),
                                Cargo               TEXT,
                                Cargo_weight        INTEGER NOT NULL check ( cargo_weight >= 0 ),
@@ -88,10 +90,10 @@ CREATE TABLE hyperloop.public.Trips_history (
 
 CREATE TABLE hyperloop.public.Tubes (
                       Tube_ID               serial constraint tube_pk primary key,
-                      Name                  VARCHAR(32) NOT NULL,
+                      Name                  VARCHAR(65) NOT NULL,
                       Length                NUMERIC NOT NULL check ( Length > 0 ),
-                      Max_speed             NUMERIC(7, 3) NOT NULL check ( Max_speed > 0 ),
-                      Estimated_travel_time DATE NOT NULL,
+                      Max_speed             NUMERIC(7, 3) NOT NULL DEFAULT 1200 check ( Max_speed > 0 ),
+                      Estimated_travel_time TIME NOT NULL,
                       Starting_station_ID   INTEGER NOT NULL,
                       Ending_station_ID     INTEGER NOT NULL
 );
@@ -170,6 +172,10 @@ ALTER TABLE hyperloop.public.Tubes
 ALTER TABLE hyperloop.public.Tubes
     ADD CONSTRAINT tube_starting_station_fk FOREIGN KEY ( Starting_station_ID )
         REFERENCES Stations ( Station_ID );
+
+ALTER TABLE hyperloop.public.schedule
+    ADD CONSTRAINT schedule_previous_schedule_fk FOREIGN KEY ( Previous_schedule_ID )
+        REFERENCES Schedule ( Schedule_ID );
 
 CREATE OR REPLACE VIEW hyperloop.public.Pressure_view ( Data_ID, Time_of_measurement, Pressure, Referred_tube_ID ) AS
 SELECT

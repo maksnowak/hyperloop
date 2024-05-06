@@ -31,7 +31,8 @@ model capsules {
   capsule_id              Int                       @id(map: "capsule_pk") @default(autoincrement())
   model                   String                    @db.VarChar(32)
   producer                String                    @db.VarChar(32)
-  status                  String                    @db.VarChar(32)
+  status                  String                    @default("Operational") @db.VarChar(16)
+  type                    String                    @db.VarChar(16)
   seats                   Int
   cargo_space             Int
   servicing_depot_id      Int
@@ -65,27 +66,30 @@ model remote_access_units {
 }
 
 model repairs_history {
-  repair_id           Int      @id(map: "repairs_history_pk") @default(autoincrement())
-  date_start          DateTime @db.Date
-  date_end            DateTime @default(now()) @db.Date
+  repair_id           Int       @id(map: "repairs_history_pk") @default(autoincrement())
+  date_start          DateTime  @default(now()) @db.Date
+  date_end            DateTime? @db.Date
   referred_capsule_id Int
   performing_depot_id Int
-  depots              depots   @relation(fields: [performing_depot_id], references: [depot_id], onDelete: NoAction, onUpdate: NoAction, map: "history_performing_depot_fk")
-  capsules            capsules @relation(fields: [referred_capsule_id], references: [capsule_id], onDelete: NoAction, onUpdate: NoAction, map: "history_referred_capsule_fkv2")
+  depots              depots    @relation(fields: [performing_depot_id], references: [depot_id], onDelete: NoAction, onUpdate: NoAction, map: "history_performing_depot_fk")
+  capsules            capsules  @relation(fields: [referred_capsule_id], references: [capsule_id], onDelete: NoAction, onUpdate: NoAction, map: "history_referred_capsule_fkv2")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model schedule {
-  schedule_id                                    Int      @id(map: "schedule_pk") @default(autoincrement())
-  arrival_time                                   DateTime @db.Timestamp(6)
-  departure_time                                 DateTime @db.Timestamp(6)
-  status                                         String   @default("Active") @db.VarChar(32)
+  schedule_id                                    Int        @id(map: "schedule_pk") @default(autoincrement())
+  departure_time                                 DateTime   @db.Time(6)
+  arrival_time                                   DateTime   @db.Time(6)
+  status                                         String     @default("Active") @db.VarChar(32)
   referred_capsule_id                            Int
   current_station_id                             Int
   next_station_id                                Int
-  stations_schedule_current_station_idTostations stations @relation("schedule_current_station_idTostations", fields: [current_station_id], references: [station_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_current_station_fk")
-  stations_schedule_next_station_idTostations    stations @relation("schedule_next_station_idTostations", fields: [next_station_id], references: [station_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_next_station_fk")
-  capsules                                       capsules @relation(fields: [referred_capsule_id], references: [capsule_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_referred_capsule_fk")
+  previous_schedule_id                           Int?
+  stations_schedule_current_station_idTostations stations   @relation("schedule_current_station_idTostations", fields: [current_station_id], references: [station_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_current_station_fk")
+  stations_schedule_next_station_idTostations    stations   @relation("schedule_next_station_idTostations", fields: [next_station_id], references: [station_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_next_station_fk")
+  schedule                                       schedule?  @relation("scheduleToschedule", fields: [previous_schedule_id], references: [schedule_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_previous_schedule_fk")
+  other_schedule                                 schedule[] @relation("scheduleToschedule")
+  capsules                                       capsules   @relation(fields: [referred_capsule_id], references: [capsule_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_referred_capsule_fk")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -103,7 +107,7 @@ model stations {
   name                                           String         @db.VarChar(32)
   latitude                                       Decimal        @db.Decimal(9, 6)
   longitude                                      Decimal        @db.Decimal(9, 6)
-  platforms                                      Int
+  platforms                                      Int            @default(0)
   schedule_schedule_current_station_idTostations schedule[]     @relation("schedule_current_station_idTostations")
   schedule_schedule_next_station_idTostations    schedule[]     @relation("schedule_next_station_idTostations")
   station_logs                                   station_logs[]
@@ -114,8 +118,8 @@ model stations {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model trips_history {
   ride_id             Int      @id(map: "trips_history_pk") @default(autoincrement())
-  date_start          DateTime @db.Date
-  date_end            DateTime @db.Date
+  date_start          DateTime @db.Timestamp(6)
+  date_end            DateTime @db.Timestamp(6)
   tickets_sold        Int
   cargo               String?
   cargo_weight        Int
@@ -128,10 +132,10 @@ model trips_history {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model tubes {
   tube_id                                      Int                       @id(map: "tube_pk") @default(autoincrement())
-  name                                         String                    @db.VarChar(32)
+  name                                         String                    @db.VarChar(65)
   length                                       Decimal                   @db.Decimal
-  max_speed                                    Decimal                   @db.Decimal(7, 3)
-  estimated_travel_time                        DateTime                  @db.Date
+  max_speed                                    Decimal                   @default(1200) @db.Decimal(7, 3)
+  estimated_travel_time                        DateTime                  @db.Time(6)
   starting_station_id                          Int
   ending_station_id                            Int
   capsule_location_events                      capsule_location_events[]
