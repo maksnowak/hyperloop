@@ -1,13 +1,33 @@
 import Sidebar from "@/components/sidebar";
-import React from "react";
+import React, { useMemo } from "react";
 import "../globals.css";
+import dynamic from "next/dynamic";
+import { PrismaClient } from "@prisma/client";
 
-const Map = () => {
+const prisma = new PrismaClient();
+
+const Map = async () => {
+  const MapComponent = useMemo(
+    () =>
+      dynamic(() => import("@/components/map"), {
+        loading: () => <p>A map is loading</p>,
+        ssr: false,
+      }),
+    []
+  );
+
+  const capsule_location_events =
+    await prisma.capsule_location_events.findMany();
+
   return (
-    <>
-      <Sidebar />
-      <div className="text-center">Map</div>;
-    </>
+    <div className="relative">
+      <div className="">
+        <Sidebar />
+      </div>
+      <div className="ml-32">
+        <MapComponent cle={capsule_location_events} />
+      </div>
+    </div>
   );
 };
 
