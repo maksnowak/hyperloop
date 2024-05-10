@@ -10,7 +10,7 @@ export default async function Home() {
 		<div>
 			<h1>🤡 ZBAZOWANE DANE TO JEST TEST 🤡</h1>
 			{capsules.map((capsule) => (
-				<div>
+				<div key={capsule.capsule_id}>
 					<div>=========</div>
 					<div>Capsule ID: {capsule.capsule_id}</div>
 					<div>Model: {capsule.model}</div>
@@ -23,3 +23,5 @@ export default async function Home() {
 		</div>
 	);
 }
+
+export const dynamic = 'force-dynamic';
