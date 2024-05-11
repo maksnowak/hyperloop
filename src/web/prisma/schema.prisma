@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model capsule_location_events {
+  event_id            Int                 @id(map: "capsule_location_events_pk") @default(autoincrement())
+  timestamp           DateTime            @default(now()) @db.Timestamp(6)
+  latitude            Decimal             @db.Decimal(9, 6)
+  longitude           Decimal             @db.Decimal(9, 6)
+  speed               Decimal             @db.Decimal(7, 3)
+  interior_conditions String?             @db.VarChar(32)
+  signal_strength     Decimal             @db.Decimal(5, 2)
+  operational_status  String?             @db.VarChar(32)
+  health_status       String?             @db.VarChar(32)
+  referred_capsule_id Int
+  referred_tube_id    Int
+  rau_id              Int
+  capsules            capsules            @relation(fields: [referred_capsule_id], references: [capsule_id], onDelete: NoAction, onUpdate: NoAction, map: "events_referred_capsule_fk")
+  remote_access_units remote_access_units @relation(fields: [rau_id], references: [unit_id], onDelete: NoAction, onUpdate: NoAction, map: "events_referred_rau_fk")
+  tubes               tubes               @relation(fields: [referred_tube_id], references: [tube_id], onDelete: NoAction, onUpdate: NoAction, map: "events_referred_tube_fk")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model capsules {
+  capsule_id              Int                       @id(map: "capsule_pk") @default(autoincrement())
+  model                   String                    @db.VarChar(32)
+  producer                String                    @db.VarChar(32)
+  status                  String                    @default("Operational") @db.VarChar(16)
+  type                    String                    @db.VarChar(16)
+  seats                   Int
+  cargo_space             Int
+  servicing_depot_id      Int
+  capsule_location_events capsule_location_events[]
+  depots                  depots                    @relation(fields: [servicing_depot_id], references: [depot_id], onDelete: NoAction, onUpdate: NoAction, map: "capsule_servicing_depot_fk")
+  repairs_history         repairs_history[]
+  schedule                schedule[]
+  trips_history           trips_history[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model depots {
+  depot_id        Int               @id(map: "depot_pk") @default(autoincrement())
+  name            String            @db.VarChar(32)
+  latitude        Decimal           @db.Decimal(9, 6)
+  longitude       Decimal           @db.Decimal(9, 6)
+  capsules        capsules[]
+  repairs_history repairs_history[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model remote_access_units {
+  unit_id                  Int                       @id(map: "remote_access_unit_pk") @default(autoincrement())
+  latitude                 Decimal                   @db.Decimal(9, 6)
+  longitude                Decimal                   @db.Decimal(9, 6)
+  environmental_conditions String?                   @db.VarChar(32)
+  health_status            String?                   @db.VarChar(32)
+  tube_id                  Int
+  capsule_location_events  capsule_location_events[]
+  tubes                    tubes                     @relation(fields: [tube_id], references: [tube_id], onDelete: NoAction, onUpdate: NoAction, map: "remote_access_unit_tube_fk")
+}
+
+model repairs_history {
+  repair_id           Int       @id(map: "repairs_history_pk") @default(autoincrement())
+  date_start          DateTime  @default(now()) @db.Date
+  date_end            DateTime? @db.Date
+  referred_capsule_id Int
+  performing_depot_id Int
+  depots              depots    @relation(fields: [performing_depot_id], references: [depot_id], onDelete: NoAction, onUpdate: NoAction, map: "history_performing_depot_fk")
+  capsules            capsules  @relation(fields: [referred_capsule_id], references: [capsule_id], onDelete: NoAction, onUpdate: NoAction, map: "history_referred_capsule_fkv2")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model schedule {
+  schedule_id                                    Int        @id(map: "schedule_pk") @default(autoincrement())
+  departure_time                                 DateTime   @db.Time(6)
+  arrival_time                                   DateTime   @db.Time(6)
+  status                                         String     @default("Active") @db.VarChar(32)
+  referred_capsule_id                            Int
+  current_station_id                             Int
+  next_station_id                                Int
+  previous_schedule_id                           Int?
+  stations_schedule_current_station_idTostations stations   @relation("schedule_current_station_idTostations", fields: [current_station_id], references: [station_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_current_station_fk")
+  stations_schedule_next_station_idTostations    stations   @relation("schedule_next_station_idTostations", fields: [next_station_id], references: [station_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_next_station_fk")
+  schedule                                       schedule?  @relation("scheduleToschedule", fields: [previous_schedule_id], references: [schedule_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_previous_schedule_fk")
+  other_schedule                                 schedule[] @relation("scheduleToschedule")
+  capsules                                       capsules   @relation(fields: [referred_capsule_id], references: [capsule_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_referred_capsule_fk")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model station_logs {
+  log_id              Int      @id(map: "station_logs_pk") @default(autoincrement())
+  date                DateTime @db.Date
+  passengers_served   Int
+  referred_station_id Int
+  stations            stations @relation(fields: [referred_station_id], references: [station_id], onDelete: NoAction, onUpdate: NoAction, map: "logs_referred_station_fk")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model stations {
+  station_id                                     Int            @id(map: "station_pk") @default(autoincrement())
+  name                                           String         @db.VarChar(32)
+  latitude                                       Decimal        @db.Decimal(9, 6)
+  longitude                                      Decimal        @db.Decimal(9, 6)
+  platforms                                      Int            @default(0)
+  schedule_schedule_current_station_idTostations schedule[]     @relation("schedule_current_station_idTostations")
+  schedule_schedule_next_station_idTostations    schedule[]     @relation("schedule_next_station_idTostations")
+  station_logs                                   station_logs[]
+  tubes_tubes_ending_station_idTostations        tubes[]        @relation("tubes_ending_station_idTostations")
+  tubes_tubes_starting_station_idTostations      tubes[]        @relation("tubes_starting_station_idTostations")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model trips_history {
+  ride_id             Int      @id(map: "trips_history_pk") @default(autoincrement())
+  date_start          DateTime @db.Timestamp(6)
+  date_end            DateTime @db.Timestamp(6)
+  tickets_sold        Int
+  cargo               String?
+  cargo_weight        Int
+  referred_capsule_id Int
+  referred_tube_id    Int
+  capsules            capsules @relation(fields: [referred_capsule_id], references: [capsule_id], onDelete: NoAction, onUpdate: NoAction, map: "history_referred_capsule_fk")
+  tubes               tubes    @relation(fields: [referred_tube_id], references: [tube_id], onDelete: NoAction, onUpdate: NoAction, map: "history_referred_tube_fk")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tubes {
+  tube_id                                      Int                       @id(map: "tube_pk") @default(autoincrement())
+  name                                         String                    @db.VarChar(65)
+  length                                       Decimal                   @db.Decimal
+  max_speed                                    Decimal                   @default(1200) @db.Decimal(7, 3)
+  estimated_travel_time                        DateTime                  @db.Time(6)
+  starting_station_id                          Int
+  ending_station_id                            Int
+  capsule_location_events                      capsule_location_events[]
+  remote_access_units                          remote_access_units[]
+  trips_history                                trips_history[]
+  stations_tubes_ending_station_idTostations   stations                  @relation("tubes_ending_station_idTostations", fields: [ending_station_id], references: [station_id], onDelete: NoAction, onUpdate: NoAction, map: "tube_ending_station_fk")
+  stations_tubes_starting_station_idTostations stations                  @relation("tubes_starting_station_idTostations", fields: [starting_station_id], references: [station_id], onDelete: NoAction, onUpdate: NoAction, map: "tube_starting_station_fk")
+  tubes_data                                   tubes_data[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tubes_data {
+  data_id             Int      @id(map: "tube_data_pk") @default(autoincrement())
+  time_of_measurement DateTime @db.Date
+  pressure            Decimal? @db.Decimal(8, 3)
+  generated_power     Decimal? @db.Decimal(8, 3)
+  referred_tube_id    Int
+  tubes               tubes    @relation(fields: [referred_tube_id], references: [tube_id], onDelete: NoAction, onUpdate: NoAction, map: "data_referred_tube_fk")
+}
