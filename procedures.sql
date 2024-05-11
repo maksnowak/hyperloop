@@ -372,3 +372,44 @@ BEGIN
     VALUES (the_start_date, the_end_date, sold_tickets, cargo_content, weight_of_cargo, the_capsule_id, the_tube_id);
 END;
 $$;
+
+-- Passenger flow function + type
+CREATE TYPE passenger_flow_type AS (
+    trips_in INTEGER,
+    trips_out INTEGER,
+    passengers_in INTEGER,
+    passengers_out INTEGER
+);
+
+CREATE OR REPLACE FUNCTION passenger_flow(
+    IN station_name VARCHAR(32),
+    IN start_date TIMESTAMP,
+    IN end_date TIMESTAMP
+)
+    RETURNS passenger_flow_type
+    LANGUAGE plpgsql
+AS $$
+    DECLARE
+        the_station_id INTEGER;
+        result passenger_flow_type;
+    BEGIN
+        -- CHECK IF STATION EXISTS
+        SELECT station_id INTO the_station_id FROM stations WHERE name = station_name;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'Station % not found', station_name;
+        END IF;
+
+        -- COUNT TRIPS IN AND TICKECTS SOLD IN
+        SELECT COUNT(*), SUM(tickets_sold) INTO result.trips_in, result.passengers_in FROM trips_history
+        WHERE referred_tube_id IN (SELECT tube_id FROM tubes WHERE ending_station_id = the_station_id)
+        AND date_end BETWEEN start_date AND end_date;
+
+        -- COUNT TRIPS OUT AND TICKECTS SOLD OUT
+        SELECT COUNT(*), SUM(tickets_sold) INTO result.trips_out, result.passengers_out FROM trips_history
+        WHERE referred_tube_id IN (SELECT tube_id FROM tubes WHERE starting_station_id = the_station_id)
+        AND date_start BETWEEN start_date AND end_date;
+
+        RETURN result;
+    end;
+$$
