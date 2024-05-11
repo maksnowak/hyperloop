@@ -19,13 +19,25 @@ const Map = async () => {
   const capsule_location_events =
     await prisma.capsule_location_events.findMany();
 
+  const depots = await prisma.depots.findMany();
+
+  const stations = await prisma.stations.findMany();
+
+  const tubes = await prisma.tubes.findMany();
+
+  console.log(depots);
   return (
     <div className="relative">
       <div className="">
         <Sidebar />
       </div>
       <div className="ml-32">
-        <MapComponent cle={capsule_location_events} />
+        <MapComponent
+          cle={capsule_location_events}
+          depots={depots}
+          stations={stations}
+          tubes={tubes}
+        />
       </div>
     </div>
   );
