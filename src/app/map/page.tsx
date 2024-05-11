@@ -2,9 +2,7 @@ import Sidebar from "@/components/sidebar";
 import React, { useMemo } from "react";
 import "../globals.css";
 import dynamic from "next/dynamic";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../client";
 
 const Map = async () => {
   const MapComponent = useMemo(

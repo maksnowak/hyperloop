@@ -1,17 +1,15 @@
 import React from "react";
 import "../globals.css";
 import Sidebar from "@/components/sidebar";
-import { PrismaClient } from "@prisma/client";
 import Depot from "@/components/depot";
-
-const prisma = new PrismaClient();
+import prisma from "../client";
 
 const Depots = async () => {
   const depots = await prisma.depots.findMany();
 
   return (
     <>
-      <div className="text-center">Depots</div>
+      <h1 className="text-center">Depots</h1>
       <div className="relative">
         <Sidebar />
         <div className="ml-64 static grid grid-cols-3 inset-y-0 right-0 gap-y-8">
