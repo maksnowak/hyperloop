@@ -1,10 +1,8 @@
-import Sidebar from "@/components/sidebar";
 import React from "react";
 import "../globals.css";
-import { PrismaClient } from "@prisma/client";
+import Sidebar from "@/components/sidebar";
 import Capsule from "@/components/capsule";
-
-const prisma = new PrismaClient();
+import prisma from "../client";
 
 const Capsules = async () => {
   const capsules = await prisma.capsules.findMany();

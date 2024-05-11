@@ -1,10 +1,8 @@
-import Sidebar from "@/components/sidebar";
-import "../../globals.css";
 import React from "react";
-import { PrismaClient } from "@prisma/client";
+import "../../globals.css";
+import Sidebar from "@/components/sidebar";
 import Repair from "@/components/repair";
-
-const prisma = new PrismaClient();
+import prisma from "../../client";
 
 const CapsulePage = async ({ params }: { params: { id: string } }) => {
   const repairs = await prisma.repairs_history.findMany({
