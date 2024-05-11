@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import React from "react";
+import prisma from "../app/client";
 
 interface RepairProps {
   repair_id: number;
@@ -8,8 +8,6 @@ interface RepairProps {
   referred_capsule_id: number;
   performing_depot_id: number;
 }
-
-const prisma = new PrismaClient();
 
 const Repair = async ({
   repair_id,
@@ -24,7 +22,7 @@ const Repair = async ({
   return (
     <div>
       <a href={`/depots/${performing_depot_id}`}>
-        <button className="w-1/3 rounded-lg bg-gray-600 text-white ring-3 hover:bg-gray-900 hover:rounded-3xl">
+        <button className="hyperloop-item w-1/5">
           <h3 className="text-center">{repair_id}</h3>
           <p>Start date : {date_start.toDateString()}</p>
           <p>End date: {date_end?.toDateString() ?? "N/A"}</p>
