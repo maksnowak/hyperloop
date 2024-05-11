@@ -12,9 +12,9 @@ const ReportTopBar = ({type, target}: ReportTopBarProps) => {
         <div>
             <h1>Hyperloop</h1>
             <h2>Report for {type}: {target}</h2>
-            <h5>Generated: {date.toLocaleString("pl-PL")}</h5>
+            <h5 suppressHydrationWarning>Generated: {date.toLocaleString("pl-PL")}</h5>
         </div>
-    )
+    ); // bez suppressHydrationWarning strona wyrzuca error że data różni się między serwerem a klientem
 };
 
 export default ReportTopBar;
