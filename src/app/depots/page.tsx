@@ -12,7 +12,7 @@ const Depots = async () => {
       <h1 className="text-center">Depots</h1>
       <div className="relative">
         <Sidebar />
-        <div className="ml-64 static grid grid-cols-3 inset-y-0 right-0 gap-y-8">
+        <div className="hyperloop-grid">
           {depots.map((depot) => {
             return <Depot key={depot.depot_id} {...depot} />;
           })}
