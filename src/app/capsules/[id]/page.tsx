@@ -10,16 +10,19 @@ const CapsulePage = async ({ params }: { params: { id: string } }) => {
       referred_capsule_id: Number(params.id),
     },
   });
-  console.log(repairs);
+  const depots = await Promise.all(
+    repairs.map(async (r) => await prisma.depots.findFirst({
+      where: { depot_id: r.performing_depot_id },
+    }))
+  );
+
   return (
     <div>
       <Sidebar />
       <h1 className="text-center bold">Capsule number {params.id}</h1>
-      <div className="ml-64 static grid grid-cols-3 inset-y-0 right-0 gap-y-8">
-        {repairs.map((repair) => {
-          return <Repair key={repair.repair_id} {...repair} />;
+        {repairs.map((r, i) => {
+          return <Repair repair={r} depot={depots[i]} />;
         })}
-      </div>
     </div>
   );
 };
