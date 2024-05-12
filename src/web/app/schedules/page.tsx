@@ -6,7 +6,7 @@ const Schedules = () => {
   return (
     <>
       <Sidebar />
-      <div className="text-center">Schedules</div>;
+      <h1 className="text-center">Schedules</h1>
     </>
   );
 };

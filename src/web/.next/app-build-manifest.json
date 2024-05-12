@@ -1,0 +1,39 @@
+{
+  "pages": {
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/css-app_globals_css-node_modules_leaflet_dist_leaflet_css.css",
+      "static/chunks/app/page.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/layout.js"
+    ],
+    "/depots/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/css-app_globals_css-node_modules_leaflet_dist_leaflet_css.css",
+      "static/chunks/app/depots/page.js"
+    ],
+    "/schedules/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/css-app_globals_css-node_modules_leaflet_dist_leaflet_css.css",
+      "static/chunks/app/schedules/page.js"
+    ],
+    "/capsules/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/css-app_globals_css-node_modules_leaflet_dist_leaflet_css.css",
+      "static/chunks/app/capsules/page.js"
+    ],
+    "/repairs/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/css-app_globals_css-node_modules_leaflet_dist_leaflet_css.css",
+      "static/chunks/app/repairs/page.js"
+    ]
+  }
+}

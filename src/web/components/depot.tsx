@@ -2,7 +2,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import React from "react";
 
-interface DepotProps {
+export interface DepotProps {
   depot_id: number;
   name: string;
   latitude: Decimal;
