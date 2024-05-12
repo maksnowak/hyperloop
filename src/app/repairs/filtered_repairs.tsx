@@ -20,7 +20,7 @@ const FilteredRepairs = (props: {
       return (isNaN(from) || r.date_start.getTime() >= from.getTime()) &&
         (isNaN(to) || (r.date_end != null && r.date_end.getTime() <= to.getTime())) &&
         (depot == "" || depot == props.depots[i].name) &&
-        (isNaN(capsule_no) || capsule_no == props.capsules[i].capsule_id);
+        (capsule_no == "" || capsule_no == props.capsules[i].capsule_id);
     }))
   }
   const [repairs, set_repairs] = useState(props.repairs);
