@@ -11,13 +11,18 @@ const Repairs = async () => {
       where: { depot_id: r.performing_depot_id },
     }))
   );
+  const capsules = await Promise.all(
+    depots.map(async (d) => await prisma.capsules.findFirst({
+      where: { servicing_depot_id: d.depot_id },
+    }))
+  );
 
   return (
     <>
       <Sidebar />
       <h1 className="text-center bold">Repair History</h1>
 
-      <FilteredRepairs repairs={repairs} depots={depots} />
+      <FilteredRepairs repairs={repairs} depots={depots} capsules={capsules}/>
     </>
   )
 };

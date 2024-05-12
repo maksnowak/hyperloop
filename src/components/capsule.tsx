@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-interface CapsuleProps {
+export interface CapsuleProps {
   capsule_id: number;
   model: string;
   producer: string;
