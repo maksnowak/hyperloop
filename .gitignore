@@ -2,20 +2,19 @@
 
 # dependencies
 node_modules
-src/.pnp
+src/web/.pnp
 .pnp.js
 .yarn/install-state.gz
 
 # testing
-src/coverage
+src/web/coverage
 
 # next.js
-src/.next/
 src/web/.next/
-src/out/
+src/web/out/
 
 # production
-src/build
+src/web/build
 
 # misc
 .DS_Store
