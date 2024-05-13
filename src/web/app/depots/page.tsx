@@ -2,7 +2,7 @@ import React from "react";
 import "../globals.css";
 import Sidebar from "@/components/sidebar";
 import Depot from "@/components/depot";
-import prisma from "../client";
+import prisma from "../../client";
 
 const Depots = async () => {
   const depots = await prisma.depots.findMany();

@@ -2,7 +2,7 @@ import Sidebar from "@/components/sidebar";
 import React, { useMemo } from "react";
 import "../globals.css";
 import dynamic from "next/dynamic";
-import prisma from "../client";
+import prisma from "../../client";
 
 const Map = async () => {
   const MapComponent = useMemo(

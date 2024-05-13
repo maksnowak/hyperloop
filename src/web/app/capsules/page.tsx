@@ -2,7 +2,7 @@ import React from "react";
 import "../globals.css";
 import Sidebar from "@/components/sidebar";
 import Capsule from "@/components/capsule";
-import prisma from "../client";
+import prisma from "../../client";
 
 const Capsules = async () => {
   const capsules = await prisma.capsules.findMany();

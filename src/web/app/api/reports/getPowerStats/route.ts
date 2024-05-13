@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/app/client";
+import prisma from "@/client";
 
 type ReposnseData = {
     data: Object[];

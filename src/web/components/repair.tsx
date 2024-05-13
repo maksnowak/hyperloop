@@ -1,5 +1,5 @@
 import React from "react";
-import prisma from "../app/client";
+import prisma from "../client";
 
 interface RepairProps {
   repair_id: number;
