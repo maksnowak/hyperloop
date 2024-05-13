@@ -10,20 +10,20 @@ const FilteredRepairs = (props: {
   depots: DepotProps[],
   capsules: CapsuleProps[],
 }) => {
-  const filter_repairs = () => {
-    const from = new Date(document.getElementById("date_from")?.value);
-    const to = new Date(document.getElementById("date_to")?.value);
-    const depot = document.getElementById("depot").value;
-    const capsule_no = document.getElementById("capsule").value;
+  const [from, setFrom] = useState(new String());
+  const [to, setTo] = useState(new String());
+  const [depot, setDepot] = useState(new String());
+  const [capsuleNo, setCapsuleNo] = useState(new String());
+  const [repairs, setRepairs] = useState(props.repairs);
 
-    set_repairs(props.repairs.filter((r, i) => {
-      return (isNaN(from) || r.date_start.getTime() >= from.getTime()) &&
-        (isNaN(to) || (r.date_end != null && r.date_end.getTime() <= to.getTime())) &&
-        (depot == "" || depot == props.depots[i].name) &&
-        (capsule_no == "" || capsule_no == props.capsules[i].capsule_id);
-    }))
+  const getFilteredRepairs = () => {
+    return props.repairs.filter((r, i) =>
+      (from == "" || r.date_start.getTime() >= new Date(from).getTime()) &&
+      (to == "" || (r.date_end != null && r.date_end.getTime() <= new Date(to).getTime())) &&
+      (depot == "" || depot == props.depots[i].name) &&
+      (capsuleNo == "" || new Number(capsuleNo) == props.capsules[i].capsule_id)
+    );
   }
-  const [repairs, set_repairs] = useState(props.repairs);
 
   return (
     <>
@@ -31,20 +31,22 @@ const FilteredRepairs = (props: {
         <label>Search for a repair</label><br />
 
         <label>From</label>
-        <input type="date" id="date_from" onChange={filter_repairs} /><br />
+        <input value={from} type="date" id="date_from" onChange={(e) => setFrom(e.target.value)} /><br />
 
         <label>To</label>
-        <input type="date" id="date_to" onChange={filter_repairs} /><br />
+        <input value={to} type="date" id="date_to" onChange={(e) => setTo(e.target.value)} /><br />
 
         <label>Depot</label>
-        <input type="text" id="depot" onChange={filter_repairs} /> <br />
+        <input value={depot} type="text" id="depot" onChange={(e) => setDepot(e.target.value)} /> <br />
 
         <label>Capsule no.</label>
-        <input type="number" id="capsule" onChange={filter_repairs} /> <br />
+        <input value={capsuleNo} type="number" id="capsule" onChange={(e) => setCapsuleNo(e.target.value)} /> <br />
       </form>
 
       <div>
-        {repairs.map((r) => <Repair repair={r} depot={props.depots.find((d) => d.depot_id == r.performing_depot_id)} />)}
+        {getFilteredRepairs().map((r) => <div key={r.repair_id}>
+          <Repair repair={r} depot={props.depots.find((d) => d.depot_id == r.performing_depot_id)!} />
+        </div>)}
       </div>
     </>
   );

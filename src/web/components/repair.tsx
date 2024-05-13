@@ -11,7 +11,7 @@ export interface RepairProps {
 
 const Repair = (props: {
   repair: RepairProps,
-  depot: DepotProps,
+  depot: DepotProps
 }) => {
   return (
     <div>
