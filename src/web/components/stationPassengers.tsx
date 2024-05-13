@@ -1,35 +1,20 @@
-"use client";
 import React from "react";
 
 const getTableContent = (data: any) => {
-    // ta funkcja będzie się łączyć z prismą żeby pobrać wszystkie elementy danego typu, na razie jest mock 
     var rows = [];
     for (let i = 0; i < data.length; i++) {
         rows.push(
-            <tr key={i}>
+            <tr key={data[i].log_id}>
                 <td>{data[i].date}</td>
-                <td>{data[i].passengers}</td>
+                <td>{data[i].passengers_served}</td>
             </tr>
         );
     }
     return rows;
 }
 
-const StationPassengers = () => {
-    var mock = [
-        {
-            date: "2021-05-01",
-            passengers: 100
-        },
-        {
-            date: "2021-05-02",
-            passengers: 120
-        },
-        {
-            date: "2021-05-03",
-            passengers: 130
-        }
-    ];
+const StationPassengers = async () => {
+    const passengers = await (await fetch("http://localhost:3000/api/reports/getStationPassengers")).json();
     return (
         <div>
             <h3>Passengers</h3>
@@ -41,7 +26,7 @@ const StationPassengers = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {getTableContent(mock)}
+                    {getTableContent(passengers.data)}
                 </tbody>
             </table>
         </div>

@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import Chart, { ChartTypeRegistry } from "chart.js/auto";
 

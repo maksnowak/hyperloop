@@ -1,43 +1,22 @@
-"use client";
 import React from "react";
 
 const getTableContent = (data: any) => {
-    // ta funkcja będzie się łączyć z prismą żeby pobrać wszystkie elementy danego typu, na razie jest mock 
     var rows = [];
     for (let i = 0; i < data.length; i++) {
         rows.push(
-            <tr key={i}>
-                <td>{data[i].entered}</td>
-                <td>{data[i].left}</td>
-                <td>{data[i].capsule}</td>
-                <td>{data[i].travelTime}</td>
+            <tr key={data[i].ride_id}>
+                <td>{data[i].date_start}</td>
+                <td>{data[i].date_end}</td>
+                <td>{data[i].capsules.model} (ID: {data[i].capsules.capsule_id})</td>
+                <td>{data[i].date_end - data[i].date_start}</td>
             </tr>
-        );
+        ); //FIXME: duration returns NaN
     }
     return rows;
 }
 
-const TubeTrips = () => {
-    var mock = [
-        {
-            entered: "2021-05-01 12:00",
-            left: "2021-05-01 14:00",
-            capsule: "1",
-            travelTime: "2h"
-        },
-        {
-            entered: "2021-05-01 16:00",
-            left: "2021-05-01 18:00",
-            capsule: "2",
-            travelTime: "2h"
-        },
-        {
-            entered: "2021-05-01 20:00",
-            left: "2021-05-01 22:00",
-            capsule: "3",
-            travelTime: "2h"
-        }
-    ];
+const TubeTrips = async () => {
+    const trips = await (await fetch("http://localhost:3000/api/reports/getTubeTrips")).json();
     return (
         <div>
             <h3>Trips history</h3>
@@ -51,7 +30,7 @@ const TubeTrips = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {getTableContent(mock)}
+                    {getTableContent(trips.data)}
                 </tbody>
             </table>
         </div>

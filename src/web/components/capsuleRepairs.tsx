@@ -1,39 +1,21 @@
-"use client";
 import React from "react";
 
 const getTableContent = (data: any) => {
-    // ta funkcja będzie się łączyć z prismą żeby pobrać wszystkie elementy danego typu, na razie jest mock 
     var rows = [];
     for (let i = 0; i < data.length; i++) {
         rows.push(
-            <tr key={i}>
-                <td>{data[i].repairStart}</td>
-                <td>{data[i].repairEnd}</td>
-                <td>{data[i].depot}</td>
+            <tr key={data[i].repair_id}>
+                <td>{data[i].date_start.toLocaleString()}</td>
+                <td>{data[i].date_end?.toLocaleString()}</td>
+                <td>{data[i].performing_depot_id}</td>
             </tr>
         );
     }
     return rows;
 }
 
-const CapsuleRepairs = () => {
-    var mock = [
-        {
-            repairStart: "2021-05-01 12:00",
-            repairEnd: "2021-05-01 14:00",
-            depot: "Warszawa"
-        },
-        {
-            repairStart: "2021-05-01 16:00",
-            repairEnd: "2021-05-01 18:00",
-            depot: "Kraków"
-        },
-        {
-            repairStart: "2021-05-01 20:00",
-            repairEnd: "2021-05-01 22:00",
-            depot: "Gdańsk"
-        }
-    ];
+const CapsuleRepairs = async () => {
+    const repairs = await (await fetch("http://localhost:3000/api/reports/getCapsuleRepairs")).json();
     return (
         <div>
             <h3>Repair history</h3>
@@ -46,7 +28,7 @@ const CapsuleRepairs = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {getTableContent(mock)}
+                    {getTableContent(repairs.data)}
                 </tbody>
             </table>
         </div>
