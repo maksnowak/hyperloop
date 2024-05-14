@@ -3,7 +3,7 @@ import "../../globals.css";
 import Sidebar from "@/components/sidebar";
 import Repair from "@/components/repair";
 import prisma from "../../client";
-import RepairActionButton from "@/app/capsules/[id]/repairActionButton";
+import RepairActionButton from "@/components/repairActionButton";
 
 const CapsulePage = async ({ params }: { params: { id: string } }) => {
     var repairs = await prisma.repairs_history.findMany({
