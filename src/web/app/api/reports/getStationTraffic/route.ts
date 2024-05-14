@@ -22,16 +22,16 @@ export async function GET() {
                 select: {
                     stations_tubes_starting_station_idTostations: {
                         select: {
-                            name: true
+                            station_id: true,
                         }
                     },
                     stations_tubes_ending_station_idTostations: {
                         select: {
-                            name: true
+                            station_id: true,
                         }
                     }
                 }
-            }
+            },
         }
     }).then((data) => {
         return NextResponse.json({ data });

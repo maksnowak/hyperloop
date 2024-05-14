@@ -1,12 +1,15 @@
 import React from "react";
 
 const getTableContent = (data: any) => {
+    // FIXME: sort by date_start
     var rows = [];
     for (let i = 0; i < data.length; i++) {
+        const start_date = new Date(data[i].date_start);
+        const end_date = new Date(data[i].date_end);
         rows.push(
             <tr key={data[i].repair_id}>
-                <td>{data[i].date_start.toLocaleString()}</td>
-                <td>{data[i].date_end?.toLocaleString()}</td>
+                <td>{start_date.toLocaleDateString("pl-PL")}</td>
+                <td>{end_date?.toLocaleDateString("pl-PL")}</td>
                 <td>{data[i].performing_depot_id}</td>
             </tr>
         );

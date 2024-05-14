@@ -1,11 +1,13 @@
 import React from "react";
 
 const getTableContent = (data: any) => {
+    //FIXME: sort by date
     var rows = [];
     for (let i = 0; i < data.length; i++) {
+        const log_date = new Date(data[i].date);
         rows.push(
             <tr key={data[i].log_id}>
-                <td>{data[i].date}</td>
+                <td>{log_date.toLocaleDateString("pl-PL")}</td>
                 <td>{data[i].passengers_served}</td>
             </tr>
         );

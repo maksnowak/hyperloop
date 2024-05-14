@@ -11,17 +11,27 @@ type ChartProps = {
 }
 
 const ChartComponent = ({type, url, labels_key, data_key, label_name}: ChartProps) => {
+    // warning: this is the only way to make charts work with api data
     const [apiData, setApiData] = React.useState<any>();
     React.useEffect(() => {
         const fetchData = async () => {
             const response = await fetch(url);
             const data = await response.json();
+            // if there is date label, convert it to locale string
+            try {
+                data.data.forEach((item: any) => {
+                    item[labels_key] = new Date(item[labels_key]).toLocaleString("pl-PL");
+                });
+            } catch (e) {
+                // do nothing
+            }
             setApiData(data.data);
         };
         fetchData();
     }, [url]);
 
     const data = {
+        //FIXME: sort data by date
         labels: apiData?.map((item: any) => item[labels_key]),
         datasets: [
             {
