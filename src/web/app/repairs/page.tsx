@@ -20,9 +20,9 @@ const Repairs = async () => {
   return (
     <>
       <Sidebar />
-      <h1 className="text-center bold">Repair History</h1>
+      <h1 className="text-center bold">Repairs</h1>
 
-      <FilteredRepairs repairs={repairs} depots={depots} capsules={capsules}/>
+      <FilteredRepairs repairs={repairs} depots={depots} capsules={capsules} />
     </>
   )
 };

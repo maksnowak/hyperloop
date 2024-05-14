@@ -8,7 +8,7 @@ const Sidebar = () => {
       <a href="/map">Map</a>
       <a href="/depots">Depots</a>
       <a href="/schedules">Schedules</a>
-      <a href="/repairs">Repair History</a>
+      <a href="/repairs">Repairs</a>
     </div>
   );
 };

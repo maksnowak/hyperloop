@@ -11,11 +11,11 @@
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
-    "/depots/page": [
+    "/repairs/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/css-app_globals_css-node_modules_leaflet_dist_leaflet_css.css",
-      "static/chunks/app/depots/page.js"
+      "static/chunks/app/repairs/page.js"
     ],
     "/schedules/page": [
       "static/chunks/webpack.js",
@@ -23,17 +23,10 @@
       "static/css/css-app_globals_css-node_modules_leaflet_dist_leaflet_css.css",
       "static/chunks/app/schedules/page.js"
     ],
-    "/capsules/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/css-app_globals_css-node_modules_leaflet_dist_leaflet_css.css",
-      "static/chunks/app/capsules/page.js"
-    ],
-    "/repairs/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/css-app_globals_css-node_modules_leaflet_dist_leaflet_css.css",
-      "static/chunks/app/repairs/page.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }
