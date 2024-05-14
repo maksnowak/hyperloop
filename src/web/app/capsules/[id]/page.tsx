@@ -26,7 +26,7 @@ const CapsulePage = async ({ params }: { params: { id: string } }) => {
       <h1 className="text-center bold">Capsule no. {params.id} repairs</h1>
         <h3 className="text-center bold">Current status: {capsule.status}</h3>
         <RepairActionButton status={capsule.status} capsule_id={capsule.capsule_id} />
-        <FilteredCapsuleRepairs repairs={repairs} depots={depots} capsules={{capsule}} />
+        <FilteredCapsuleRepairs repairs={repairs} depots={depots} capsule_id={capsule.capsule_id} />
     </div>
   );
 };

@@ -4,7 +4,7 @@ import Repair, { RepairProps } from "@/components/repair";
 import { DepotProps } from "@/components/depot";
 import React, { useState } from "react";
 
-const FilteredRepairs = (props: {
+const FilteredCapsuleRepairs = (props: {
     repairs: RepairProps[];
     depots: DepotProps[];
     capsule_id: number;
@@ -61,4 +61,4 @@ const FilteredRepairs = (props: {
     );
 };
 
-export default FilteredRepairs;
+export default FilteredCapsuleRepairs;
