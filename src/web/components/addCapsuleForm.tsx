@@ -16,6 +16,7 @@ const AddCapsuleForm = () => {
     const depots = getDepots();
 
     const handleSubmit = () => {
+
         console.log("Adding capsule");
     }
     return (
