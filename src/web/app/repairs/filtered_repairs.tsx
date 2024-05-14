@@ -68,7 +68,7 @@ const FilteredRepairs = (props: {
         <br />
       </form>
 
-      <div>
+      <div className="hyperloop-grid">
         {getFilteredRepairs().map((r) => (
           <div key={r.repair_id}>
             <Repair

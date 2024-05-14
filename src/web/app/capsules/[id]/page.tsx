@@ -1,9 +1,9 @@
 import React from "react";
 import "../../globals.css";
 import Sidebar from "@/components/sidebar";
-import Repair from "@/components/repair";
 import prisma from "../../client";
 import RepairActionButton from "@/components/repairActionButton";
+import FilteredCapsuleRepairs from "@/components/filteredCapsuleRepairs";
 
 const CapsulePage = async ({ params }: { params: { id: string } }) => {
     var repairs = await prisma.repairs_history.findMany({
@@ -26,12 +26,7 @@ const CapsulePage = async ({ params }: { params: { id: string } }) => {
       <h1 className="text-center bold">Capsule no. {params.id} repairs</h1>
         <h3 className="text-center bold">Current status: {capsule.status}</h3>
         <RepairActionButton status={capsule.status} capsule_id={capsule.capsule_id} />
-        <br></br>
-        <br></br>
-        {repairs.sort((r1, r2) => r1.repair_id - r2.repair_id)
-            .map((r, i) => {
-          return <Repair repair={r} depot={depots[i]} />;
-        })}
+        <FilteredCapsuleRepairs repairs={repairs} depots={depots} capsules={{capsule}} />
     </div>
   );
 };

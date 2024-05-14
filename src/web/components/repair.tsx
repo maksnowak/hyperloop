@@ -16,7 +16,7 @@ const Repair = (props: {
   return (
     <div>
       <a href={`/depots/${props.repair.performing_depot_id}`}>
-        <button className="hyperloop-item w-1/5">
+        <button className="hyperloop-item w-2/3">
           <h3 className="text-center">{props.repair.repair_id}</h3>
           <p>Start date: {props.repair.date_start.toDateString()}</p>
           <p>End date: {props.repair.date_end?.toDateString() ?? "N/A"}</p>
