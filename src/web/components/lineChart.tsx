@@ -3,14 +3,13 @@ import React from "react";
 import Chart, { ChartTypeRegistry } from "chart.js/auto";
 
 type ChartProps = {
-    type: keyof ChartTypeRegistry;
     url: string;
     labels_key: string;
     data_key: string;
     label_name?: string;
 }
 
-const ChartComponent = ({type, url, labels_key, data_key, label_name}: ChartProps) => {
+const LineChartComponent = ({url, labels_key, data_key, label_name}: ChartProps) => {
     // warning: this is the only way to make charts work with api data
     const [apiData, setApiData] = React.useState<any>();
     React.useEffect(() => {
@@ -37,8 +36,8 @@ const ChartComponent = ({type, url, labels_key, data_key, label_name}: ChartProp
                 label: label_name! || "Data",
                 data: apiData?.map((item: any) => item[data_key]),
                 fill: false,
-                backgroundColor: "rgb(75, 192, 192)",
-                borderColor: "rgba(75, 192, 192, 0.2)",
+                backgroundColor: "rgb(0, 0, 0)",
+                borderColor: "rgba(0, 0, 0, 0.2)",
             },
         ],
     };
@@ -54,7 +53,7 @@ const ChartComponent = ({type, url, labels_key, data_key, label_name}: ChartProp
                     chartRef.current.destroy();
                 }
                 chartRef.current = new Chart(ctx, {
-                    type: type,
+                    type: 'line',
                     data: data,
                 });
             }
@@ -66,11 +65,11 @@ const ChartComponent = ({type, url, labels_key, data_key, label_name}: ChartProp
                 chartRef.current.destroy();
             }
         };
-    }, [type, data]);
+    }, [data]);
 
     return (
         <canvas ref={canvasRef} />
     );
 };
 
-export default ChartComponent;
+export default LineChartComponent;
