@@ -31,7 +31,7 @@ const ReportForm = () => {
             });
         } else if (reportType === "Capsule") {
             fetch("http://localhost:3000/api/getAllCapsules").then((response) => response.json()).then((data) => {
-                let capsuleNames = data.data.map((capsule: any) => capsule.model);
+                let capsuleNames = data.data.map((capsule: any) => capsule.producer+" "+capsule.model+" (ID: "+capsule.capsule_id+")");
                 let capsuleIDs = data.data.map((capsule: any) => capsule.capsule_id);
                 setTargets(capsuleNames);
                 setTargetIDs(capsuleIDs);
