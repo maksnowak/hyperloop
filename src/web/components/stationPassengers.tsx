@@ -15,7 +15,7 @@ const getTableContent = (data: any) => {
 }
 
 const StationPassengers = async () => {
-    const passengers = await (await fetch("http://localhost:3000/api/reports/getStationPassengers")).json();
+    const passengers = await (await fetch("http://localhost:3000/api/reports/getStationPassengers?id=1")).json(); // for now ID is hardcoded
     return (
         <div>
             <h3>Passengers</h3>
