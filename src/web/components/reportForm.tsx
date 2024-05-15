@@ -1,47 +1,64 @@
 "use client";
 import React from "react";
 
-const getReportTargets = (reportType: string) => {
-    // ta funkcja będzie się łączyć z prismą żeby pobrać wszystkie elementy danego typu, na razie jest mock 
-    if (reportType === "Stacja") {
-        return "Nazwa stacji";
-    } else if (reportType === "Odcinek") {
-        return "Odcinek A-B";
-    } else if (reportType === "Kapsuła") {
-        return "Numer kapsuły i jej nazwa";
-    }
-}
-
 const ReportForm = () => {
-    const [reportType, setReportType] = React.useState("Stacja");
-    const [reportTarget, setReportTarget] = React.useState(getReportTargets(reportType));
+    const [reportType, setReportType] = React.useState("Select report type");
+    const [reportTarget, setReportTarget] = React.useState("");
+    const [targets, setTargets] = React.useState(["Select report type first"]) // this should be fetched from the API, for now it's hardcoded
+    const [reportFrom, setReportFrom] = React.useState("");
+    const [reportTo, setReportTo] = React.useState("");
+
+    React.useEffect(() => {
+        if (reportType === "Station") {
+            fetch("http://localhost:3000/api/getAllStations").then((response) => response.json()).then((data) => {
+                let stationNames = data.data.map((station: any) => station.name);
+                setTargets(stationNames);
+            });
+        } else if (reportType === "Tube") {
+            fetch("http://localhost:3000/api/getAllTubes").then((response) => response.json()).then((data) => {
+                let tubeNames = data.data.map((tube: any) => tube.name);
+                setTargets(tubeNames);
+            });
+        } else if (reportType === "Capsule") {
+            fetch("http://localhost:3000/api/getAllCapsules").then((response) => response.json()).then((data) => {
+                let capsuleNames = data.data.map((capsule: any) => capsule.model);
+                setTargets(capsuleNames);
+            });
+        }
+    }, [reportType]);
 
     return (
         <div>
+            <h3>Report form</h3>
             <form>
-                <label>Select report type</label>
+                <label>
+                    Report type:
+                    <select value={reportType} onChange={(e) => setReportType(e.target.value)}>
+                        <option value="Select report type" selected disabled hidden>Select report type</option>
+                        <option value="Station">Station</option>
+                        <option value="Tube">Tube</option>
+                        <option value="Capsule">Capsule</option>
+                    </select>
+                </label>
                 <br />
-                <select value={reportType} onChange={(e) => setReportType(e.target.value)}>
-                    <option value="Stacja">Stacja</option>
-                    <option value="Odcinek">Odcinek</option>
-                    <option value="Kapsuła">Kapsuła</option>
-                </select>
+                <label>
+                    Target:
+                    <select value={reportTarget} onChange={(e) => setReportTarget(e.target.value)}>
+                        {targets.map((target) => <option key={target} value={target}>{target}</option>)}
+                    </select>
+                </label>
                 <br />
-                <label>Select the object you want the report for</label>
+                <label>
+                    From:
+                    <input type="date" value={reportFrom} onChange={(e) => setReportFrom(e.target.value)} />
+                </label>
                 <br />
-                <select value={reportTarget} onChange={(e) => setReportTarget(e.target.value)}>
-                    <option value={getReportTargets(reportType)}>{getReportTargets(reportType)}</option>
-                </select>
+                <label>
+                    To:
+                    <input type="date" value={reportTo} onChange={(e) => setReportTo(e.target.value)} />
+                </label>
                 <br />
-                <label>Select beginning date</label>
-                <br />
-                <input type="date" />
-                <br />
-                <label>Select end date</label>
-                <br />
-                <input type="date" />
-                <br />
-                <button type="submit">Generate</button>
+                <input type="submit" value="Generate report" />
             </form>
         </div>
     )

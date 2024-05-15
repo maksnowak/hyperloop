@@ -4,7 +4,7 @@ import ReportTopBar from "@/components/reportTopBar";
 import CapsuleRoutes from "@/components/capsuleRoutes";
 import CapsuleRepairs from "@/components/capsuleRepairs";
 
-const GenerateCapsuleReport = async () => {
+const GenerateCapsuleReport = () => {
     return (
         <>
             <ReportTopBar type="capsule" target="0" />

@@ -4,7 +4,7 @@ import ReportTopBar from "@/components/reportTopBar";
 import StationPassengers from "@/components/stationPassengers";
 import StationTraffic from "@/components/stationTraffic";
 
-const GenerateStationReport = async () => {
+const GenerateStationReport = () => {
     return (
         <>
             <ReportTopBar type="station" target="Station name" />
