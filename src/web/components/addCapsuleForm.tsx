@@ -1,7 +1,5 @@
 "use client";
 import React, {useEffect} from "react";
-import 'reactjs-popup/dist/index.css';
-import prisma from "@/app/client";
 
 const AddCapsuleForm = () => {
     const [model, setModel] = React.useState("");
