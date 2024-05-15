@@ -15,7 +15,7 @@ const getTableContent = (data: any) => {
 }
 
 const StationPassengers = async () => {
-    const passengers = await (await fetch("http://localhost:3000/api/reports/getStationPassengers?id=1")).json(); // for now ID is hardcoded
+    const passengers = await (await fetch("http://localhost:3000/api/reports/getStationPassengers?id=1&from=2022-01-01&to=2025-01-01")).json(); // for now params are hardcoded
     return (
         <div>
             <h3>Passengers</h3>

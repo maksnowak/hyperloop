@@ -1,25 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/client";
+import validateParams from "@/app/api/validateParams";
 
 type ReposnseData = {
     data: Object[];
 }
 
 export async function GET(req: NextRequest) {
-    let id;
-    // check if a valid id is provided
+    let id, from, to;
     try {
-        id = req.nextUrl.searchParams.get('id');
-        if (!id) {
-            throw new Error('No id provided');
-        }
-        id = Number(id);
+        const params = validateParams(req.nextUrl.searchParams.get('id'), req.nextUrl.searchParams.get('from'), req.nextUrl.searchParams.get('to'));
+        id = params.id;
+        from = params.from;
+        to = params.to;
     } catch (error) {
         return NextResponse.error();
     }
     return await prisma.trips_history.findMany({
         where: {
-            referred_tube_id: id
+            referred_tube_id: id,
+            AND: [
+                {
+                    date_start: {
+                        gte: from
+                    }
+                },
+                {
+                    date_end: {
+                        lte: to
+                    }
+                }
+            ]
         },
         select: {
             ride_id: true,

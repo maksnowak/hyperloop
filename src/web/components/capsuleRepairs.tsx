@@ -17,7 +17,7 @@ const getTableContent = (data: any) => {
 }
 
 const CapsuleRepairs = async () => {
-    const repairs = await (await fetch("http://localhost:3000/api/reports/getCapsuleRepairs?id=1")).json(); // for now ID is hardcoded
+    const repairs = await (await fetch("http://localhost:3000/api/reports/getCapsuleRepairs?id=1&from=2022-01-01&to=2025-01-01")).json(); // for now params are hardcoded
     return (
         <div>
             <h3>Repair history</h3>

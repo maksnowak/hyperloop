@@ -26,7 +26,7 @@ const getTableContent = (data: any) => {
 }
 
 const TubeTrips = async () => {
-    const trips = await (await fetch("http://localhost:3000/api/reports/getTubeTrips?id=1")).json(); // for now ID is hardcoded
+    const trips = await (await fetch("http://localhost:3000/api/reports/getTubeTrips?id=1&from=2022-01-01&to=2025-01-01")).json(); // for now params are hardcoded
     return (
         <div>
             <h3>Trips history</h3>
