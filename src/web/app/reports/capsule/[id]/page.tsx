@@ -31,3 +31,5 @@ const GenerateCapsuleReport = async ({
 };
 
 export default GenerateCapsuleReport;
+
+export const dynamic = 'force-dynamic';

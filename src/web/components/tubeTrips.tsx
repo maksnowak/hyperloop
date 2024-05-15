@@ -56,3 +56,5 @@ const TubeTrips = async ({
 };
 
 export default TubeTrips;
+
+export const dynamic = 'force-dynamic';

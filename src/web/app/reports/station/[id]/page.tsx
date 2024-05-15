@@ -35,3 +35,5 @@ const GenerateStationReport = async ({
 };
 
 export default GenerateStationReport;
+
+export const dynamic = 'force-dynamic';

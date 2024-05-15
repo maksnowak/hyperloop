@@ -38,3 +38,5 @@ const Capsule = ({
 };
 
 export default Capsule;
+
+export const dynamic = 'force-dynamic';

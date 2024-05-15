@@ -46,3 +46,5 @@ const CapsuleRepairs = async ({
 };
 
 export default CapsuleRepairs;
+
+export const dynamic = 'force-dynamic';

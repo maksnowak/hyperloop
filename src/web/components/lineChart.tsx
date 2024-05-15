@@ -73,3 +73,5 @@ const LineChartComponent = ({url, labels_key, data_key, label_name}: ChartProps)
 };
 
 export default LineChartComponent;
+
+export const dynamic = 'force-dynamic';

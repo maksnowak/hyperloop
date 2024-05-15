@@ -35,3 +35,6 @@ const GenerateTubeReport = async ({
 };
 
 export default GenerateTubeReport;
+
+
+export const dynamic = 'force-dynamic';

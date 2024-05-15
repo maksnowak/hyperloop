@@ -58,3 +58,5 @@ const CapsuleRoutes = async ({
 };
 
 export default CapsuleRoutes;
+
+export const dynamic = 'force-dynamic';

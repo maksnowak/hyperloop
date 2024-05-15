@@ -59,3 +59,5 @@ const BarChartComponent = ({url, labels, label_names}: ChartProps) => {
 };
 
 export default BarChartComponent;
+
+export const dynamic = 'force-dynamic';

@@ -43,3 +43,5 @@ const StationPassengers = async ({
 };
 
 export default StationPassengers;
+
+export const dynamic = 'force-dynamic';

@@ -18,3 +18,5 @@ const ReportTopBar = ({type, target}: ReportTopBarProps) => {
 };
 
 export default ReportTopBar;
+
+export const dynamic = 'force-dynamic';

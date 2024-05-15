@@ -15,3 +15,6 @@ const Reports = () => {
 };
 
 export default Reports;
+
+
+export const dynamic = 'force-dynamic';

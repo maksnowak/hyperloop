@@ -89,3 +89,5 @@ const ReportForm = () => {
 };
 
 export default ReportForm;
+
+export const dynamic = 'force-dynamic';

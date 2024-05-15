@@ -61,3 +61,5 @@ const StationTraffic = async ({
 };
 
 export default StationTraffic;
+
+export const dynamic = 'force-dynamic';
