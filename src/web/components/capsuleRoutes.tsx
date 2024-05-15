@@ -26,8 +26,16 @@ const getTableContent = (data: any) => {
     return rows;
 }
 
-const CapsuleRoutes = async () => {
-    const routes = await (await fetch("http://localhost:3000/api/reports/getCapsuleRoutes?id=1&from=2022-01-01&to=2025-01-01")).json(); // for now params are hardcoded
+const CapsuleRoutes = async ({
+    id,
+    from,
+    to
+}: {
+    id: string;
+    from: string;
+    to: string;
+}) => {
+    const routes = await (await fetch(`http://localhost:3000/api/reports/getCapsuleRoutes?id=${id}&from=${from}&to=${to}`)).json();
     return (
         <div>
             <h3>Route history</h3>

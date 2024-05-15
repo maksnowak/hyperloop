@@ -14,8 +14,16 @@ const getTableContent = (data: any) => {
     return rows;
 }
 
-const StationPassengers = async () => {
-    const passengers = await (await fetch("http://localhost:3000/api/reports/getStationPassengers?id=1&from=2022-01-01&to=2025-01-01")).json(); // for now params are hardcoded
+const StationPassengers = async ({
+    id,
+    from,
+    to
+}: {
+    id: string;
+    from: string;
+    to: string;
+}) => {
+    const passengers = await (await fetch(`http://localhost:3000/api/reports/getStationPassengers?id=${id}&from=${from}&to=${to}`)).json();
     return (
         <div>
             <h3>Passengers</h3>

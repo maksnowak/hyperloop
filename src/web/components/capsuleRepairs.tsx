@@ -16,8 +16,16 @@ const getTableContent = (data: any) => {
     return rows;
 }
 
-const CapsuleRepairs = async () => {
-    const repairs = await (await fetch("http://localhost:3000/api/reports/getCapsuleRepairs?id=1&from=2022-01-01&to=2025-01-01")).json(); // for now params are hardcoded
+const CapsuleRepairs = async ({
+    id,
+    from,
+    to
+}: {
+    id: string;
+    from: string;
+    to: string;
+}) => {
+    const repairs = await (await fetch(`http://localhost:3000/api/reports/getCapsuleRepairs?id=${id}&from=${from}&to=${to}`)).json();
     return (
         <div>
             <h3>Repair history</h3>

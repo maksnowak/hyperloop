@@ -48,7 +48,7 @@ const ReportForm = () => {
             return;
         }
         let targetID = targetIDs[targets.indexOf(reportTarget)];
-        router.push(`/reports/${reportType.toLowerCase()}/${targetID}`);
+        router.push(`/reports/${reportType.toLowerCase()}/${targetID}?from=${reportFrom}&to=${reportTo}`);
     }
 
     return (
@@ -57,7 +57,7 @@ const ReportForm = () => {
             <form onSubmit={submitReport}>
                 <label>
                     Report type:
-                    <select value={reportType} onChange={(e) => setReportType(e.target.value)}>
+                    <select value={reportType} required onChange={(e) => setReportType(e.target.value)}>
                         <option value="Select report type" disabled hidden>Select report type</option>
                         <option value="Station">Station</option>
                         <option value="Tube">Tube</option>
@@ -67,19 +67,19 @@ const ReportForm = () => {
                 <br />
                 <label>
                     Target:
-                    <select value={reportTarget} onChange={(e) => setReportTarget(e.target.value)}>
+                    <select value={reportTarget} required onChange={(e) => setReportTarget(e.target.value)}>
                         {targets.map((target) => <option key={target} value={target}>{target}</option>)}
                     </select>
                 </label>
                 <br />
                 <label>
                     From:
-                    <input type="date" value={reportFrom} onChange={(e) => setReportFrom(e.target.value)} />
+                    <input type="date" value={reportFrom} required onChange={(e) => setReportFrom(e.target.value)} />
                 </label>
                 <br />
                 <label>
                     To:
-                    <input type="date" value={reportTo} onChange={(e) => setReportTo(e.target.value)} />
+                    <input type="date" value={reportTo} required onChange={(e) => setReportTo(e.target.value)} />
                 </label>
                 <br />
                 <input type="submit" value="Generate report"/>

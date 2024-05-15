@@ -10,7 +10,7 @@ const GenerateCapsuleReport = async ({
     searchParams,
 }: {
     params: { id: string };
-    searchParams: { [key: string]: string | string[] | undefined }
+    searchParams: { [key: string]: string }
 }) => {
     const name = await prisma.capsules.findUnique({
         where: {
@@ -24,8 +24,8 @@ const GenerateCapsuleReport = async ({
     return (
         <>
             <ReportTopBar type="capsule" target={name!.producer+" "+name!.model+" (ID: "+params.id+")"}  />
-            <CapsuleRoutes />
-            <CapsuleRepairs />
+            <CapsuleRoutes id={params.id} from={searchParams.from} to={searchParams.to}/>
+            <CapsuleRepairs id={params.id} from={searchParams.from} to={searchParams.to}/>
         </>
     );
 };

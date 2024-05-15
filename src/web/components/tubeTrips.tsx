@@ -25,8 +25,16 @@ const getTableContent = (data: any) => {
     return rows;
 }
 
-const TubeTrips = async () => {
-    const trips = await (await fetch("http://localhost:3000/api/reports/getTubeTrips?id=1&from=2022-01-01&to=2025-01-01")).json(); // for now params are hardcoded
+const TubeTrips = async ({
+    id,
+    from,
+    to
+}: {
+    id: string;
+    from: string;
+    to: string;
+}) => {
+    const trips = await (await fetch(`http://localhost:3000/api/reports/getTubeTrips?id=${id}&from=${from}&to=${to}`)).json();
     return (
         <div>
             <h3>Trips history</h3>

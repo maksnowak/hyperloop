@@ -10,7 +10,7 @@ const GenerateStationReport = async ({
     searchParams,
 }: {
     params: { id: string };
-    searchParams: { [key: string]: string | string[] | undefined }
+    searchParams: { [key: string]: string }
 }) => {
     const name = await prisma.stations.findUnique({
         where: {
@@ -23,8 +23,8 @@ const GenerateStationReport = async ({
     return (
         <>
             <ReportTopBar type="station" target={name!.name} />
-            <StationPassengers />
-            <StationTraffic />
+            <StationPassengers id={params.id} from={searchParams.from} to={searchParams.to}/>
+            <StationTraffic id={params.id} from={searchParams.from} to={searchParams.to}/>
         </>
     );
 };
