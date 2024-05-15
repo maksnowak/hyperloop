@@ -31,3 +31,6 @@ const Repairs = async () => {
 };
 
 export default Repairs;
+
+
+export const dynamic = 'force-dynamic';
