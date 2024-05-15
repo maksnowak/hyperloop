@@ -17,6 +17,9 @@ export async function GET() {
                     model: true
                 }
             }
+        },
+        orderBy: {
+            date_start: 'asc'
         }
     }).then((data) => {
         return NextResponse.json({ data });

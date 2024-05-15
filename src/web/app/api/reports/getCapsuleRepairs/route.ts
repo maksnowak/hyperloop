@@ -12,6 +12,9 @@ export async function GET() {
             date_start: true,
             date_end: true,
             performing_depot_id: true
+        },
+        orderBy: {
+            date_start: 'asc'
         }
     }).then((data) => {
         return NextResponse.json({ data });

@@ -31,7 +31,6 @@ const ChartComponent = ({type, url, labels_key, data_key, label_name}: ChartProp
     }, [url]);
 
     const data = {
-        //FIXME: sort data by date
         labels: apiData?.map((item: any) => item[labels_key]),
         datasets: [
             {

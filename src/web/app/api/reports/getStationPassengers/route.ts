@@ -11,6 +11,9 @@ export async function GET() {
             log_id: true,
             date: true,
             passengers_served: true
+        },
+        orderBy: {
+            date: 'asc'
         }
     }).then((data) => {
         return NextResponse.json({ data });

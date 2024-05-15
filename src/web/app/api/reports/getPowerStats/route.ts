@@ -16,6 +16,9 @@ export async function GET() {
             data_id: true,
             time_of_measurement: true,
             generated_power: true
+        },
+        orderBy: {
+            time_of_measurement: 'asc'
         }
     }).then((data) => {
         return NextResponse.json({ data });

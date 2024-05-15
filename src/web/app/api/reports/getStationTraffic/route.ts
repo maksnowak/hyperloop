@@ -32,6 +32,9 @@ export async function GET() {
                     }
                 }
             },
+        },
+        orderBy: {
+            date_start: 'asc'
         }
     }).then((data) => {
         return NextResponse.json({ data });

@@ -1,7 +1,6 @@
 import React from "react";
 
 const getTableContent = (data: any) => {
-    //FIXME: sort by date
     const s = 8; // temporary station ID
     var rows = [];
     for (let i = 0; i < data.length; i++) {
