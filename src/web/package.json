@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "@prisma/client": "5.12.1",
+    "@react-pdf/renderer": "^3.4.4",
+    "chart.js": "^4.4.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
-    "chart.js": "^4.4.2",
     "next": "14.2.1",
     "prisma": "^5.12.1",
     "react": "^18",
