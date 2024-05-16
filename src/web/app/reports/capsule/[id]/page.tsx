@@ -23,9 +23,11 @@ const GenerateCapsuleReport = async ({
     });
     return (
         <>
-            <ReportTopBar type="capsule" target={name!.producer+" "+name!.model+" (ID: "+params.id+")"}  />
-            <CapsuleRoutes id={params.id} from={searchParams.from} to={searchParams.to}/>
-            <CapsuleRepairs id={params.id} from={searchParams.from} to={searchParams.to}/>
+            <div className="max-w-2xl mx-auto">
+                <ReportTopBar type="capsule" target={name!.producer+" "+name!.model+" (ID: "+params.id+")"}  />
+                <CapsuleRoutes id={params.id} from={searchParams.from} to={searchParams.to}/>
+                <CapsuleRepairs id={params.id} from={searchParams.from} to={searchParams.to}/>
+            </div>
         </>
     );
 };

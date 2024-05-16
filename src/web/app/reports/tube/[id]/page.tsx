@@ -23,15 +23,17 @@ const GenerateTubeReport = async ({
     const avgPassengers = await (await fetch(`http://localhost:3000/api/reports/getAveragePassengers?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`)).json();
     return (
         <>
-            <ReportTopBar type="tube" target={name!.name} />
-            <h4>Average daily number of passengers: {avgPassengers.data[0].average_passenger_count || "0"}</h4>
-            <TubeTrips id={params.id} from={searchParams.from} to={searchParams.to}/>
-            <h3>Generated power</h3>
-            <LineChartComponent url={`http://localhost:3000/api/reports/getPowerStats?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`} labels_key="time_of_measurement" data_key="generated_power" label_name="Power"/>
-            <h3>Tube pressure</h3>
-            <LineChartComponent url={`http://localhost:3000/api/reports/getPressureStats?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`} labels_key="time_of_measurement" data_key="pressure" label_name="Pressure"/>
+            <div className="max-w-2xl mx-auto">
+                <ReportTopBar type="tube" target={name!.name} />
+                <h4>Average daily number of passengers: {avgPassengers.data[0].average_passenger_count || "0"}</h4>
+                <TubeTrips id={params.id} from={searchParams.from} to={searchParams.to}/>
+                <h3>Generated power</h3>
+                <LineChartComponent url={`http://localhost:3000/api/reports/getPowerStats?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`} labels_key="time_of_measurement" data_key="generated_power" label_name="Power"/>
+                <h3>Tube pressure</h3>
+                <LineChartComponent url={`http://localhost:3000/api/reports/getPressureStats?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`} labels_key="time_of_measurement" data_key="pressure" label_name="Pressure"/>
+            </div>
         </>
-    ); // FIXME: for some reason average_passenger_count is not being displayed
+    );
 };
 
 export default GenerateTubeReport;
