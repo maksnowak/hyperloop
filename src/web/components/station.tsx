@@ -15,7 +15,7 @@ const Station = (props: {
     return (
         <div>
             <a>
-                <p>Station name: {props.station.name}</p>
+                <h3>Station name: {props.station.name}</h3>
                 <p>Localization: ({Math.round(props.station.latitude)}, {Math.round(props.station.longitude)})</p>
                 <p>Perons: {props.station.platforms}</p>
             </a>
