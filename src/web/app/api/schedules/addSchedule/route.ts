@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     try {
         await prisma.$queryRaw`CALL add_schedule(${stationNames}, CAST(${departureTime} AS TIME), ${capsuleType}, CAST(${bothWays} AS BOOLEAN))`;
         return NextResponse.json({ message: "Schedule added successfully", status: 200 });
-    } catch (e) {
+    } catch (e: any) {
         const errorMessage = e.message.split('ERROR:').at(-1).trim().replace(/`/g, '');
         console.log(e.message);
         return NextResponse.json({ message: errorMessage, status: 500 });
