@@ -1,5 +1,5 @@
 import React from "react";
-// import "../globals.css";
+import "@/app/globals.css";
 import ReportTopBar from "@/components/reportTopBar";
 import StationPassengers from "@/components/stationPassengers";
 import StationTraffic from "@/components/stationTraffic";
