@@ -22,7 +22,6 @@ form {
 input {
   border-width: 1px;
   border-color: black;
-  margin: 2px;
 }
 
 h1 {
@@ -40,9 +39,17 @@ h3 {
   background-color: #4a5568;
   color: white;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
+  padding: 5px;
 }
 
 .hyperloop-item:hover {
   background-color: #1f2937;
   border-radius: 24px;
+}
+
+.hyperloop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-left: 10%;
 }

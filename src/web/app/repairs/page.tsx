@@ -1,36 +1,32 @@
 import React from "react";
 import "../globals.css";
 import Sidebar from "@/components/sidebar";
-import Repair from "@/components/repair";
-import prisma from "../../client";
+import prisma from "../client";
+import FilteredRepairs from "./filtered_repairs";
 
 const Repairs = async () => {
-  const repairs = (await prisma.repairs_history.findMany())
-    .sort()
-    .map((r) => <Repair key={r.repair_id} {...r} />)
-
+  const repairs = await prisma.repairs_history.findMany();
+  const depots = await Promise.all(
+    repairs.map(async (r) => await prisma.depots.findFirst({
+      where: { depot_id: r.performing_depot_id },
+    }))
+  );
+  const capsules = await Promise.all(
+    depots.map(async (d) => await prisma.capsules.findFirst({
+      where: { servicing_depot_id: d?.depot_id },
+    }))
+  );
 
   return (
     <>
       <Sidebar />
-      <h1 className="text-center bold">Repair History</h1>
+      <h1 className="text-center bold">Repairs</h1>
 
-      <form>
-        <label>Search for a repair</label><br />
-        <label>From</label>
-        <input type="text" id="repair_history_search_from" /><br />
-        <label>To</label>
-        <input type="text" id="repair_history_search_to" />
-      </form>
-
-      <div>
-        {repairs}
-      </div>
+      <FilteredRepairs repairs={repairs} depots={depots} capsules={capsules} />
     </>
   )
 };
 
 export default Repairs;
-
 
 export const dynamic = 'force-dynamic';
