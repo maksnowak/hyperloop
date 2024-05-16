@@ -6,7 +6,9 @@ import prisma from "../client"
 import AddScheduleForm from "@/components/addScheduleForm";
 
 const Schedules = async () => {
-    const schedules = await prisma.schedule.findMany();
+    const schedules = (await prisma.schedule.findMany())
+        .sort((s1, s2) => s1.schedule_id - s2.schedule_id)
+        .map((s) => <Schedule key={s.schedule_id} {...s} />);
 
     return (
         <>
@@ -14,7 +16,7 @@ const Schedules = async () => {
             <Sidebar />
             <AddScheduleForm />
             <div className="hyperloop-grid">
-                {schedules.map((s) => <Schedule key={s.schedule_id} {...s} />)};
+                {schedules};
             </div>
         </>
     );

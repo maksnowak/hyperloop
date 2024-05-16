@@ -9,6 +9,8 @@ const AddScheduleForm = () => {
     const [capsuleType, setCapsuleType] = useState("");
     const [bothWays, setBothWays] = useState(false);
 
+    const [errorMsg, setErrorMsg] = useState("");
+
     useEffect(() => {
         const fetchData = React.cache(async () => {
             try {
@@ -24,12 +26,15 @@ const AddScheduleForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await (await fetch(`/api/schedules/addSchedule?station_names=${selectedStations}&starting_time=${departureTime}&capsule_type=${capsuleType}&both_ways=${bothWays}`)).json();
+
+        const response = await (await fetch(`/api/schedules/addSchedule?station_names=${selectedStations.join(',')}&starting_time=${departureTime}&capsule_type=${capsuleType}&both_ways=${bothWays}`)).json();
         if (response.status === 200) {
             console.log(response.message);
             await new Promise(f => setTimeout(f, 1000));
+            setErrorMsg("");
             window.location.reload();
         } else {
+            setErrorMsg(response.message);
             console.log("ERROR: " + response.message);
         }
     };
@@ -56,10 +61,7 @@ const AddScheduleForm = () => {
                 <br />
 
                 <label htmlFor="station">Stations</label>
-                <select id="station" onChange={(e) => {
-                    setSelectedStations([...selectedStations, e.target.value]);
-                    console.log(stations, selectedStations);
-                }}>
+                <select id="station" onChange={(e) => setSelectedStations([...selectedStations, e.target.value])}>
                     <option key={0} value=""></option >
                     {stations.filter(s => !selectedStations.includes(s.name)).map(s => (
                         <option key={s.station_id} value={s.name}>
@@ -69,15 +71,26 @@ const AddScheduleForm = () => {
                 </select>
                 <br />
 
-                <div required className="hyperloop-grid">
-                    {selectedStations.map((s, i) => <div key={i+1} className="hyperloop-item">{i + 1}. {s}</div>)}
-                </div >
+                <div className="hyperloop-grid">
+                    {selectedStations.map((s, i) => <button
+                        key={i + 1}
+                        type={"button"}
+                        className="hyperloop-item"
+                        value={s}
+                        onClick={(e) =>
+                            setSelectedStations(selectedStations.filter(s => s != e.target.value))
+                        }>
+                        {i + 1}. {s}
+                    </button>)}
+                </div>
                 <br />
 
                 <button className={"hyperloop-item"} type={"submit"}>Add schedule</button>
                 <br />
-            </form>
-        </div>
+
+                <div className="err">{errorMsg}</div>
+            </form >
+        </div >
     );
 }
 

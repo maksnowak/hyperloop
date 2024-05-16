@@ -1,25 +1,24 @@
+//@ts-nocheck
 import prisma from "@/app/client";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
 
-    const departureTime: string = searchParams.get("departure_time")!;
-    const arrivalTime: string = searchParams.get("departure_time")!;
-    // @ts-ignore
-    const capsule: number = searchParams.get("capsule")!;
-    // current_station_id: number;
-    // next_station_id: number;
-    // previous_schedule_id: number | null;
-    if (!departureTime || !arrivalTime || !capsule) {
+    const stationNames: string[] = searchParams.get("station_names").split(',');
+    const departureTime: string = searchParams.get("starting_time");
+    const capsuleType: string = searchParams.get("capsule_type");
+    const bothWays: boolean = Boolean(searchParams.get("both_ways"));
+
+    if (!stationNames || !departureTime || !capsuleType || !bothWays) {
         return NextResponse.json({
-            message: "Missing departure time, arrival time or capsule",
+            message: "Missing stationNames, departureTime, capsuleType or bothWays",
             status: 400
         });
     }
 
     try {
-        await prisma.$queryRaw`CALL add_schedule(${departureTime}, ${arrivalTime}, CAST(${capsule} AS INTEGER))`;
+        await prisma.$queryRaw`CALL add_schedule(${stationNames}, CAST(${departureTime} AS TIME), ${capsuleType}, CAST(${bothWays} AS BOOLEAN))`;
         return NextResponse.json({ message: "Schedule added successfully", status: 200 });
     } catch (e: any) {
         const errorMessage = e.message.split('ERROR:').at(-1).trim().replace(/`/g, '');
