@@ -27,12 +27,10 @@ const AddScheduleForm = () => {
         const response = await (await fetch(`/api/schedules/addSchedule?station_names=${selectedStations}&starting_time=${departureTime}&capsule_type=${capsuleType}&both_ways=${bothWays}`)).json();
         if (response.status === 200) {
             console.log(response.message);
-            setLabel(response.message);
             await new Promise(f => setTimeout(f, 1000));
             window.location.reload();
         } else {
             console.log("ERROR: " + response.message);
-            setLabel("ERROR: " + response.message);
         }
     };
 
@@ -54,27 +52,25 @@ const AddScheduleForm = () => {
                 <br />
 
                 <label htmlFor="bothWays">Is it both ways?</label>
-                <input required type="checkbox" id="bothWays" onChange={(e) => setBothWays(e.target.value)} />
+                <input type="checkbox" id="bothWays" onChange={(e) => setBothWays(e.target.value)} />
                 <br />
 
                 <label htmlFor="station">Stations</label>
-                <select required id="station" value={stations.length} onChange={(e) => {
-                    if (!selectedStations.includes(e.target.value)) {
-                        setSelectedStations([...selectedStations, e.target.value]);
-                    }
+                <select id="station" onChange={(e) => {
+                    setSelectedStations([...selectedStations, e.target.value]);
                     console.log(stations, selectedStations);
                 }}>
-                    <option value=""></option >
-                    {stations.map((s) => {
-                        <option key={s.station_id} value={s.station_id}>
+                    <option key={0} value=""></option >
+                    {stations.filter(s => !selectedStations.includes(s.name)).map(s => (
+                        <option key={s.station_id} value={s.name}>
                             {s.name}
                         </option>
-                    })}
+                    ))}
                 </select>
                 <br />
 
-                <div className="hyperloop-grid">
-                    {selectedStations.map((s) => <div className="hyperloop-item">{s.name}</div>)}
+                <div required className="hyperloop-grid">
+                    {selectedStations.map(s => <div className="hyperloop-item">{s}</div>)}
                 </div >
                 <br />
 
