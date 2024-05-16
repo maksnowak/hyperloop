@@ -27,10 +27,10 @@ const GenerateStationReport = async ({
                 <ReportTopBar type="station" target={name!.name} />
                 <StationPassengers id={params.id} from={searchParams.from} to={searchParams.to}/>
                 <h3>Passenger flow</h3>
-                <BarChartComponent url={`http://localhost:3000/api/reports/getPassengerFlow?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`} labels={['passengers_in', 'passengers_out']} label_names={['Arriving passengers', 'Departing passengers']} />
+                <BarChartComponent url={`/api/reports/getPassengerFlow?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`} labels={['passengers_in', 'passengers_out']} label_names={['Arriving passengers', 'Departing passengers']} />
                 <StationTraffic id={params.id} from={searchParams.from} to={searchParams.to}/>
                 <h3>Trips flow</h3>
-                <BarChartComponent url={`http://localhost:3000/api/reports/getPassengerFlow?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`} labels={['trips_in', 'trips_out']} label_names={['Arrivals', 'Departures']} />
+                <BarChartComponent url={`/api/reports/getPassengerFlow?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`} labels={['trips_in', 'trips_out']} label_names={['Arrivals', 'Departures']} />
             </div>
         </>
     );
