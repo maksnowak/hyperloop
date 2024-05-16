@@ -9,7 +9,7 @@ const Stations = async () => {
     const stations = (await prisma.stations.findMany())
         .sort((s1, s2) => s1.station_id - s2.station_id)
         .map(s =>
-            <div key={s.station_id}>
+            <div className="hyperloop-item w-2/3" key={s.station_id}>
                 <Station station={s} />
             </div>);
 

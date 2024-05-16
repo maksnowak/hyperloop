@@ -15,12 +15,9 @@ const Station = (props: {
     return (
         <div>
             <a href={`/stations/${props.station.station_id}`}>
-                <button className="hyperloop-item w-2/3">
-                    <h3 className="text-center">{props.station.station_id}</h3>
-                    <p>Station name: {props.station.name}</p>
-                    <p>Localization: ({Math.round(props.station.latitude)}, {Math.round(props.station.longitude)})</p>
-                    <p>Perons: {props.station.platforms}</p>
-                </button>
+                <p>Station name: {props.station.name}</p>
+                <p>Localization: ({Math.round(props.station.latitude)}, {Math.round(props.station.longitude)})</p>
+                <p>Perons: {props.station.platforms}</p>
             </a>
         </div>
     );
