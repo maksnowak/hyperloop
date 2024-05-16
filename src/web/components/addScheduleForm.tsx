@@ -27,7 +27,6 @@ const AddScheduleForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // const startingTime = new Date(departureTime).toISOString().replace('T', ' ').replace('Z', '');
         const response = await (await fetch(`/api/schedules/addSchedule?station_names=${selectedStations.join(',')}&starting_time=${departureTime}&capsule_type=${capsuleType}&both_ways=${bothWays}`)).json();
         if (response.status === 200) {
             console.log(response.message);
@@ -74,6 +73,7 @@ const AddScheduleForm = () => {
 
                 <div className="hyperloop-grid">
                     {selectedStations.map((s, i) => <button
+                        key={i + 1}
                         type={"button"}
                         className="hyperloop-item"
                         value={s}
