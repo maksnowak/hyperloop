@@ -24,3 +24,5 @@ const Depot = ({ depot_id, name, latitude, longitude }: DepotProps) => {
 };
 
 export default Depot;
+
+export const dynamic = 'force-dynamic';
