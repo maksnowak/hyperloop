@@ -70,7 +70,7 @@ const AddScheduleForm = () => {
                 <br />
 
                 <div required className="hyperloop-grid">
-                    {selectedStations.map((s, i) => <div className="hyperloop-item">{i + 1}. {s}</div>)}
+                    {selectedStations.map((s, i) => <div key={i+1} className="hyperloop-item">{i + 1}. {s}</div>)}
                 </div >
                 <br />
 

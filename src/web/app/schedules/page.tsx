@@ -21,3 +21,5 @@ const Schedules = async () => {
 };
 
 export default Schedules;
+
+export const dynamic = 'force-dynamic';
