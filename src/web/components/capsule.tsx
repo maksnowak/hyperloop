@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-export interface CapsuleProps {
+interface CapsuleProps {
   capsule_id: number;
   model: string;
   producer: string;
@@ -38,3 +38,5 @@ const Capsule = ({
 };
 
 export default Capsule;
+
+export const dynamic = 'force-dynamic';

@@ -1,13 +1,13 @@
 import Sidebar from "@/components/sidebar";
 import React, { useMemo } from "react";
 import "../globals.css";
-import dynamic from "next/dynamic";
-import prisma from "../client";
+import { default as nextDynamic } from "next/dynamic"; // I have to do it this way so the pipeline doesn't break
+import prisma from "../../client";
 
 const Map = async () => {
   const MapComponent = useMemo(
     () =>
-      dynamic(() => import("@/components/map"), {
+      nextDynamic(() => import("@/components/map"), {
         loading: () => <p>A map is loading</p>,
         ssr: false,
       }),
@@ -42,3 +42,5 @@ const Map = async () => {
 };
 
 export default Map;
+
+export const dynamic = 'force-dynamic';

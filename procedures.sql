@@ -382,7 +382,7 @@ CREATE TYPE passenger_flow_type AS (
 );
 
 CREATE OR REPLACE FUNCTION passenger_flow(
-    IN station_name VARCHAR(32),
+    IN the_station_id INTEGER,
     IN start_date TIMESTAMP,
     IN end_date TIMESTAMP
 )
@@ -390,16 +390,8 @@ CREATE OR REPLACE FUNCTION passenger_flow(
     LANGUAGE plpgsql
 AS $$
     DECLARE
-        the_station_id INTEGER;
         result passenger_flow_type;
     BEGIN
-        -- CHECK IF STATION EXISTS
-        SELECT station_id INTO the_station_id FROM stations WHERE name = station_name;
-
-        IF NOT FOUND THEN
-            RAISE EXCEPTION 'Station % not found', station_name;
-        END IF;
-
         -- COUNT TRIPS IN AND TICKETS SOLD IN
         SELECT COUNT(*), SUM(tickets_sold) INTO result.trips_in, result.passengers_in FROM trips_history
         WHERE referred_tube_id IN (SELECT tube_id FROM tubes WHERE ending_station_id = the_station_id)
@@ -416,8 +408,8 @@ $$;
 
 -- Average passenger count on a given tube
 CREATE OR REPLACE FUNCTION average_passenger_count(
-    IN starting_station_name varchar(32),
-    IN ending_station_name varchar(32),
+    IN the_starting_station_id INTEGER,
+    IN the_ending_station_id INTEGER,
     IN start_date TIMESTAMP,
     IN end_date TIMESTAMP,
     IN both_ways BOOLEAN DEFAULT TRUE
@@ -426,27 +418,14 @@ CREATE OR REPLACE FUNCTION average_passenger_count(
     LANGUAGE plpgsql
 AS $$
     DECLARE
-        the_starting_station_id INTEGER;
-        the_ending_station_id INTEGER;
         the_tube_id INTEGER;
         other_way_average NUMERIC;
         result NUMERIC;
     BEGIN
-        -- CHECK IF STATIONS EXIST
-        SELECT station_id INTO the_starting_station_id FROM stations WHERE name = starting_station_name;
-        IF NOT FOUND THEN
-            RAISE EXCEPTION 'Station % not found', starting_station_name;
-        END IF;
-
-        SELECT station_id INTO the_ending_station_id FROM stations WHERE name = ending_station_name;
-        IF NOT FOUND THEN
-            RAISE EXCEPTION 'Station % not found', ending_station_name;
-        END IF;
-
         -- GET TUBE ID
         SELECT tube_id INTO the_tube_id FROM tubes WHERE starting_station_id = the_starting_station_id AND ending_station_id = the_ending_station_id;
         IF NOT FOUND THEN
-            RAISE EXCEPTION 'Tube between stations % and % not found', starting_station_name, ending_station_name;
+            RAISE EXCEPTION 'Tube between stations % and % not found', the_starting_station_id, the_ending_station_id;
         END IF;
 
         -- COUNT AVERAGE PASSENGER COUNT
@@ -457,7 +436,7 @@ AS $$
             -- UPDATE TUBE ID
             SELECT tube_id INTO the_tube_id FROM tubes WHERE starting_station_id = the_ending_station_id AND ending_station_id = the_starting_station_id;
             IF NOT FOUND THEN
-                RAISE EXCEPTION 'Tube between stations % and % not found', ending_station_name, starting_station_name;
+                RAISE EXCEPTION 'Tube between stations % and % not found', the_ending_station_id, the_starting_station_id;
             END IF;
 
             -- COUNT AVERAGE PASSENGER COUNT

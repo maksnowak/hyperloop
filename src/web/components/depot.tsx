@@ -2,7 +2,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import React from "react";
 
-export interface DepotProps {
+interface DepotProps {
   depot_id: number;
   name: string;
   latitude: Decimal;
@@ -24,3 +24,5 @@ const Depot = ({ depot_id, name, latitude, longitude }: DepotProps) => {
 };
 
 export default Depot;
+
+export const dynamic = 'force-dynamic';

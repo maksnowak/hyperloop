@@ -23,3 +23,5 @@ const Depots = async () => {
 };
 
 export default Depots;
+
+export const dynamic = 'force-dynamic';

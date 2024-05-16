@@ -146,3 +146,6 @@ function getLinkedStations(stations: Station[], tube: Tube) {
   const name2 = station2?.name;
   return { pos, name1, name2 };
 }
+
+
+export const dynamic = 'force-dynamic';
