@@ -6,6 +6,7 @@ export async function GET(request: Request) {
 
     const departureTime: string = searchParams.get("departure_time")!;
     const arrivalTime: string = searchParams.get("departure_time")!;
+    // @ts-ignore
     const capsule: number = searchParams.get("capsule")!;
     // current_station_id: number;
     // next_station_id: number;
@@ -20,7 +21,7 @@ export async function GET(request: Request) {
     try {
         await prisma.$queryRaw`CALL add_schedule(${departureTime}, ${arrivalTime}, CAST(${capsule} AS INTEGER))`;
         return NextResponse.json({ message: "Schedule added successfully", status: 200 });
-    } catch (e) {
+    } catch (e: any) {
         const errorMessage = e.message.split('ERROR:').at(-1).trim().replace(/`/g, '');
         console.log(e.message);
         return NextResponse.json({ message: errorMessage, status: 500 });
