@@ -10,6 +10,7 @@ const Sidebar = () => {
             <a href="/schedules">Schedules</a>
             <a href="/repairs">Repair History</a>
             <a href="/stations">Stations</a>
+            <a href="/reports">Reports</a>
         </div>
     );
 };
