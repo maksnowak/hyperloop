@@ -26,3 +26,5 @@ const Capsules = async () => {
 };
 
 export default Capsules;
+
+export const dynamic = 'force-dynamic';

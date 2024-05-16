@@ -28,3 +28,5 @@ const Repair = (props: {
 };
 
 export default Repair;
+
+export const dynamic = 'force-dynamic';
