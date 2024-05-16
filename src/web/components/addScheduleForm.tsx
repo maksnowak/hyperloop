@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 
 const AddScheduleForm = () => {
-    const [stations, setStations] = useState<string[]>([]);
+    const [stations, setStations] = useState([]);
     const [selectedStations, setSelectedStations] = useState([]);
     const [departureTime, setDepartureTime] = useState("");
     const [capsuleType, setCapsuleType] = useState("");
@@ -14,7 +14,7 @@ const AddScheduleForm = () => {
             try {
                 const response = await fetch(`http://localhost:3000/api/getAllStations`);
                 const data = await response.json();
-                setStations(data);
+                setStations(data.data);
             } catch (error) {
                 console.error("Error fetching stations:", error);
             }
@@ -62,7 +62,7 @@ const AddScheduleForm = () => {
                     if (!selectedStations.includes(e.target.value)) {
                         setSelectedStations([...selectedStations, e.target.value]);
                     }
-                    // console.log(stations, selectedStations);
+                    console.log(stations, selectedStations);
                 }}>
                     <option value=""></option >
                     {stations.map((s) => {
