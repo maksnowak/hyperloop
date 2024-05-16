@@ -1,3 +1,4 @@
+//@ts-nocheck
 "use client";
 import { Decimal } from "@prisma/client/runtime/library";
 import React, { FC } from "react";
@@ -11,6 +12,7 @@ import {
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import Station from "./station";
+import Tube from "./tube";
 
 interface capsule_location_event {
     event_id: number;
@@ -110,12 +112,12 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
                     );
                 })}
                 {tubes.map((tube) => {
-                    const { pos, name1, name2 } = getLinkedStations(stations, tube);
+                    const { pos } = getLinkedStations(stations, tube);
 
                     return (
                         <Polyline key={tube.tube_id} positions={pos}>
                             <Popup>
-                                Trasa {name1}-{name2}
+                                <Tube tube={tube} />
                             </Popup>
                         </Polyline>
                     );
