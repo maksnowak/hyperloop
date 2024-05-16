@@ -2,7 +2,7 @@
 import React from "react";
 import { useState } from "react";
 
-export default function RepairActionButton({ capsule_id, status }) {
+export default function RepairActionButton({ capsule_id, status }: any) {
     const [text, setText] = React.useState(status === "Under repair" ? "End repair" : "Start repair");
     const [label, setLabel] = React.useState("");
     const [isDisabled, setIsDisabled] = React.useState(false);
