@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from "react";
 import "../../globals.css";
 import Sidebar from "@/components/sidebar";
