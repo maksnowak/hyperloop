@@ -26,7 +26,7 @@ const TimetableForm = (props: {
 
                 <button className="hyperloop-item" onClick={async (e) => {
                     e.preventDefault();
-                    const response = await (await fetch(`http://localhost:3000/api/schedules/setTimetable?schedule_id=${s.schedule_id}&newDepartureTime=${newDepartureTime}&newArrivalTime=${newArrivalTime}`)).json();
+                    const response = await (await fetch(`/api/schedules/setTimetable?schedule_id=${s.schedule_id}&newDepartureTime=${newDepartureTime}&newArrivalTime=${newArrivalTime}`)).json();
 
                     if (response.status === 200) {
                         console.log(response.message);
