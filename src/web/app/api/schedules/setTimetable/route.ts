@@ -33,3 +33,5 @@ export async function GET(request: Request) {
         return NextResponse.json({ message: e.message, status: 500 });
     }
 }
+
+export const dynamic = 'force-dynamic';
