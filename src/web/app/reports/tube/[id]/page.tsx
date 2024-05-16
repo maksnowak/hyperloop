@@ -24,7 +24,7 @@ const GenerateTubeReport = async ({
     return (
         <>
             <ReportTopBar type="tube" target={name!.name} />
-            <h4>Average daily number of passengers: {avgPassengers.data.average_passenger_count || "0"}</h4>
+            <h4>Average daily number of passengers: {avgPassengers.data[0].average_passenger_count || "0"}</h4>
             <TubeTrips id={params.id} from={searchParams.from} to={searchParams.to}/>
             <h3>Generated power</h3>
             <LineChartComponent url={`http://localhost:3000/api/reports/getPowerStats?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`} labels_key="time_of_measurement" data_key="generated_power" label_name="Power"/>

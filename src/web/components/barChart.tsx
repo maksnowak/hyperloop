@@ -27,7 +27,7 @@ const BarChartComponent = ({url, labels, label_names}: ChartProps) => {
     }, [url]);
 
     const data = {
-        labels: labels,
+        labels: [""],
         datasets: labels.map((label) => ({
             label: label_names ? label_names[labels.indexOf(label)] : label,
             data: apiData?.map((item: any) => item[label]),
