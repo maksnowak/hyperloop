@@ -10,22 +10,21 @@ const AddScheduleForm = () => {
     const [bothWays, setBothWays] = useState(false);
 
     useEffect(() => {
-        setStations(["3", "4", "5"]);
-        console.log(stations);
-        // const fetchData = React.cache(async () => {
-        //     try {
-        //         // const response = await fetch(`http://localhost:3000/api/capsules/getStations`);
-        //         // const data = await response.json();
-        //     } catch (error) {
-        //         console.error("Error fetching stations:", error);
-        //     }
-        // });
-        // fetchData();
+        const fetchData = React.cache(async () => {
+            try {
+                const response = await fetch(`http://localhost:3000/api/getAllStations`);
+                const data = await response.json();
+                setStations(data);
+            } catch (error) {
+                console.error("Error fetching stations:", error);
+            }
+        });
+        fetchData();
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await (await fetch(`/api/schedules/addSchedule?station_names=${stations}&starting_time=${departureTime}&capsule_type=${capsuleType}&both_ways=${bothWays}`)).json();
+        const response = await (await fetch(`/api/schedules/addSchedule?station_names=${selectedStations}&starting_time=${departureTime}&capsule_type=${capsuleType}&both_ways=${bothWays}`)).json();
         if (response.status === 200) {
             console.log(response.message);
             setLabel(response.message);
@@ -59,26 +58,23 @@ const AddScheduleForm = () => {
                 <br />
 
                 <label htmlFor="station">Stations</label>
-                <select required id="station" value={stations} onChange={(e) => {
-                    // if (!selectedStations.includes(e.target.value)) {
-                    setSelectedStations([...selectedStations, e.target.value]);
-                    // }
-                    console.log(stations, selectedStations);
+                <select required id="station" value={stations.length} onChange={(e) => {
+                    if (!selectedStations.includes(e.target.value)) {
+                        setSelectedStations([...selectedStations, e.target.value]);
+                    }
+                    // console.log(stations, selectedStations);
                 }}>
                     <option value=""></option >
-                    <option value="1">1</option >
-                    <option value="2">2</option >
                     {stations.map((s) => {
-                        <option key={s} value={s}>{s}</option>
-                        // <option key={s.station_id} value={s.station_id}>
-                        //     {s.name}
-                        // </option>
+                        <option key={s.station_id} value={s.station_id}>
+                            {s.name}
+                        </option>
                     })}
                 </select>
                 <br />
 
                 <div className="hyperloop-grid">
-                    {selectedStations.map((s) => <div className="hyperloop-item">{s}</div>)}
+                    {selectedStations.map((s) => <div className="hyperloop-item">{s.name}</div>)}
                 </div >
                 <br />
 
