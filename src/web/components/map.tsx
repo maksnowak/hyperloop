@@ -7,12 +7,14 @@ import {
     Marker,
     Polyline,
     Popup,
-    TileLayer,
+    TileLayer, useMapEvents,
 } from "react-leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import Station from "./station";
 import Tube from "./tube";
+import AddDepotOrStationForm from "@/components/addDepotOrStationForm";
+import AddStationConnectionForm from "@/components/addStationConnectionForm";
 
 interface capsule_location_event {
     event_id: number;
@@ -62,12 +64,39 @@ interface MapProps {
 }
 
 const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
+    const [lastClicked, setLastClicked] = React.useState<null | number[]>(null);
+    const DynamicMarker = () => {
+
+        const map = useMapEvents({
+            click(e) {
+                setLastClicked([
+                    e.latlng.lat,
+                    e.latlng.lng
+                ]);
+            },
+        })
+
+        return (
+            lastClicked ?
+                <Marker
+                    key={lastClicked[0]}
+                    position={lastClicked}
+                >
+                    <Popup>
+                        <AddDepotOrStationForm params={{ lat: lastClicked[0], lon: lastClicked[1] }} />
+                    </Popup>
+                </Marker>
+                : null
+        )
+
+    }
+
     return (
         <div>
             <MapContainer
                 style={{ height: "100vh" }}
-                center={[52.218, 21.011]}
-                zoom={8}
+                center={[51.875, 19.415]}
+                zoom={7}
                 scrollWheelZoom={false}
             >
                 <TileLayer
@@ -107,6 +136,7 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
                         >
                             <Popup>
                                 <Station station={station} />
+                                <AddStationConnectionForm params={{ station_id: station.station_id, station_name: station.name }} />
                             </Popup>
                         </Marker>
                     );
@@ -122,6 +152,7 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
                         </Polyline>
                     );
                 })}
+                <DynamicMarker />
             </MapContainer>
         </div>
     );
