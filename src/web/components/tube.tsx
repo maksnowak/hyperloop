@@ -14,7 +14,8 @@ export interface TubeProps {
 const Tube = (props: {
     tube: TubeProps
 }) => {
-    const travelTime: string = `${props.tube.estimated_travel_time.getHours()}h ${props.tube.estimated_travel_time.getMinutes()}min`;
+    console.log(props.tube.estimated_travel_time)
+    const travelTime: string = `${new Date(props.tube.estimated_travel_time).getMinutes()}min ${new Date(props.tube.estimated_travel_time).getSeconds()}s`;
 
     return (
         <div>
