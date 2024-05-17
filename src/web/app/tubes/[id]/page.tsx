@@ -3,11 +3,26 @@ import "../../globals.css";
 import Sidebar from "@/components/sidebar";
 import prisma from "../../client";
 
+export interface TubeDataProps {
+    tube_id: number;
+    name: string;
+    length: number;
+    max_speed: number;
+    estimated_travel_time: Date;
+    starting_station_id: number;
+    ending_station_id: number;
+    data_id: number | null;
+    time_of_measurement: Date | null;
+    pressure: number | null;
+    generated_power: number | null;
+    referred_tube_id: number | null;
+}
+
 const TubePage = async ({ params }: { params: { id: string } }) => {
-    const tubes = await prisma.$queryRaw`SELECT * FROM tubes t left join tubes_data td on td.referred_tube_id = t.tube_id WHERE t.tube_id = CAST(${params.id} AS INTEGER)`;
+    const tubes: TubeDataProps[] = await prisma.$queryRaw`SELECT * FROM tubes t left join tubes_data td on td.referred_tube_id = t.tube_id WHERE t.tube_id = CAST(${params.id} AS INTEGER)`;
 
     var data;
-    if (!tubes[0].pressure) {
+    if (tubes[0].pressure == null) {
         data = <center>
             <div className="hyperloop-item w-1/3">
                 <h3>No data gathered</h3>
