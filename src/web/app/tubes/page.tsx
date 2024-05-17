@@ -6,8 +6,8 @@ import Tube from "@/components/tube";
 
 const Tubes = async () => {
     const tubes = (await prisma.tubes.findMany())
-        .map(t => <div className="hyperloop-item w-2/3">
-            <Tube key={t.tube_id} tube={t} />
+        .map(t => <div key={t.tube_id} className="hyperloop-item w-2/3">
+            <Tube tube={t} />
         </div >);
 
     return (
