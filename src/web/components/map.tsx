@@ -7,12 +7,13 @@ import {
     Marker,
     Polyline,
     Popup,
-    TileLayer,
+    TileLayer, useMapEvents,
 } from "react-leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import Station from "./station";
 import Tube from "./tube";
+import AddDepotOrStationForm from "@/components/addDepotOrStationForm";
 
 interface capsule_location_event {
     event_id: number;
@@ -62,6 +63,33 @@ interface MapProps {
 }
 
 const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
+    const [lastClicked, setLastClicked] = React.useState<null | number[]>(null);
+    const DynamicMarker = () => {
+
+        const map = useMapEvents({
+            click(e) {
+                setLastClicked([
+                    e.latlng.lat,
+                    e.latlng.lng
+                ]);
+            },
+        })
+
+        return (
+            lastClicked ?
+                <Marker
+                    key={lastClicked[0]}
+                    position={lastClicked}
+                >
+                    <Popup>
+                        <AddDepotOrStationForm params={{ lat: lastClicked[0], lon: lastClicked[1] }} />
+                    </Popup>
+                </Marker>
+                : null
+        )
+
+    }
+
     return (
         <div>
             <MapContainer
@@ -122,6 +150,7 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
                         </Polyline>
                     );
                 })}
+                <DynamicMarker />
             </MapContainer>
         </div>
     );
