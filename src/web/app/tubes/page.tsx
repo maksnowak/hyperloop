@@ -2,7 +2,7 @@
 import React from "react";
 import "@/app/globals.css";
 import Sidebar from "@/components/sidebar";
-import prisma from "@/app/client";
+import prisma from "@/client";
 import Tube from "@/components/tube";
 
 const Tubes = async () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import "../../globals.css";
 import Sidebar from "@/components/sidebar";
-import prisma from "@/app/client";
+import prisma from "@/client";
 import Capsule from "@/components/capsule";
 
 const DepotPage = async ({ params }: { params: { id: string } }) => {

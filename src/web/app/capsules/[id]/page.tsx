@@ -1,7 +1,7 @@
 import React from "react";
 import "@/app/globals.css";
 import Sidebar from "@/components/sidebar";
-import prisma from "@/app/client";
+import prisma from "@/client";
 import RepairActionButton from "@/components/repairActionButton";
 import FilteredCapsuleRepairs from "@/components/filteredCapsuleRepairs";
 
