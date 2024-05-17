@@ -66,9 +66,9 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
         <div>
             <MapContainer
                 style={{ height: "100vh" }}
-                center={[52.218, 21.011]}
-                zoom={8}
-                scrollWheelZoom={true}
+                center={[51.875, 19.415]}
+                zoom={7}
+                scrollWheelZoom={false}
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
