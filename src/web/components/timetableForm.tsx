@@ -1,4 +1,5 @@
 //@ts-nocheck
+// DEPRECATED
 "use client"
 
 import { useState } from "react";
