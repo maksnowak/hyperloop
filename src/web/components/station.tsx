@@ -16,7 +16,7 @@ const Station = (props: {
         <div>
             <a href={`stations/${props.station.station_id}`}>
                 <h3>Station name: {props.station.name}</h3>
-                <p>Localization: ({Math.round(props.station.latitude)}, {Math.round(props.station.longitude)})</p>
+                <p>Localization: ({props.station.latitude}, {props.station.longitude})</p>
                 <p>Platforms: {props.station.platforms}</p>
             </a>
         </div>
