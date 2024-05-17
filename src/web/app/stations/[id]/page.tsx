@@ -2,9 +2,29 @@
 import React, {useEffect} from "react";
 import "../../globals.css";
 import Sidebar from "@/components/sidebar";
-import Schedule, {ScheduleProps} from "@/components/schedule";
 import {StationProps} from "@/components/station";
 import ArrivalOrDeparture from "@/components/arrivalOrDeparture";
+
+const extractTime = (time: string) => {
+    const date = new Date(time);
+    return {
+        hours: date.getUTCHours(),
+        minutes: date.getUTCMinutes(),
+        seconds: date.getUTCSeconds(),
+    };
+}
+
+const compareTimes = (time1: string, time2: string) => {
+    const t1 = extractTime(time1);
+    const t2 = extractTime(time2);
+    if (t1.hours !== t2.hours) {
+        return t1.hours - t2.hours;
+    }
+    if (t1.minutes !== t2.minutes) {
+        return t1.minutes - t2.minutes;
+    }
+    return t1.seconds - t2.seconds;
+}
 
 const StationPage = ({ params }: { params: { id: string } }) => {
     const [gridText, setGridText] = React.useState("");
@@ -40,7 +60,10 @@ const StationPage = ({ params }: { params: { id: string } }) => {
         }
         setGridText(view);
         const schedules = response.data;
-        setData(schedules.sort((s1, s2) => s1.schedule_id - s2.schedule_id)
+        setData(schedules.sort((s1, s2) => compareTimes(
+            view === "Arrivals" ? s1.arrival_time : s1.departure_time,
+            view === "Arrivals" ? s2.arrival_time : s2.departure_time
+        ))
             .map((s) => <ArrivalOrDeparture key={s.schedule_id} {...s} />));
         console.log(gridText);
     }
