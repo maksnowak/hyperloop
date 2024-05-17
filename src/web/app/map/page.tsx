@@ -8,7 +8,7 @@ const Map = async () => {
   const MapComponent = useMemo(
     () =>
       nextDynamic(() => import("@/components/map"), {
-        loading: () => <p>A map is loading</p>,
+        loading: () => <p>Loading...</p>,
         ssr: false,
       }),
     []
@@ -17,11 +17,9 @@ const Map = async () => {
   const capsule_location_events =
     await prisma.capsule_location_events.findMany();
 
-  const depots = (await (await fetch(`http://localhost:3000/api/depots/getDepots`)).json()).data;
-
-  const stations = (await (await fetch(`http://localhost:3000/api/stations/getStations`)).json()).data;
-
-  const tubes = (await (await fetch(`http://localhost:3000/api/tubes/getTubes`)).json()).data;
+    const depots = await prisma.depots.findMany();
+    const stations = await prisma.stations.findMany();
+    const tubes = await prisma.tubes.findMany();
 
   return (
     <div className="relative">
