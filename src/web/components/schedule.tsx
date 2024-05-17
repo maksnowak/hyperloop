@@ -25,7 +25,7 @@ const Schedule = ({
 }: ScheduleProps) => {
     return (
         <>
-            <a href={`/schedules/${schedule_id}`}>
+            <a>
                 <button className="hyperloop-item w-2/3">
                     <h3 className="text-center">{schedule_id}</h3>
                     <p>Departure time: {departure_time.toLocaleTimeString('en-GB', {timeZone: 'UTC'})}</p>

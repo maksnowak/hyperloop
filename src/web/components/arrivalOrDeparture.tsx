@@ -13,7 +13,7 @@ const ArrivalOrDeparture = ({
                   }: ScheduleProps) => {
     return (
         <>
-            <a href={`/schedules/${schedule_id}`}>
+            <a>
                 <button className="hyperloop-item w-2/3">
                     <h3 className="text-center">{schedule_id}</h3>
                     <p>Departure time: {departure_time.split('T').at(-1).split('.').at(0).trim()}</p>
