@@ -14,6 +14,7 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import Station from "./station";
 import Tube from "./tube";
 import AddDepotOrStationForm from "@/components/addDepotOrStationForm";
+import AddStationConnectionForm from "@/components/addStationConnectionForm";
 
 interface capsule_location_event {
     event_id: number;
@@ -135,6 +136,7 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
                         >
                             <Popup>
                                 <Station station={station} />
+                                <AddStationConnectionForm params={{ station_id: station.station_id, station_name: station.name }} />
                             </Popup>
                         </Marker>
                     );
