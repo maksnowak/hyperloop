@@ -9,6 +9,7 @@ const Sidebar = () => {
             <a href="/depots">Depots</a>
             <a href="/schedules">Schedules</a>
             <a href="/repairs">Repair History</a>
+            <a href="/ride_history">Ride History</a>
             <a href="/stations">Stations</a>
             <a href="/reports">Reports</a>
         </div>
