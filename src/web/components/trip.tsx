@@ -28,6 +28,7 @@ const Trip = (props: {
                 <p>Tickets sold: {trip.tickets_sold}</p>
                 <p>Cargo: {trip.cargo}, {trip.cargo_weight}kg</p>
                 <p>Tube taken: {tube}</p>
+                <p>Capsule id: {trip.referred_capsule_id}</p>
             </div>
         </>
     );
