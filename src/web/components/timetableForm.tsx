@@ -16,11 +16,11 @@ const TimetableForm = (props: {
     return (
         <>
             <form>
-                <label>Departure time: {s.departure_time.toLocaleTimeString()} →</label>
+                <label>Departure time: {s.departure_time.toLocaleTimeString('en-GB', {timeZone: 'UTC'})} →</label>
                 <input type="time" onChange={(e) => setNewDepartureTime(e.target.value)} />
                 <br />
 
-                <label>Arrival time: {s.arrival_time.toLocaleTimeString()} →</label>
+                <label>Arrival time: {s.arrival_time.toLocaleTimeString('en-GB', {timeZone: 'UTC'})} →</label>
                 <input type="time" onChange={(e) => setNewArrivalTime(e.target.value)} />
                 <br />
 

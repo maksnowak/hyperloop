@@ -14,10 +14,10 @@ const Station = (props: {
 }) => {
     return (
         <div>
-            <a>
+            <a href={`stations/${props.station.station_id}`}>
                 <h3>Station name: {props.station.name}</h3>
                 <p>Localization: ({Math.round(props.station.latitude)}, {Math.round(props.station.longitude)})</p>
-                <p>Perons: {props.station.platforms}</p>
+                <p>Platforms: {props.station.platforms}</p>
             </a>
         </div>
     );
