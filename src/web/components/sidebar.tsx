@@ -6,9 +6,11 @@ const Sidebar = () => {
             <a href="/">Home</a>
             <a href="/capsules">Capsules</a>
             <a href="/map">Map</a>
+            <a href="/tubes">Tubes</a>
             <a href="/depots">Depots</a>
             <a href="/schedules">Schedules</a>
             <a href="/repairs">Repair History</a>
+            <a href="/ride_history">Ride History</a>
             <a href="/stations">Stations</a>
             <a href="/reports">Reports</a>
         </div>
