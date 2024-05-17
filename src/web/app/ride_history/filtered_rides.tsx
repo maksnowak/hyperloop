@@ -67,8 +67,8 @@ const FilteredRides = (props: {
             </form>
 
             <div className="hyperloop-grid">
-                {getFilteredRides().map(t => <div>
-                    <Trip key={t.ride_id} trip={t} tube={t.name} />
+                {getFilteredRides().map(t => <div key={t.ride_id}>
+                    <Trip trip={t} tube={t.name} />
                 </div>)}
             </div>
         </>
