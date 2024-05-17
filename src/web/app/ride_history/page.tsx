@@ -1,9 +1,10 @@
 import "@/app/globals.css"
 import Sidebar from "@/components/sidebar";
 import FilteredRides from "./filtered_rides";
+import { DetailedTripProps } from "./filtered_rides";
 
 const RideHistoryPage = async ({ }: { params: { id: string } }) => {
-    const trips: DetailedTripProps = await prisma.$queryRaw`SELECT * FROM trips_history th JOIN tubes t on t.tube_id = th.referred_tube_id`;
+    const trips: DetailedTripProps[] = await prisma.$queryRaw`SELECT * FROM trips_history th JOIN tubes t on t.tube_id = th.referred_tube_id`;
 
     return (
         <div>
