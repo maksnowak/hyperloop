@@ -38,6 +38,7 @@ startingPosition = [52.232149, 21.006627]
 endingPosition = [50.866077, 20.628568]
 traceDistance = distance(startingPosition, endingPosition)
 speed = 0.001
+capsule_id = 22
 
 direction = [
     (endingPosition[0] - startingPosition[0]) / traceDistance, 
@@ -48,8 +49,8 @@ next_position = startingPosition
 while distance(next_position, endingPosition) > 0.1:
     time.sleep(sample_in_s)
 
-    notify_location(CapsuleLocationEvent(next_position[0], next_position[1], 2137))
+    notify_location(CapsuleLocationEvent(next_position[0], next_position[1], capsule_id))
     next_position = [next_position[0] + direction[0] * speed, next_position[1] + direction[1] * speed]
 
 next_position = endingPosition
-notify_location(CapsuleLocationEvent(next_position[0], next_position[1], 2137))
+notify_location(CapsuleLocationEvent(next_position[0], next_position[1], capsule_id))

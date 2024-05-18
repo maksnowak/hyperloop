@@ -1,9 +1,4 @@
-const { Kafka } = require('kafkajs');
-
-const kafka = new Kafka({
-	clientId: 'web',
-	brokers: ['localhost:9092'],
-});
+const { kafka } = require('../kafka.ts');
 
 const setup = (io) => {
 	io.of('/capsules').on('connection', async (socket) => {

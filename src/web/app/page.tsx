@@ -1,20 +1,30 @@
 import InteractiveMap from '@/components/location/interactiveMap';
-import { io } from 'socket.io-client';
 import prisma from '../client';
+import { toClientComponentProps } from '@/utils/rendering';
 
-const socket = io();
+const fix = (a: any) => JSON.parse(JSON.stringify(a));
+
 
 export default async function Page() {
+	const capsulesPromise = prisma.capsules.findMany();
 	const depotsPromise = prisma.depots.findMany();
 	const stationsPromise = prisma.stations.findMany();
 	const tubesPromise = prisma.tubes.findMany();
 
-	const [depots, stations, tubes] = await Promise.all([depotsPromise, stationsPromise, tubesPromise]);
+	const [capsules, depots, stations, tubes] = await Promise.all([capsulesPromise, depotsPromise, stationsPromise, tubesPromise]);
+
+	console.log(capsules);
+	
 
 	return (
 		<div className='h-screen'>
 			<div className='h-5/6 rounded-lg overflow-hidden'>
-				<InteractiveMap depots={depots} stations={stations} tubes={tubes} />
+				<InteractiveMap
+					capsules={toClientComponentProps(capsules)}
+					depots={toClientComponentProps(depots)}
+					stations={toClientComponentProps(stations)}
+					tubes={toClientComponentProps(tubes)}
+				/>
 			</div>
 		</div>
 	);
