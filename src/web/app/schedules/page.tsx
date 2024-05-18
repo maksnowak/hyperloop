@@ -2,7 +2,7 @@ import React from "react";
 import "../globals.css";
 import Sidebar from "@/components/sidebar";
 import Schedule from "@/components/schedule";
-import prisma from "../client"
+import prisma from "@/client"
 import AddScheduleForm from "@/components/addScheduleForm";
 
 const Schedules = async () => {

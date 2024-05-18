@@ -3,7 +3,7 @@ import "../globals.css";
 import Sidebar from "@/components/sidebar";
 import Capsule from "@/components/capsule";
 import AddCapsuleForm from "@/components/addCapsuleForm";
-import prisma from "../client";
+import prisma from "@/client";
 
 const Capsules = async () => {
     const capsules = (await prisma.capsules.findMany())
@@ -13,10 +13,10 @@ const Capsules = async () => {
     return (
         <>
             <h1 className="text-center">Capsules</h1>
-          <Sidebar />
-          <AddCapsuleForm />
-          <br/>
-          <div className="hyperloop-grid">
+            <Sidebar />
+            <AddCapsuleForm />
+            <br />
+            <div className="hyperloop-grid">
                 {capsules}
             </div>
         </>

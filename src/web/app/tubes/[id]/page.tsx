@@ -1,7 +1,7 @@
 import React from "react";
 import "../../globals.css";
 import Sidebar from "@/components/sidebar";
-import prisma from "../../client";
+import prisma from "@/client";
 
 export interface TubeDataProps {
     tube_id: number;

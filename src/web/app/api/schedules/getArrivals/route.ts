@@ -1,12 +1,12 @@
 import prisma from "@/client";
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const arrival_id: number = +searchParams.get("arrival_id")!;
     if (!arrival_id) {
-        return NextResponse.json({data: [], message: "Missing arrival_id", status: 400 });
+        return NextResponse.json({ data: [], message: "Missing arrival_id", status: 400 });
     }
 
     try {
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     } catch (e: any) {
         const errorMessage = e.message.split('ERROR:').at(-1).trim().replace(/`/g, '');
         console.log(e.message);
-        return NextResponse.json({data: [], message: errorMessage, status: 500 });
+        return NextResponse.json({ data: [], message: errorMessage, status: 500 });
     }
 }
 
