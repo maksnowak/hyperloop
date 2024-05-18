@@ -1,7 +1,7 @@
 "use client";
 import React, {useEffect} from "react";
 
-const AddStationConnectionForm = ({ params }: { params: { station_id: number, station_name: string } }) => {
+const AddStationConnectionForm = ({ params }: { params: { station_id: number, station_name: string, refreshHandle: Function } }) => {
     const [stations, setStations] = React.useState([]);
     const [isDisabled, setIsDisabled] = React.useState(false);
     const [label, setLabel] = React.useState("");
@@ -25,9 +25,7 @@ const AddStationConnectionForm = ({ params }: { params: { station_id: number, st
         setIsDisabled(true);
         if (response.status === 200) {
             console.log(response.message);
-            setLabel(response.message + " Reloading in 1 second...");
-            await new Promise(f => setTimeout(f, 1000));
-            window.location.reload();
+            params.refreshHandle("Tube");
         } else {
             console.log("ERROR: " + response.message);
             setLabel("ERROR: " + response.message);

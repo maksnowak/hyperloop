@@ -63,7 +63,54 @@ interface MapProps {
     tubes: Tube[];
 }
 
-const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
+const Map: FC<MapProps> = ({ cle }) => {
+    const [depots, setDepots] = React.useState<Depot[]>([]);
+    const [stations, setStations] = React.useState<Station[]>([]);
+    const [tubes, setTubes] = React.useState<Tube[]>([]);
+    const [refreshElement, setRefreshElement] = React.useState<null | string>(null);
+    const [isFetching, setIsFetching] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        const fetchAll = async () => {
+            setDepots((await (await fetch("/api/depots/getDepots", { cache: 'no-store' })).json()).data);
+            setStations((await (await fetch("/api/stations/getStations", { cache: 'no-store' })).json()).data);
+            setTubes((await (await fetch("/api/tubes/getTubes", { cache: 'no-store' })).json()).data);
+        }
+        fetchAll();
+    }, []);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            if (!refreshElement || isFetching) return;
+
+            setIsFetching(true);
+
+            try {
+                if (refreshElement === "Depot") {
+                    const response = await fetch("/api/depots/getDepots", { cache: 'no-store' });
+                    const data = await response.json();
+                    setDepots(data.data);
+                } else if (refreshElement === "Station") {
+                    const response = await fetch("/api/stations/getStations", { cache: 'no-store' });
+                    const data = await response.json();
+                    setStations(data.data);
+                } else if (refreshElement === "Tube") {
+                    const response = await fetch("/api/tubes/getTubes", { cache: 'no-store' });
+                    const data = await response.json();
+                    setTubes(data.data);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setIsFetching(false);
+                setRefreshElement(null);
+            }
+        };
+
+        fetchData();
+    }, [refreshElement, isFetching]);
+
+    // DYNAMIC MARKER
     const [lastClicked, setLastClicked] = React.useState<null | number[]>(null);
     const DynamicMarker = () => {
 
@@ -83,7 +130,7 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
                     position={lastClicked}
                 >
                     <Popup>
-                        <AddDepotOrStationForm params={{ lat: lastClicked[0], lon: lastClicked[1] }} />
+                        <AddDepotOrStationForm params={{ lat: lastClicked[0], lon: lastClicked[1], refreshHandle: setRefreshElement, markerHandle: setLastClicked }} />
                     </Popup>
                 </Marker>
                 : null
@@ -94,6 +141,7 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
     return (
         <div>
             <MapContainer
+                key={`${depots.length}-${stations.length}-${tubes.length}`}
                 style={{ height: "100vh" }}
                 center={[51.875, 19.415]}
                 zoom={7}
@@ -136,7 +184,7 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
                         >
                             <Popup>
                                 <Station station={station} />
-                                <AddStationConnectionForm params={{ station_id: station.station_id, station_name: station.name }} />
+                                <AddStationConnectionForm params={{ station_id: station.station_id, station_name: station.name, refreshHandle: setRefreshElement }} />
                             </Popup>
                         </Marker>
                     );
