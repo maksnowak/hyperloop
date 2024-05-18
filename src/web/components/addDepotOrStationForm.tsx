@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-const AddDepotOrStationForm = ({ params }: { params: { lat: number, lon: number } }) => {
+const AddDepotOrStationForm = ({ params }: { params: { lat: number, lon: number, refreshHandle: Function, markerHandle: Function } }) => {
     const [name, setName] = React.useState("");
     const [type, setType] = React.useState("");
     const [isDisabled, setIsDisabled] = React.useState(false);
@@ -13,9 +13,8 @@ const AddDepotOrStationForm = ({ params }: { params: { lat: number, lon: number 
         setIsDisabled(true);
         if (response.status === 200) {
             console.log(response.message);
-            setLabel(response.message + " Reloading in 1 second...");
-            await new Promise(f => setTimeout(f, 1000));
-            window.location.reload();
+            params.markerHandle(null);
+            params.refreshHandle(type);
         } else {
             console.log("ERROR: " + response.message);
             setLabel("ERROR: " + response.message);

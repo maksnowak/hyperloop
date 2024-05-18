@@ -1,3 +1,4 @@
+//@ts-nocheck // z jakiegoś powodu nie wykrywa zmiany parametrów MapComponent
 import Sidebar from "@/components/sidebar";
 import React, { useMemo } from "react";
 import "../globals.css";
@@ -17,10 +18,6 @@ const Map = async () => {
     const capsule_location_events =
         await prisma.capsule_location_events.findMany();
 
-    const depots = await prisma.depots.findMany();
-    const stations = await prisma.stations.findMany();
-    const tubes = await prisma.tubes.findMany();
-
     return (
         <div className="relative">
             <div className="">
@@ -29,9 +26,6 @@ const Map = async () => {
             <div className="ml-32">
                 <MapComponent
                     cle={capsule_location_events}
-                    depots={depots}
-                    stations={stations}
-                    tubes={tubes}
                 />
             </div>
         </div>
