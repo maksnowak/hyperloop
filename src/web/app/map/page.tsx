@@ -7,7 +7,7 @@ import prisma from "../../client";
 const Map = async () => {
   const MapComponent = useMemo(
     () =>
-      nextDynamic(() => import("@/components/map"), {
+      nextDynamic(() => import("@/components/location/map"), {
         loading: () => <p>A map is loading</p>,
         ssr: false,
       }),

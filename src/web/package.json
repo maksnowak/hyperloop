@@ -3,24 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node server.js",
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.3.6",
+    "@nextui-org/shared-icons": "^2.0.7",
     "@prisma/client": "5.12.1",
     "@react-pdf/renderer": "^3.4.4",
     "chart.js": "^4.4.2",
+    "framer-motion": "^11.2.4",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
+    "kafkajs": "^2.2.4",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
-    "next": "14.2.1",
+    "next": "^14.2.3",
     "prisma": "^5.12.1",
     "react": "^18",
     "react-dom": "^18",
-    "react-leaflet": "^4.2.1"
+    "react-leaflet": "^4.2.1",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.12",

@@ -1,7 +1,7 @@
 //@ts-nocheck
 "use client";
 import { Decimal } from "@prisma/client/runtime/library";
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import {
     MapContainer,
     Marker,
@@ -11,23 +11,10 @@ import {
 } from "react-leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
-import Station from "./station";
-import Tube from "./tube";
+import Station from "../station";
+import Tube from "../tube";
+import { CapsuleMaker } from "./capsuleMarker";
 
-interface capsule_location_event {
-    event_id: number;
-    timestamp: Date;
-    latitude: Decimal;
-    longitude: Decimal;
-    speed: Decimal;
-    interior_conditions: string | null;
-    signal_strength: Decimal;
-    operational_status: string | null;
-    health_status: string | null;
-    referred_capsule_id: number;
-    referred_tube_id: number;
-    rau_id: number;
-}
 
 interface Depot {
     depot_id: number;
@@ -63,9 +50,9 @@ interface MapProps {
 
 const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
     return (
-        <div>
+        <div className="h-full">
             <MapContainer
-                style={{ height: "100vh" }}
+                className="h-full"
                 center={[52.218, 21.011]}
                 zoom={8}
                 scrollWheelZoom={false}
@@ -74,7 +61,7 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {cle.map((capsule_location_event) => {
+                {/* {cle.map((capsule_location_event) => {
                     return (
                         <Marker
                             key={capsule_location_event.event_id}
@@ -88,7 +75,8 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
                             </Popup>
                         </Marker>
                     );
-                })}
+                })} */}
+				<CapsuleMaker />
                 {depots.map((depot) => {
                     return (
                         <Marker
@@ -115,12 +103,12 @@ const Map: FC<MapProps> = ({ cle, depots, stations, tubes }) => {
                     const { pos } = getLinkedStations(stations, tube);
 
                     return (
-                        <Polyline key={tube.tube_id} positions={pos}>
-                            <Popup>
-                                <Tube tube={tube} />
-                            </Popup>
-                        </Polyline>
-                    );
+						<Polyline key={tube.tube_id} positions={pos} color='#9ca3af'>
+							<Popup>
+								<Tube tube={tube} />
+							</Popup>
+						</Polyline>
+					);
                 })}
             </MapContainer>
         </div>
