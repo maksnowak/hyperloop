@@ -9,21 +9,6 @@ CREATE TABLE hyperloop.public.Capsules (
                          Servicing_depot_ID INTEGER NOT NULL
 );
 
-CREATE TABLE hyperloop.public.Capsule_location_events (
-                                         Event_ID            serial constraint capsule_location_events_pk primary key,
-                                         Timestamp           TIMESTAMP NOT NULL DEFAULT (now()),
-                                         Latitude            NUMERIC(9, 6) NOT NULL check ( Latitude >= -90 and Latitude <= 90 ),
-                                         Longitude           NUMERIC(9, 6) NOT NULL check ( Longitude >= -180 and Longitude <= 180 ),
-                                         Speed               NUMERIC(7, 3) NOT NULL check ( Speed >= 0 ),
-                                         Interior_conditions VARCHAR(32),
-                                         Signal_strength     NUMERIC(5, 2) NOT NULL check ( Signal_strength >= 0 and Signal_strength <= 100 ),
-                                         Operational_status  VARCHAR(32),
-                                         Health_status       VARCHAR(32),
-                                         Referred_capsule_ID INTEGER NOT NULL,
-                                         Referred_tube_ID    INTEGER NOT NULL,
-                                         Rau_ID              INTEGER NOT NULL
-);
-
 CREATE TABLE hyperloop.public.Depots (
                        Depot_ID  serial constraint depot_pk primary key,
                        Name      VARCHAR(32) NOT NULL,
@@ -115,18 +100,6 @@ ALTER TABLE hyperloop.public.Capsules
 
 ALTER TABLE hyperloop.public.Tubes_data
     ADD CONSTRAINT data_referred_tube_fk FOREIGN KEY ( Referred_tube_ID )
-        REFERENCES Tubes ( Tube_ID );
-
-ALTER TABLE hyperloop.public.Capsule_location_events
-    ADD CONSTRAINT events_referred_capsule_fk FOREIGN KEY ( Referred_capsule_ID )
-        REFERENCES Capsules ( Capsule_ID );
-
-ALTER TABLE hyperloop.public.Capsule_location_events
-    ADD CONSTRAINT events_referred_rau_fk FOREIGN KEY ( Rau_ID )
-        REFERENCES Remote_access_units ( Unit_ID );
-
-ALTER TABLE hyperloop.public.Capsule_location_events
-    ADD CONSTRAINT events_referred_tube_fk FOREIGN KEY ( Referred_tube_ID )
         REFERENCES Tubes ( Tube_ID );
 
 ALTER TABLE hyperloop.public.Repairs_history
