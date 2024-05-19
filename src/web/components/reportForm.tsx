@@ -53,10 +53,10 @@ const ReportForm = () => {
 
     return (
         <div>
-            <h3>Report form</h3>
+            <h1>Reports</h1>
             <form onSubmit={submitReport}>
                 <label>
-                    Report type:
+                    Report type:&nbsp;
                     <select value={reportType} required onChange={(e) => setReportType(e.target.value)}>
                         <option value="Select report type" disabled hidden>Select report type</option>
                         <option value="Station">Station</option>
@@ -66,23 +66,24 @@ const ReportForm = () => {
                 </label>
                 <br />
                 <label>
-                    Target:
+                    Target:&nbsp;
                     <select value={reportTarget} required onChange={(e) => setReportTarget(e.target.value)}>
                         {targets.map((target) => <option key={target} value={target}>{target}</option>)}
                     </select>
                 </label>
                 <br />
                 <label>
-                    From:
+                    From:&nbsp;
                     <input type="date" value={reportFrom} required onChange={(e) => setReportFrom(e.target.value)} />
                 </label>
                 <br />
                 <label>
-                    To:
+                    To:&nbsp;
                     <input type="date" value={reportTo} required onChange={(e) => setReportTo(e.target.value)} />
                 </label>
                 <br />
-                <input type="submit" value="Generate report"/>
+                <br />
+                <button className="hyperloop-item" type="submit">Generate report</button>
             </form>
         </div>
     )
