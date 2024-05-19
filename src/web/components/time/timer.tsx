@@ -6,15 +6,19 @@ const getTime = () => new Date();
 
 const ensureTwoDigits = (value: number) => value < 10 ? `0${value}` : value
 
+const toTimeString = (time: Date) => `${ensureTwoDigits(time.getHours())}:${ensureTwoDigits(time.getMinutes())}:${ensureTwoDigits(time.getSeconds())}`;
+
+const toDateString = (time: Date) => `${ensureTwoDigits(time.getDate())} / ${ensureTwoDigits(time.getMonth())} / ${time.getFullYear()}`;
+
 export const Timer = () => {
-    const [dateString, setDateString] = useState('');
-    const [timeString, setTimeString] = useState('');
+    const [dateString, setDateString] = useState(toDateString(getTime()));
+    const [timeString, setTimeString] = useState(toTimeString(getTime()));
 
     useEffect(() => {
         setInterval(() => {
             const time = getTime();
-            setTimeString(`${ensureTwoDigits(time.getHours())}:${ensureTwoDigits(time.getMinutes())}:${ensureTwoDigits(time.getSeconds())}`);
-            setDateString(`${ensureTwoDigits(time.getDate())} / ${ensureTwoDigits(time.getMonth())} / ${time.getFullYear()}`);
+            setTimeString(toTimeString(time));
+            setDateString(toDateString(time));
         }, 100);
     });
 
