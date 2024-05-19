@@ -1,4 +1,4 @@
-import { ArrowRightEndOnRectangleIcon, CalendarDaysIcon, ChartBarSquareIcon, HomeIcon, LifebuoyIcon, MapIcon, WrenchIcon } from "@heroicons/react/24/outline";
+import { ArrowRightEndOnRectangleIcon, CalendarDaysIcon, ChartBarSquareIcon, ChevronDoubleRightIcon, HomeIcon, LifebuoyIcon, MapIcon, WrenchIcon } from "@heroicons/react/24/outline";
 
 export interface Route {
 	path: string;
@@ -11,6 +11,7 @@ export const routes: Route[] = [
 	{ path: '/stations', title: 'Stations', icon: <ArrowRightEndOnRectangleIcon className='w-6 h-6' /> },
 	{ path: '/depots', title: 'Depots', icon: <HomeIcon className='w-6 h-6' /> },
 	{ path: '/capsules', title: 'Capsules', icon: <LifebuoyIcon className='w-6 h-6' /> },
+	{ path: '/tubes', title: 'Tubes', icon: <ChevronDoubleRightIcon className='w-6 h-6' /> },
 	{ path: '/schedules', title: 'Schedules', icon: <CalendarDaysIcon className='w-6 h-6' /> },
 	{ path: '/repairs', title: 'Repair History', icon: <WrenchIcon className='w-6 h-6' /> },
 	{ path: '/reports', title: 'Reports', icon: <ChartBarSquareIcon className='w-6 h-6' />}
