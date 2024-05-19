@@ -9,6 +9,7 @@ import { default as StationContainer } from '../station';
 import { default as TubeContainer } from '../tube';
 import AddDepotOrStationForm from '@/components/addDepotOrStationForm';
 import AddStationConnectionForm from '@/components/addStationConnectionForm';
+import { NewDepotOrStationMarker } from './newDepotOrStationMarker';
 
 const Map = () => {
 	const [capsules, setCapsules] = useState<Capsule[]>([]);
@@ -58,31 +59,6 @@ const Map = () => {
 
 		fetchData();
 	}, [refreshElement, isFetching]);
-
-	// DYNAMIC MARKER
-	const [lastClicked, setLastClicked] = React.useState<null | number[]>(null);
-	const DynamicMarker = () => {
-		const map = useMapEvents({
-			click(e) {
-				setLastClicked([e.latlng.lat, e.latlng.lng]);
-			},
-		});
-
-		return lastClicked ? (
-			<Marker key={lastClicked[0]} position={lastClicked as [number, number]}>
-				<Popup>
-					<AddDepotOrStationForm
-						params={{
-							lat: lastClicked[0],
-							lon: lastClicked[1],
-							refreshHandle: setRefreshElement,
-							markerHandle: setLastClicked,
-						}}
-					/>
-				</Popup>
-			</Marker>
-		) : null;
-	};
 
 	return (
 		<div className='h-full'>
@@ -134,7 +110,7 @@ const Map = () => {
 						</Polyline>
 					);
 				})}
-				<DynamicMarker />
+				<NewDepotOrStationMarker onRefresh={(value: any) => setRefreshElement(value)} />
 			</MapContainer>
 		</div>
 	);
