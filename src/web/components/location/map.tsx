@@ -1,13 +1,12 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from 'react-leaflet';
 import 'leaflet-defaulticon-compatibility';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
-import { Capsule, Depot, Station, Tube } from '../../types';
+import { Capsule, Depot, Station, Tube } from '@/types';
 import { CapsuleMarker } from './capsuleMarker';
 import { default as StationContainer } from '../station';
 import { default as TubeContainer } from '../tube';
-import AddDepotOrStationForm from '@/components/addDepotOrStationForm';
 import AddStationConnectionForm from '@/components/addStationConnectionForm';
 import { NewDepotOrStationMarker } from './newDepotOrStationMarker';
 
@@ -18,6 +17,8 @@ const Map = () => {
 	const [tubes, setTubes] = useState<Tube[]>([]);
 	const [refreshElement, setRefreshElement] = useState<null | string>(null);
 	const [isFetching, setIsFetching] = useState<boolean>(false);
+	const [center, setCenter] = useState<[number, number]>([52.218, 21.011]);
+	const [zoom, setZoom] = useState<number>(8);
 
 	React.useEffect(() => {
 		const fetchAll = async () => {
@@ -60,19 +61,31 @@ const Map = () => {
 		fetchData();
 	}, [refreshElement, isFetching]);
 
+	const MapEventHandler = () => {
+		useMapEvents({
+			moveend: (event) => {
+				const map = event.target;
+				setCenter([map.getCenter().lat, map.getCenter().lng]);
+				setZoom(map.getZoom());
+			}
+		});
+		return null;
+	};
+
 	return (
 		<div className='h-full'>
 			<MapContainer
 				key={`${depots.length}-${stations.length}-${tubes.length}`}
 				className='h-full'
-				center={[52.218, 21.011]}
-				zoom={8}
-				scrollWheelZoom={false}
+				center={center}
+				zoom={zoom}
+				scrollWheelZoom={true}
 			>
 				<TileLayer
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 					url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 				/>
+				<MapEventHandler />
 				{capsules.map((capsule) => (
 					<CapsuleMarker key={capsule.capsule_id} capsule={capsule} />
 				))}
