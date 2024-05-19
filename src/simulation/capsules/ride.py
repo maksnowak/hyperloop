@@ -1,6 +1,6 @@
 from datetime import datetime, date
 import time
-from schedules.repository import Schedule
+from schedules.repository import Schedule, add_ride_history
 from capsules.container import CapsulesContainer
 from stations.repository import get_station
 
@@ -65,3 +65,5 @@ def simulate_ride(schedule: Schedule):
     container.update_capsule(schedule.capsule_id, next_position)
 
     print(f'Ride simulation for schedule {schedule.schedule_id} completed')
+
+    add_ride_history(schedule.schedule_id)
