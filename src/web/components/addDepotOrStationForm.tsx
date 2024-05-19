@@ -39,7 +39,7 @@ const AddDepotOrStationForm = ({ params }: { params: { lat: number, lon: number,
                     <option value="Station">Station</option>
                 </select>
                 <br/>
-                <button id={"sub"} className={"hyperloop-item"} type={"submit"} disabled={isDisabled}>Add capsule</button>
+                <button id={"sub"} className={"hyperloop-item"} type={"submit"} disabled={isDisabled}>Register facility</button>
                 <br/>
                 <label htmlFor={"sub"}>{label}</label>
             </form>
