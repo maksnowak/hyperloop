@@ -1,24 +1,74 @@
 'use client';
-import React, { FC } from 'react';
-import { MapContainer, Marker, Polyline, Popup, TileLayer } from 'react-leaflet';
+import React, { FC, useState } from 'react';
+import { MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from 'react-leaflet';
 import 'leaflet-defaulticon-compatibility';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
 import { Capsule, Depot, Station, Tube } from '../../types';
 import { CapsuleMarker } from './capsuleMarker';
 import { default as StationContainer } from '../station';
 import { default as TubeContainer } from '../tube';
+import AddDepotOrStationForm from '@/components/addDepotOrStationForm';
+import AddStationConnectionForm from '@/components/addStationConnectionForm';
+import { NewDepotOrStationMarker } from './newDepotOrStationMarker';
 
-interface MapProps {
-	capsules: Capsule[];
-	depots: Depot[];
-	stations: Station[];
-	tubes: Tube[];
-}
+const Map = () => {
+	const [capsules, setCapsules] = useState<Capsule[]>([]);
+	const [depots, setDepots] = useState<Depot[]>([]);
+	const [stations, setStations] = useState<Station[]>([]);
+	const [tubes, setTubes] = useState<Tube[]>([]);
+	const [refreshElement, setRefreshElement] = useState<null | string>(null);
+	const [isFetching, setIsFetching] = useState<boolean>(false);
 
-const Map: FC<MapProps> = ({ capsules, depots, stations, tubes }) => {
+	React.useEffect(() => {
+		const fetchAll = async () => {
+			setCapsules((await (await fetch('/api/getAllCapsules', { cache: 'no-store' })).json()).data);
+			setDepots((await (await fetch('/api/depots/getDepots', { cache: 'no-store' })).json()).data);
+			setStations((await (await fetch('/api/stations/getStations', { cache: 'no-store' })).json()).data);
+			setTubes((await (await fetch('/api/tubes/getTubes', { cache: 'no-store' })).json()).data);
+		};
+		fetchAll();
+	}, []);
+
+	React.useEffect(() => {
+		const fetchData = async () => {
+			if (!refreshElement || isFetching) return;
+
+			setIsFetching(true);
+
+			try {
+				if (refreshElement === 'Depot') {
+					const response = await fetch('/api/depots/getDepots', { cache: 'no-store' });
+					const data = await response.json();
+					setDepots(data.data);
+				} else if (refreshElement === 'Station') {
+					const response = await fetch('/api/stations/getStations', { cache: 'no-store' });
+					const data = await response.json();
+					setStations(data.data);
+				} else if (refreshElement === 'Tube') {
+					const response = await fetch('/api/tubes/getTubes', { cache: 'no-store' });
+					const data = await response.json();
+					setTubes(data.data);
+				}
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			} finally {
+				setIsFetching(false);
+				setRefreshElement(null);
+			}
+		};
+
+		fetchData();
+	}, [refreshElement, isFetching]);
+
 	return (
 		<div className='h-full'>
-			<MapContainer className='h-full' center={[52.218, 21.011]} zoom={8} scrollWheelZoom={false}>
+			<MapContainer
+				key={`${depots.length}-${stations.length}-${tubes.length}`}
+				className='h-full'
+				center={[52.218, 21.011]}
+				zoom={8}
+				scrollWheelZoom={false}
+			>
 				<TileLayer
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 					url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -38,6 +88,13 @@ const Map: FC<MapProps> = ({ capsules, depots, stations, tubes }) => {
 						<Marker key={station.station_id} position={[Number(station.latitude), Number(station.longitude)]}>
 							<Popup>
 								<StationContainer station={station} />
+								<AddStationConnectionForm
+									params={{
+										station_id: station.station_id,
+										station_name: station.name,
+										refreshHandle: setRefreshElement,
+									}}
+								/>
 							</Popup>
 						</Marker>
 					);
@@ -53,6 +110,7 @@ const Map: FC<MapProps> = ({ capsules, depots, stations, tubes }) => {
 						</Polyline>
 					);
 				})}
+				<NewDepotOrStationMarker onRefresh={(value: any) => setRefreshElement(value)} />
 			</MapContainer>
 		</div>
 	);

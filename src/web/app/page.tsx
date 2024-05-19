@@ -1,29 +1,29 @@
-import InteractiveMap from '@/components/location/interactiveMap';
-import prisma from '../client';
-import { toClientComponentProps } from '@/utils/rendering';
+'use client';
 
-const fix = (a: any) => JSON.parse(JSON.stringify(a));
+import { useMemo } from 'react';
+import { default as nextDynamic } from 'next/dynamic'; // I have to do it this way so the pipeline doesn't break
+import { Spinner } from '@nextui-org/react';
 
+
+const loading = () => (
+	<div className='w-full h-full flex items-center justify-center'>
+		<Spinner />
+	</div>
+);
 
 export default async function Page() {
-	const capsulesPromise = prisma.capsules.findMany();
-	const depotsPromise = prisma.depots.findMany();
-	const stationsPromise = prisma.stations.findMany();
-	const tubesPromise = prisma.tubes.findMany();
-
-	const [capsules, depots, stations, tubes] = await Promise.all([capsulesPromise, depotsPromise, stationsPromise, tubesPromise]);
-
-	console.log(capsules);
-	
+	const MapComponent = useMemo(
+		() =>
+			nextDynamic(() => import('@/components/location/map'), {
+				loading: loading,
+				ssr: false,
+			}),
+		[]
+	);
 
 	return (
 		<div className='h-full'>
-			<InteractiveMap
-				capsules={toClientComponentProps(capsules)}
-				depots={toClientComponentProps(depots)}
-				stations={toClientComponentProps(stations)}
-				tubes={toClientComponentProps(tubes)}
-			/>
+			<MapComponent />
 		</div>
 	);
 }
