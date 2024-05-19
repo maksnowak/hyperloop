@@ -1,7 +1,6 @@
 import React from "react";
 
-const getTableContent = (data: any) => {
-    const s = 8; // temporary station ID
+const getTableContent = (data: any, s: number) => {
     var rows = [];
     for (let i = 0; i < data.length; i++) {
         let event;
@@ -40,7 +39,7 @@ const StationTraffic = async ({
     to: string;
 }) => {
     const traffic = await (await fetch(`http://localhost:3000/api/reports/getStationTraffic?id=${id}&from=${from}&to=${to}`)).json();
-    const tableContent = getTableContent(traffic.data);
+    const tableContent = getTableContent(traffic.data, Number(id));
     if (tableContent.length === 0) {
         return (
             <div>
