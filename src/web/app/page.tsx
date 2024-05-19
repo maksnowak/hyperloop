@@ -11,7 +11,7 @@ const loading = () => (
 	</div>
 );
 
-export default async function Page() {
+export default function Page() {
 	const MapComponent = useMemo(
 		() =>
 			nextDynamic(() => import('@/components/location/map'), {
