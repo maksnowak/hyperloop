@@ -1,18 +1,8 @@
 from datetime import datetime, date
 import time
-import uuid
 from schedules.repository import Schedule
-from events.producer import produce
+from capsules.container import CapsulesContainer
 from stations.repository import get_station
-
-
-class CapsuleLocationEvent:
-    def __init__(self, latitude: float, longitude: float, capsule_id: int):
-        self.latitude = latitude
-        self.longitude = longitude
-        self.referredCapsuleId = capsule_id
-        self.timestamp = time.time()
-        self.eventId = str(uuid.uuid4())
 
 
 def wait_for_departure(schedule: Schedule):
@@ -35,13 +25,16 @@ def simulate_ride(schedule: Schedule):
     
     wait_for_departure(schedule)
     
-    print(f'Simulating ride for schedule {schedule.schedule_id}')
+
+    container = CapsulesContainer()
 
     arrival_datetime = datetime.combine(date.today(), schedule.arrival_time)
     departure_datetime = datetime.combine(date.today(), schedule.departure_time)
 
     start_station = get_station(schedule.start_station_id)
     end_station = get_station(schedule.end_station_id)
+
+    print(f'Simulating ride for schedule {schedule.schedule_id} from {start_station.name} to {end_station.name}')
 
     start_position = [start_station.latitude, start_station.longitude]
     end_position = [end_station.latitude, end_station.longitude]
@@ -63,10 +56,10 @@ def simulate_ride(schedule: Schedule):
     while distance(next_position, end_position) > sampled_speed:
         time.sleep(sample_time)
 
-        produce('hello', CapsuleLocationEvent(next_position[0], next_position[1], schedule.capsule_id))
+        container.update_capsule(schedule.capsule_id, next_position)
         next_position = [next_position[0] + direction[0] * sampled_speed, next_position[1] + direction[1] * sampled_speed]
 
     next_position = end_position
-    produce('hello', CapsuleLocationEvent(next_position[0], next_position[1], schedule.capsule_id))
+    container.update_capsule(schedule.capsule_id, next_position)
 
     print(f'Ride simulation for schedule {schedule.schedule_id} completed')
