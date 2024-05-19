@@ -35,6 +35,15 @@ const TubeTrips = async ({
     to: string;
 }) => {
     const trips = await (await fetch(`http://localhost:3000/api/reports/getTubeTrips?id=${id}&from=${from}&to=${to}`)).json();
+    const tableContent = getTableContent(trips.data);
+    if (tableContent.length === 0) {
+        return (
+            <div>
+                <h3>Trips history</h3>
+                <p>No trips found for this capsule in the selected time period</p>
+            </div>
+        )
+    }
     return (
         <div>
             <h3>Trips history</h3>
@@ -48,7 +57,7 @@ const TubeTrips = async ({
                     </tr>
                 </thead>
                 <tbody>
-                    {getTableContent(trips.data)}
+                    {tableContent}
                 </tbody>
             </table>
         </div>
