@@ -19,7 +19,7 @@ const LineChartComponent = ({url, labels_key, data_key, label_name}: ChartProps)
             // if there is date label, convert it to locale string
             try {
                 data.data.forEach((item: any) => {
-                    item[labels_key] = new Date(item[labels_key]).toLocaleString("pl-PL");
+                    item[labels_key] = new Date(item[labels_key]).toLocaleString("pl-PL", {timeZone: "UTC"});
                 });
             } catch (e) {
                 // do nothing

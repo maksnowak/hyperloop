@@ -7,8 +7,8 @@ const getTableContent = (data: any) => {
         const end_date = new Date(data[i].date_end);
         rows.push(
             <tr key={data[i].repair_id}>
-                <td>{start_date.toLocaleDateString("pl-PL")}</td>
-                <td>{end_date?.toLocaleDateString("pl-PL")}</td>
+                <td>{start_date.toLocaleDateString("pl-PL", {timeZone: "UTC"})}</td>
+                <td>{end_date?.toLocaleDateString("pl-PL", {timeZone: "UTC"})}</td>
                 <td>{data[i].performing_depot_id}</td>
             </tr>
         );

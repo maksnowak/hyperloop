@@ -6,7 +6,7 @@ const getTableContent = (data: any) => {
         const log_date = new Date(data[i].date);
         rows.push(
             <tr key={data[i].log_id}>
-                <td>{log_date.toLocaleDateString("pl-PL")}</td>
+                <td>{log_date.toLocaleDateString("pl-PL", {timeZone: "UTC"})}</td>
                 <td>{data[i].passengers_served}</td>
             </tr>
         );

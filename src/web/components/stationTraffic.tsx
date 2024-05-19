@@ -20,7 +20,7 @@ const getTableContent = (data: any) => {
         event_date = new Date(event_date);
         rows.push(
             <tr key={data[i].ride_id}>
-                <td>{event_date.toLocaleString("pl-PL")}</td>
+                <td>{event_date.toLocaleString("pl-PL", {timeZone: "UTC"})}</td>
                 <td>{data[i].capsules.model} (ID: {data[i].capsules.capsule_id})</td>
                 <td>{data[i].tickets_sold}</td>
                 <td>{event}</td>

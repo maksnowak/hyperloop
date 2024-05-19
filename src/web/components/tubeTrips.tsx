@@ -15,8 +15,8 @@ const getTableContent = (data: any) => {
         // end of conversion
         rows.push(
             <tr key={data[i].ride_id}>
-                <td>{start_date.toLocaleString("pl-PL")}</td>
-                <td>{end_date.toLocaleString("pl-PL")}</td>
+                <td>{start_date.toLocaleString("pl-PL", {timeZone: "UTC"})}</td>
+                <td>{end_date.toLocaleString("pl-PL", {timeZone: "UTC"})}</td>
                 <td>{data[i].capsules.model} (ID: {data[i].capsules.capsule_id})</td>
                 <td>{hours !== 0 ? hours+"h " : ""}{minutes}m {seconds}s</td>
             </tr>
