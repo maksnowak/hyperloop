@@ -46,7 +46,7 @@ const Map: FC<MapProps> = ({ capsules, depots, stations, tubes }) => {
 					const { pos } = getLinkedStations(stations, tube);
 
 					return (
-						<Polyline key={tube.tube_id} positions={pos} color='#9ca3af'>
+						<Polyline key={tube.tube_id} positions={pos} color='#64748b'>
 							<Popup>
 								<TubeContainer tube={tube} />
 							</Popup>

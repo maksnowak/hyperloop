@@ -7,7 +7,7 @@ import { CapsuleLocationEvent } from '../../types/CapsuleLocationEvent';
 
 const socket = io('/capsules');
 
-const getIconUrl = (capsuleId: number) => `https://ui-avatars.com/api/?rounded=true&background=fcd34d&color=020617&name=${capsuleId}`;
+const getIconUrl = (capsuleId: number) => `https://ui-avatars.com/api/?rounded=true&background=2F6DE6&color=FFFFFF&name=${capsuleId}`;
 
 interface CapsuleMakerProps {
 	capsule: Capsule;
@@ -31,7 +31,7 @@ export const CapsuleMarker = ({ capsule }: CapsuleMakerProps) => {
 			position={position as [number, number]}
 			icon={icon({
 				iconUrl: getIconUrl(capsule?.capsule_id),
-				iconSize: [25, 25],
+				iconSize: [30, 30],
 			})}
 		>
 			<Popup>Capsule number {capsule.capsule_id}</Popup>
