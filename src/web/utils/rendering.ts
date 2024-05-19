@@ -1,0 +1,1 @@
+export const toClientComponentProps = (props: any) => JSON.parse(JSON.stringify(props));

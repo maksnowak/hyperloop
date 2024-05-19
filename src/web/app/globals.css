@@ -3,49 +3,6 @@
 @import "tailwindcss/utilities";
 @import "leaflet/dist/leaflet.css";
 
-* {
-  margin: 5px;
-}
-
-body {
-  text-align: center;
-}
-
-html {
-  background-color: aliceblue;
-}
-
-form {
-  font-size: 120%;
-}
-
-input {
-  border-width: 1px;
-  border-color: black;
-}
-
-h1 {
-  font-size: 150%;
-  margin-bottom: 2%;
-}
-
-h3 {
-  font-size: 120%;
-  margin-bottom: 0.5%;
-}
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-  border: 1px solid black;
-}
-
-th, td {
-  border: 1px solid black;
-  padding: 5px;
-  text-align: left;
-}
-
 .err {
     color: #ff5049;
     font-size: 110%;
