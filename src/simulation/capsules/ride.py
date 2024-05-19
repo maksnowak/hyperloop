@@ -1,12 +1,13 @@
 from datetime import datetime, date
+from random import randint
 import time
 from schedules.repository import Schedule, add_ride_history
 from capsules.container import CapsulesContainer
-from stations.repository import get_station
+from stations.repository import get_station, log_passengers_arrival
 
 
 def wait_for_departure(schedule: Schedule):
-    print(f'Waiting for departure for schedule {schedule.schedule_id}')
+    print(f'Waiting for departure for schedule {schedule.schedule_id} with capsule {schedule.capsule_id}')
 
     current_date = date.today()
     departure_timestamp = datetime.combine(current_date, schedule.departure_time).timestamp()
@@ -26,9 +27,17 @@ def simulate_ride(schedule: Schedule):
         return
     
     wait_for_departure(schedule)
-    
 
     container = CapsulesContainer()
+    capsule = container.get_capsule(schedule.capsule_id)
+
+    # ---
+    passengers = randint(1, capsule.max_seats)
+    cargo = randint(1, capsule.max_cargo_space)
+
+    add_ride_history(schedule.schedule_id, passengers, cargo)
+    log_passengers_arrival(schedule.end_station_id, passengers)
+    # --- 
 
     arrival_datetime = datetime.combine(date.today(), schedule.arrival_time)
     departure_datetime = datetime.combine(date.today(), schedule.departure_time)
@@ -36,7 +45,7 @@ def simulate_ride(schedule: Schedule):
     start_station = get_station(schedule.start_station_id)
     end_station = get_station(schedule.end_station_id)
 
-    print(f'Simulating ride for schedule {schedule.schedule_id} from {start_station.name} to {end_station.name}')
+    print(f'Simulating ride for schedule {schedule.schedule_id} with capsule {schedule.capsule_id} from {start_station.name} to {end_station.name}')
 
     start_position = [start_station.latitude, start_station.longitude]
     end_position = [end_station.latitude, end_station.longitude]
@@ -64,6 +73,10 @@ def simulate_ride(schedule: Schedule):
     next_position = end_position
     container.update_capsule(schedule.capsule_id, next_position)
 
-    print(f'Ride simulation for schedule {schedule.schedule_id} completed')
+    print(f'Ride simulation for schedule {schedule.schedule_id} with capsule {schedule.capsule_id} from {start_station.name} to {end_station.name} completed')
 
-    add_ride_history(schedule.schedule_id)
+    passengers = randint(1, capsule.max_seats)
+    cargo = randint(1, capsule.max_cargo_space)
+
+    add_ride_history(schedule.schedule_id, passengers, cargo)
+    log_passengers_arrival(schedule.end_station_id, passengers)

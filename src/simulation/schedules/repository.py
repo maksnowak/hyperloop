@@ -76,27 +76,14 @@ def get_mock_schedule(capsule_id: int = 1, start_station_id: int = 2, end_statio
     )
 
 
-def add_ride_history(schedule_id: int):
+def add_ride_history(schedule_id: int, passengers: int, cargo: int):
     with connect() as conn:
         with conn.cursor() as cur:
             cur.execute(f"""
-                SELECT seats, cargo_space
-                FROM capsules
-                WHERE capsule_id = (
-                    SELECT referred_capsule_id
-                    FROM schedule
-                    WHERE schedule_id = {schedule_id}
-                )
-            """)
-
-            max_seats, max_cargo_space = cur.fetchone()
-            seats, cargo_space = randint(1, max_seats), randint(1, max_cargo_space)
-
-            cur.execute(f"""
                 CALL create_trip_history(
                     referred_schedule_id := {schedule_id},
-                    sold_tickets := {seats},
-                    weight_of_cargo := {cargo_space},
+                    sold_tickets := {passengers},
+                    weight_of_cargo := {cargo},
                     cargo_content := 'Example content'
                 );
             """)

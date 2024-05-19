@@ -2,9 +2,11 @@ from random import uniform
 from db.connection import connect
 
 class Capsule:
-    def __init__(self, capsule_id: int, latitude: float, longitude: float,):
+    def __init__(self, capsule_id: int, latitude: float, longitude: float, max_seats: int, max_cargo_space: int):
         self.capsule_id = capsule_id
         self.position = [float(latitude), float(longitude)]
+        self.max_seats = max_seats
+        self.max_cargo_space = max_cargo_space
 
 
 default_posiiton = [49.883353, 19.493670] # Wadowice depot
@@ -13,7 +15,7 @@ def get_capsules():
     with connect() as conn:
         with conn.cursor() as cur:
             cur.execute(f"""
-                SELECT capsule_id
+                SELECT capsule_id, seats, cargo_space
                 FROM capsules
             """)
 
@@ -43,7 +45,9 @@ def get_capsules():
                 capsule_id = capsule[0]
                 position = initial_positions.get(capsule_id, default_posiiton)
                 shaked_position = [float(position[0]) + uniform(-0.0005, 0.0005), float(position[1])]   # to imitate platforms
+                max_seats = capsule[1]
+                max_cargo_space = capsule[2]
 
-                capsules_with_positions.append([capsule_id, *shaked_position])
+                capsules_with_positions.append([capsule_id, *shaked_position, max_seats, max_cargo_space])
 
             return [Capsule(*capsule) for capsule in capsules_with_positions]
