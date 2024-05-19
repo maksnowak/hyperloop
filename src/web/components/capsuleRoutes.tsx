@@ -15,8 +15,8 @@ const getTableContent = (data: any) => {
         // end of conversion
         rows.push(
             <tr key={data[i].ride_id}>
-                <td>{start_date.toLocaleString("pl-PL")}</td>
-                <td>{end_date.toLocaleString("pl-PL")}</td>
+                <td>{start_date.toLocaleString("pl-PL", {timeZone: "UTC"})}</td>
+                <td>{end_date.toLocaleString("pl-PL", {timeZone: "UTC"})}</td>
                 <td>{data[i].tubes.stations_tubes_starting_station_idTostations.name}</td>
                 <td>{data[i].tubes.stations_tubes_ending_station_idTostations.name}</td>
                 <td>{hours !== 0 ? hours+"h " : ""}{minutes}m {seconds}s</td> 
@@ -36,6 +36,15 @@ const CapsuleRoutes = async ({
     to: string;
 }) => {
     const routes = await (await fetch(`http://localhost:3000/api/reports/getCapsuleRoutes?id=${id}&from=${from}&to=${to}`)).json();
+    const tableContent = getTableContent(routes.data);
+    if (tableContent.length === 0) {
+        return (
+            <div>
+                <h3>Route history</h3>
+                <p>No routes found for this capsule in the selected time period</p>
+            </div>
+        )
+    }
     return (
         <div>
             <h3>Route history</h3>
@@ -50,7 +59,7 @@ const CapsuleRoutes = async ({
                     </tr>
                 </thead>
                 <tbody>
-                    {getTableContent(routes.data)}
+                    {tableContent}
                 </tbody>
             </table>
         </div>
