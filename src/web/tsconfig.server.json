@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "es2015",
+    "outDir": "dist",
+    "target": "es5",
+    "isolatedModules": false,
+    "noEmit": false
+  },
+  "include": ["./server.js"]
+}

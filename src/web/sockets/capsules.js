@@ -1,4 +1,4 @@
-const { kafka } = require('../kafka.ts');
+const { kafka } = require('../kafka');
 
 const setup = (io) => {
 	io.of('/capsules').on('connection', async (socket) => {

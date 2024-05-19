@@ -59,6 +59,12 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+COPY --from=builder --chown=nextjs:nodejs /app/dist/server.js ./server.js
+COPY --from=builder --chown=nextjs:nodejs /app/dist/sockets ./sockets
+COPY --from=builder --chown=nextjs:nodejs /app/dist/kafka.js ./kafka.js
+# it's not clean, but way more easy to maintain (we need server dependencies)
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+
 USER nextjs
 
 EXPOSE 3000
