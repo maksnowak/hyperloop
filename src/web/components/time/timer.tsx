@@ -15,12 +15,16 @@ export const Timer = () => {
     const [timeString, setTimeString] = useState(toTimeString(getTime()));
 
     useEffect(() => {
-        setInterval(() => {
+        const interval = setInterval(() => {
             const time = getTime();
             setTimeString(toTimeString(time));
             setDateString(toDateString(time));
         }, 100);
+
+        return () => clearInterval(interval);
     });
+
+    if (!dateString || !timeString) return null;
 
     return (
 		<div>
