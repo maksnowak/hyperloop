@@ -1,3 +1,4 @@
+from datetime import datetime
 from db.connection import connect
 
 class Station:
@@ -22,5 +23,14 @@ def get_station(station_id: int):
             if not station:
                 return None
 
-            print(f'Found station: {station}')
             return Station(*station)
+        
+def log_passengers_arrival(station_id: int, passengers: int):
+    with connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(f"""
+                insert into station_logs ("date", passengers_served, referred_station_id)
+                values ('{datetime.now().strftime('%Y-%m-%d')}',{passengers}, {station_id});
+            """)
+
+            conn.commit()
