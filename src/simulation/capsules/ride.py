@@ -6,6 +6,8 @@ from stations.repository import get_station
 
 
 def wait_for_departure(schedule: Schedule):
+    print(f'Waiting for departure for schedule {schedule.schedule_id}')
+
     current_date = date.today()
     departure_timestamp = datetime.combine(current_date, schedule.departure_time).timestamp()
 
