@@ -17,15 +17,13 @@ export default async function Page() {
 	
 
 	return (
-		<div className='h-screen'>
-			<div className='h-5/6 rounded-lg overflow-hidden'>
-				<InteractiveMap
-					capsules={toClientComponentProps(capsules)}
-					depots={toClientComponentProps(depots)}
-					stations={toClientComponentProps(stations)}
-					tubes={toClientComponentProps(tubes)}
-				/>
-			</div>
+		<div className='h-full'>
+			<InteractiveMap
+				capsules={toClientComponentProps(capsules)}
+				depots={toClientComponentProps(depots)}
+				stations={toClientComponentProps(stations)}
+				tubes={toClientComponentProps(tubes)}
+			/>
 		</div>
 	);
 }
