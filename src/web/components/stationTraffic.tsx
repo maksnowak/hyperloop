@@ -1,7 +1,6 @@
 import React from "react";
 
-const getTableContent = (data: any) => {
-    const s = 8; // temporary station ID
+const getTableContent = (data: any, s: number) => {
     var rows = [];
     for (let i = 0; i < data.length; i++) {
         let event;
@@ -20,7 +19,7 @@ const getTableContent = (data: any) => {
         event_date = new Date(event_date);
         rows.push(
             <tr key={data[i].ride_id}>
-                <td>{event_date.toLocaleString("pl-PL")}</td>
+                <td>{event_date.toLocaleString("pl-PL", {timeZone: "UTC"})}</td>
                 <td>{data[i].capsules.model} (ID: {data[i].capsules.capsule_id})</td>
                 <td>{data[i].tickets_sold}</td>
                 <td>{event}</td>
@@ -40,6 +39,15 @@ const StationTraffic = async ({
     to: string;
 }) => {
     const traffic = await (await fetch(`http://localhost:3000/api/reports/getStationTraffic?id=${id}&from=${from}&to=${to}`)).json();
+    const tableContent = getTableContent(traffic.data, Number(id));
+    if (tableContent.length === 0) {
+        return (
+            <div>
+                <h3>Traffic data</h3>
+                <p>No traffic data found for this station in the selected time period</p>
+            </div>
+        )
+    }
     return (
         <div>
             <h3>Traffic data</h3>
@@ -53,7 +61,7 @@ const StationTraffic = async ({
                     </tr>
                 </thead>
                 <tbody>
-                    {getTableContent(traffic.data)}
+                    {tableContent}
                 </tbody>
             </table>
         </div>

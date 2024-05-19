@@ -14,7 +14,7 @@ const ReportForm = () => {
 
     React.useEffect(() => {
         if (reportType === "Station") {
-            fetch("http://localhost:3000/api/getAllStations").then((response) => response.json()).then((data) => {
+            fetch(`/api/getAllStations`).then((response) => response.json()).then((data) => {
                 let stationNames = data.data.map((station: any) => station.name);
                 let stationIDs = data.data.map((station: any) => station.station_id);
                 setTargets(stationNames);
@@ -22,7 +22,7 @@ const ReportForm = () => {
                 setReportTarget(stationNames[0]);
             });
         } else if (reportType === "Tube") {
-            fetch("http://localhost:3000/api/getAllTubes").then((response) => response.json()).then((data) => {
+            fetch(`/api/getAllTubes`).then((response) => response.json()).then((data) => {
                 let tubeNames = data.data.map((tube: any) => tube.name);
                 let tubeIDs = data.data.map((tube: any) => tube.tube_id);
                 setTargets(tubeNames);
@@ -30,7 +30,7 @@ const ReportForm = () => {
                 setReportTarget(tubeNames[0]);
             });
         } else if (reportType === "Capsule") {
-            fetch("http://localhost:3000/api/getAllCapsules").then((response) => response.json()).then((data) => {
+            fetch(`/api/getAllCapsules`).then((response) => response.json()).then((data) => {
                 let capsuleNames = data.data.map((capsule: any) => capsule.producer+" "+capsule.model+" (ID: "+capsule.capsule_id+")");
                 let capsuleIDs = data.data.map((capsule: any) => capsule.capsule_id);
                 setTargets(capsuleNames);
@@ -53,10 +53,10 @@ const ReportForm = () => {
 
     return (
         <div>
-            <h3>Report form</h3>
+            <h1>Reports</h1>
             <form onSubmit={submitReport}>
                 <label>
-                    Report type:
+                    Report type:&nbsp;
                     <select value={reportType} required onChange={(e) => setReportType(e.target.value)}>
                         <option value="Select report type" disabled hidden>Select report type</option>
                         <option value="Station">Station</option>
@@ -66,23 +66,24 @@ const ReportForm = () => {
                 </label>
                 <br />
                 <label>
-                    Target:
+                    Target:&nbsp;
                     <select value={reportTarget} required onChange={(e) => setReportTarget(e.target.value)}>
                         {targets.map((target) => <option key={target} value={target}>{target}</option>)}
                     </select>
                 </label>
                 <br />
                 <label>
-                    From:
+                    From:&nbsp;
                     <input type="date" value={reportFrom} required onChange={(e) => setReportFrom(e.target.value)} />
                 </label>
                 <br />
                 <label>
-                    To:
+                    To:&nbsp;
                     <input type="date" value={reportTo} required onChange={(e) => setReportTo(e.target.value)} />
                 </label>
                 <br />
-                <input type="submit" value="Generate report"/>
+                <br />
+                <button className="hyperloop-item" type="submit">Generate report</button>
             </form>
         </div>
     )

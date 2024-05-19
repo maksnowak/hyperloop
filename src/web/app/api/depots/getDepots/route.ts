@@ -1,5 +1,5 @@
-import prisma from "../../../client";
-import {NextResponse} from "next/server";
+import prisma from "@/client";
+import { NextResponse } from "next/server";
 
 type ResponseData = {
     data: Object[];
@@ -8,8 +8,10 @@ type ResponseData = {
 export async function GET(request: Request) {
     return await prisma.depots.findMany()
         .then((data) => {
-            return NextResponse.json( {data} );
+            return NextResponse.json({ data });
         }).catch((error) => {
             return NextResponse.error();
         });
 }
+
+export const dynamic = 'force-dynamic';

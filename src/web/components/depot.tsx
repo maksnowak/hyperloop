@@ -11,15 +11,14 @@ interface DepotProps {
 
 const Depot = ({ depot_id, name, latitude, longitude }: DepotProps) => {
   return (
-    <button
-      className="hyperloop-item w-2/3"
-      onClick={() => alert(`Clicked on depot ${name}`)}
-    >
+    <a href={`/depots/${depot_id}`}>
+      <button className="hyperloop-item w-2/3">
       <h3 className="text-center">{depot_id}</h3>
       <p>Depot name: {name}</p>
       <p>Latitude: {Number(latitude)}</p>
       <p>Longitude: {Number(longitude)}</p>
     </button>
+    </a>
   );
 };
 

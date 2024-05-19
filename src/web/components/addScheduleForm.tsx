@@ -14,7 +14,7 @@ const AddScheduleForm = () => {
     useEffect(() => {
         const fetchData = React.cache(async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/getAllStations`);
+                const response = await fetch(`/api/getAllStations`);
                 const data = await response.json();
                 setStations(data.data);
             } catch (error) {

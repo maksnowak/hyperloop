@@ -15,7 +15,7 @@ const AddCapsuleForm = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/depots/getDepots`);
+                const response = await fetch(`/api/depots/getDepots`);
                 const data = await response.json();
                 setDepots(data.data);
             } catch (error) {

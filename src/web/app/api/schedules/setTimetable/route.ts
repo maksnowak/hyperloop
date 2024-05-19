@@ -1,4 +1,4 @@
-import prisma from "../../../client";
+import prisma from "@/client";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -33,3 +33,5 @@ export async function GET(request: Request) {
         return NextResponse.json({ message: e.message, status: 500 });
     }
 }
+
+export const dynamic = 'force-dynamic';
