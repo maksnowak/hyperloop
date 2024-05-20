@@ -1,14 +1,21 @@
 "use client";
-import React from "react";
+import React, { use, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { DateRangePicker, Button, Select, SelectSection, SelectItem } from "@nextui-org/react";
+import { parseDate } from "@internationalized/date";
 
 const ReportForm = () => {
     const [reportType, setReportType] = React.useState("Select report type");
     const [reportTarget, setReportTarget] = React.useState("");
     const [targets, setTargets] = React.useState(["Select report type first"])
     const [targetIDs, setTargetIDs] = React.useState([0] as number[]);
-    const [reportFrom, setReportFrom] = React.useState("");
-    const [reportTo, setReportTo] = React.useState("");
+    const [reportFrom, setReportFrom] = React.useState(new Date().toISOString().substring(0, 10));
+    const [reportTo, setReportTo] = React.useState(new Date().toISOString().substring(0, 10));
+    const [reportRange, setReportRange] = React.useState({
+        start: parseDate(new Date().toISOString().substring(0, 10)),
+        end: parseDate(new Date().toISOString().substring(0, 10))
+    });
+
     const router = useRouter();
 
     React.useEffect(() => {
@@ -18,7 +25,6 @@ const ReportForm = () => {
                 let stationIDs = data.data.map((station: any) => station.station_id);
                 setTargets(stationNames);
                 setTargetIDs(stationIDs);
-                setReportTarget(stationNames[0]);
             });
         } else if (reportType === "Tube") {
             fetch(`/api/tubes/getTubes`).then((response) => response.json()).then((data) => {
@@ -26,7 +32,6 @@ const ReportForm = () => {
                 let tubeIDs = data.data.map((tube: any) => tube.tube_id);
                 setTargets(tubeNames);
                 setTargetIDs(tubeIDs);
-                setReportTarget(tubeNames[0]);
             });
         } else if (reportType === "Capsule") {
             fetch(`/api/capsules/getAllCapsules`).then((response) => response.json()).then((data) => {
@@ -34,9 +39,9 @@ const ReportForm = () => {
                 let capsuleIDs = data.data.map((capsule: any) => capsule.capsule_id);
                 setTargets(capsuleNames);
                 setTargetIDs(capsuleIDs);
-                setReportTarget(capsuleNames[0]);
             });
         }
+        console.log(targetIDs);
     }, [reportType]);
 
     const submitReport = (event: React.FormEvent) => {
@@ -50,39 +55,36 @@ const ReportForm = () => {
         router.push(`/reports/${reportType.toLowerCase()}/${targetID}?from=${reportFrom}&to=${reportTo}`);
     }
 
+    useEffect(() => {
+        console.log(reportTarget);
+        console.log(targets);
+    }, [reportTarget]);
+
     return (
         <div>
-            <h1>Reports</h1>
             <form onSubmit={submitReport}>
-                <label>
-                    Report type:&nbsp;
-                    <select value={reportType} required onChange={(e) => setReportType(e.target.value)}>
-                        <option value="Select report type" disabled hidden>Select report type</option>
-                        <option value="Station">Station</option>
-                        <option value="Tube">Tube</option>
-                        <option value="Capsule">Capsule</option>
-                    </select>
-                </label>
-                <br />
-                <label>
-                    Target:&nbsp;
-                    <select value={reportTarget} required onChange={(e) => setReportTarget(e.target.value)}>
-                        {targets.map((target) => <option key={target} value={target}>{target}</option>)}
-                    </select>
-                </label>
-                <br />
-                <label>
-                    From:&nbsp;
-                    <input type="date" value={reportFrom} required onChange={(e) => setReportFrom(e.target.value)} />
-                </label>
-                <br />
-                <label>
-                    To:&nbsp;
-                    <input type="date" value={reportTo} required onChange={(e) => setReportTo(e.target.value)} />
-                </label>
-                <br />
-                <br />
-                <button className="hyperloop-item" type="submit">Generate report</button>
+                <Select label="Report type" value={reportType} onChange={(e) => setReportType(e.target.value)}>
+                    <SelectSection>
+                        <SelectItem key="station" value="Station">Station</SelectItem>
+                        <SelectItem key="tube" value="Tube">Tube</SelectItem>
+                        <SelectItem key="capsule" value="Capsule">Capsule</SelectItem>
+                    </SelectSection>
+                </Select>
+                <Select label="Report target" value={reportTarget} onChange={(e) => setReportTarget(e.target.value)}>
+                    <SelectSection>
+                        {targets.map((target) => <SelectItem key={target} value={target}>{target}</SelectItem>)}
+                    </SelectSection>
+                </Select>
+                <DateRangePicker label="Report range" value={reportRange} onChange={(e) => {
+                    setReportRange({
+                        start: e.start,
+                        end: e.end
+                    });
+                    setReportFrom(e.start.toString());
+                    setReportTo(e.end.toString());
+                    }
+                }/>
+                <Button type="submit">Generate report</Button>
             </form>
         </div>
     )
