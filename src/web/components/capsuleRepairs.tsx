@@ -27,7 +27,7 @@ const CapsuleRepairs = async ({
     from: string;
     to: string;
 }) => {
-    const repairs = await (await fetch(`http://localhost:3000/api/reports/getCapsuleRepairs?id=${id}&from=${from}&to=${to}`)).json();
+    const repairs = await (await fetch(`/api/reports/getCapsuleRepairs?id=${id}&from=${from}&to=${to}`)).json();
     const tableContent = getTableContent(repairs.data);
     if (tableContent.length === 0) {
         return (

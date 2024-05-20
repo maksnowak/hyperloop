@@ -37,7 +37,7 @@ const CapsuleRoutes = async ({
     from: string;
     to: string;
 }) => {
-    const routes = await (await fetch(`http://localhost:3000/api/reports/getCapsuleRoutes?id=${id}&from=${from}&to=${to}`)).json();
+    const routes = await (await fetch(`/api/reports/getCapsuleRoutes?id=${id}&from=${from}&to=${to}`)).json();
     const tableContent = getTableContent(routes.data);
     if (tableContent.length === 0) {
         return (
