@@ -7,13 +7,17 @@ import threading
 
 from repairs.repair import simulate_repair
 from repairs.repository import get_active_repairs
+from tubes.measurement import simulate_measurement
+from tubes.container import TubesContainer
 
-heartbeat_interval = 0.1
 check_interval = 15
 
 def simulate():    
-    heartbeat_thread = threading.Thread(target=lambda i: CapsulesContainer().heartbeat(i), args=(heartbeat_interval,))
-    heartbeat_thread.start()
+    capsules_heartbeat_thread = threading.Thread(target=lambda i: CapsulesContainer().heartbeat(i), args=(0.1,))
+    capsules_heartbeat_thread.start()
+
+    tubes_heartbeat_thread = threading.Thread(target=lambda i: TubesContainer().heartbeat(i), args=(60,))
+    tubes_heartbeat_thread.start()
 
     last_check = time.time()
 
@@ -35,5 +39,10 @@ def simulate():
         for repair in repairs:
             repair_thread = threading.Thread(target=lambda r: simulate_repair(r), args=(repair,))
             repair_thread.start()
+
+        tubes = TubesContainer().tubes
+        for tube in tubes:
+            measurement_thread = threading.Thread(target=lambda t: simulate_measurement(t), args=(tube,))
+            measurement_thread.start()
 
         time.sleep(check_interval)
