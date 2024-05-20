@@ -60,10 +60,10 @@ BEGIN
     rau_lon_step = (lon2 - lon1) / 10;
 
     FOR i IN 0..10 LOOP
-        INSERT INTO remote_access_units (latitude, longitude, tube_id)
-        VALUES (lat1 + rau_lat_step * i, lon1 + rau_lon_step * i, tube1_id);
-        INSERT INTO remote_access_units (latitude, longitude, tube_id)
-        VALUES (lat1 + rau_lat_step * i, lon1 + rau_lon_step * i, tube2_id);
+        INSERT INTO remote_access_units (latitude, longitude, tube_id, environmental_conditions, health_status)
+        VALUES (lat1 + rau_lat_step * i, lon1 + rau_lon_step * i, tube1_id, 'GOOD', 'OK');
+        INSERT INTO remote_access_units (latitude, longitude, tube_id, environmental_conditions, health_status)
+        VALUES (lat1 + rau_lat_step * i, lon1 + rau_lon_step * i, tube2_id, 'GOOD', 'OK');
     END LOOP;
 END
 $$;
