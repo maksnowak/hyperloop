@@ -1,3 +1,4 @@
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import React from "react";
 
 const getTableContent = (data: any) => {
@@ -5,10 +6,10 @@ const getTableContent = (data: any) => {
     for (let i = 0; i < data.length; i++) {
         const log_date = new Date(data[i].date);
         rows.push(
-            <tr key={data[i].log_id}>
-                <td>{log_date.toLocaleDateString("pl-PL", {timeZone: "UTC"})}</td>
-                <td>{data[i].passengers_served}</td>
-            </tr>
+            <TableRow key={data[i].log_id}>
+                <TableCell>{log_date.toLocaleDateString("pl-PL", {timeZone: "UTC"})}</TableCell>
+                <TableCell>{data[i].passengers_served}</TableCell>
+            </TableRow>
         );
     }
     return rows;
@@ -36,17 +37,15 @@ const StationPassengers = async ({
     return (
         <div>
             <h3>Passengers</h3>
-            <table>
-                <thead>
-                    <tr key="head">
-                        <th>Date</th>
-                        <th>Number of passengers</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <Table>
+                <TableHeader>
+                    <TableColumn>Date</TableColumn>
+                    <TableColumn>Number of passengers</TableColumn>
+                </TableHeader>
+                <TableBody>
                     {tableContent}
-                </tbody>
-            </table>
+                </TableBody>
+            </Table>
         </div>
     )
 };

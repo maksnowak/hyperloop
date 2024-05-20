@@ -16,7 +16,8 @@ export async function GET(req: NextRequest) {
     } catch (error) {
         return NextResponse.error();
     }
-    return await prisma.station_logs.findMany({
+    return await prisma.station_logs.groupBy({
+        by: ['date'],
         where: {
             referred_station_id: id,
             AND: [
@@ -32,9 +33,7 @@ export async function GET(req: NextRequest) {
                 }
             ]
         },
-        select: {
-            log_id: true,
-            date: true,
+        _sum: {
             passengers_served: true
         },
         orderBy: {
