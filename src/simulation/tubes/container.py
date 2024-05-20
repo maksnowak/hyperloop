@@ -10,7 +10,7 @@ class TubesContainer(metaclass=SingletonMeta):
         if not self.tubes:
             self.fetch()
 
-        self.tubes_data = {tube.tube_id: TubeData(tube.tube_id, None, None) for tube in self.tubes}
+        self.tubes_data = {tube.tube_id: TubeData(tube.tube_id, tube.length, None, None) for tube in self.tubes}
 
     def fetch(self):
         self.tubes = get_tubes()
@@ -27,7 +27,7 @@ class TubesContainer(metaclass=SingletonMeta):
         if not tube:
             return
         
-        self.tubes_data[tube_id] = TubeData(tube_id, pressure, generated_power)
+        self.tubes_data[tube_id] = TubeData(tube_id, tube.length, pressure, generated_power)
 
 
     def heartbeat(self, interval: float):
