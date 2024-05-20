@@ -11,11 +11,10 @@ const SchedulePage = async ({ params }: { params: { id: string } }) => {
     });
 
     return (
-        <>
-            <Sidebar />
-            <h1 className="text-center bold">Schedule no. {params.id}</h1>
+		<div className='p-5'>
+			<h1 className='text-4xl font-bold pb-5'>Schedule no. {params.id}</h1>
             <TimetableForm schedule={schedule} />
-        </>
+        </div>
     );
 };
 

@@ -18,12 +18,10 @@ const Repairs = async () => {
     );
 
     return (
-        <>
-            <Sidebar />
-            <h1 className="text-center bold">Repairs</h1>
-
+        <div className='p-5'>
+            <h1 className='text-4xl font-bold pb-5'>Repairs</h1>
             <FilteredRepairs repairs={repairs} depots={depots} capsules={capsules} />
-        </>
+        </div>
     )
 };
 

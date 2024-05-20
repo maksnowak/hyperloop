@@ -1,6 +1,5 @@
 import React from "react";
 import "../globals.css";
-import Sidebar from "@/components/sidebar";
 import Schedule from "@/components/schedule";
 import prisma from "@/client"
 import AddScheduleForm from "@/components/addScheduleForm";
@@ -11,14 +10,13 @@ const Schedules = async () => {
         .map((s) => <Schedule key={s.schedule_id} {...s} />);
 
     return (
-        <>
-            <h1 className="text-center">Schedules</h1>
-            <Sidebar />
+		<div className='p-5'>
+			<h1 className='text-4xl font-bold pb-5'>Schedules</h1>
             <AddScheduleForm />
             <div className="hyperloop-grid">
                 {schedules};
             </div>
-        </>
+        </div>
     );
 };
 

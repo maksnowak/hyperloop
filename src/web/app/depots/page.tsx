@@ -8,18 +8,15 @@ const Depots = async () => {
     const depots = await prisma.depots.findMany();
 
     return (
-        <>
-            <h1>Depots</h1>
-            <div className="relative">
-                <Sidebar />
-                <div className="hyperloop-grid">
-                    {depots.map((depot) => {
-                        return <Depot key={depot.depot_id} {...depot} />;
-                    })}
-                </div>
+        <div className='p-5'>
+            <h1 className='text-4xl font-bold pb-5'>Depots</h1>
+            <div className='hyperloop-grid'>
+                {depots.map((depot) => {
+                    return <Depot key={depot.depot_id} {...depot} />;
+                })}
             </div>
-        </>
-    );
+        </div>
+	);
 };
 
 export default Depots;

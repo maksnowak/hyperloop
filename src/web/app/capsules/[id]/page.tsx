@@ -1,6 +1,5 @@
 import React from "react";
 import "@/app/globals.css";
-import Sidebar from "@/components/sidebar";
 import prisma from "@/client";
 import RepairActionButton from "@/components/repairActionButton";
 import FilteredCapsuleRepairs from "@/components/filteredCapsuleRepairs";
@@ -21,14 +20,13 @@ const RepairsPage = async ({ params }: { params: { id: string } }) => {
     });
 
     return (
-        <div>
-            <Sidebar />
-            <h1 className="text-center bold">Repairs for capsule no. {params.id} repairs</h1>
-            <h3 className="text-center bold">Current status: {capsule!.status}</h3>
+		<div className='p-5'>
+			<h1 className='text-4xl font-bold pb-5'>Repairs for capsule no. {params.id}</h1>
+            <h3 className='text-center bold'>Current status: {capsule!.status}</h3>
             <RepairActionButton status={capsule!.status} capsule_id={capsule!.capsule_id} />
-            <FilteredCapsuleRepairs repairs={repairs} depots={depots} capsule_id={capsule!.capsule_id} />
-        </div >
-    );
+			<FilteredCapsuleRepairs repairs={repairs} depots={depots} capsule_id={capsule!.capsule_id} />
+		</div>
+	);
 };
 
 export default RepairsPage;

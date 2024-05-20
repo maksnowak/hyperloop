@@ -1,7 +1,6 @@
 //@ts-nocheck
 import React from "react";
 import "../globals.css";
-import Sidebar from "@/components/sidebar";
 import prisma from "@/client";
 import Station from "@/components/station";
 
@@ -15,15 +14,14 @@ const Stations = async () => {
 
 
     return (
-        <>
-            <h1 className="text-center bold">Stations</h1>
+		<div className='p-5'>
+			<h1 className='text-4xl font-bold pb-5'>Stations</h1>
             <div className="relative">
-                <Sidebar />
                 <div className="hyperloop-grid">
                     {stations}
                 </div>
             </div>
-        </>
+        </div>
     )
 };
 
