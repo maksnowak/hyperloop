@@ -40,7 +40,7 @@ const StationTraffic = async ({
     from: string;
     to: string;
 }) => {
-    const traffic = await (await fetch(`http://localhost:3000/api/reports/getStationTraffic?id=${id}&from=${from}&to=${to}`)).json();
+    const traffic = await (await fetch(`/api/reports/getStationTraffic?id=${id}&from=${from}&to=${to}`)).json();
     const tableContent = getTableContent(traffic.data, Number(id));
     if (tableContent.length === 0) {
         return (

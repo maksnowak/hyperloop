@@ -36,7 +36,7 @@ const TubeTrips = async ({
     from: string;
     to: string;
 }) => {
-    const trips = await (await fetch(`http://localhost:3000/api/reports/getTubeTrips?id=${id}&from=${from}&to=${to}`)).json();
+    const trips = await (await fetch(`/api/reports/getTubeTrips?id=${id}&from=${from}&to=${to}`)).json();
     const tableContent = getTableContent(trips.data);
     if (tableContent.length === 0) {
         return (
