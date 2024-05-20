@@ -6,9 +6,9 @@ const getTableContent = (data: any) => {
     for (let i = 0; i < data.length; i++) {
         const log_date = new Date(data[i].date);
         rows.push(
-            <TableRow key={data[i].log_id}>
+            <TableRow key={log_date.toString()}>
                 <TableCell>{log_date.toLocaleDateString("pl-PL", {timeZone: "UTC"})}</TableCell>
-                <TableCell>{data[i].passengers_served}</TableCell>
+                <TableCell>{data[i]._sum.passengers_served}</TableCell>
             </TableRow>
         );
     }
