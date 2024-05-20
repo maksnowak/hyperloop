@@ -5,6 +5,9 @@ from capsules.ride import simulate_ride
 from capsules.container import CapsulesContainer
 import threading
 
+from repairs.repair import simulate_repair
+from repairs.repository import get_active_repairs
+
 heartbeat_interval = 0.1
 check_interval = 15
 
@@ -26,5 +29,11 @@ def simulate():
         for schedule in schedules:
             simulation_thread = threading.Thread(target=lambda s: simulate_ride(s), args=(schedule,))
             simulation_thread.start()
+            
+        repairs = get_active_repairs()
+
+        for repair in repairs:
+            repair_thread = threading.Thread(target=lambda r: simulate_repair(r), args=(repair,))
+            repair_thread.start()
 
         time.sleep(check_interval)
