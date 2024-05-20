@@ -11,16 +11,13 @@ const Capsules = async () => {
         .map((g) => <Capsule key={g.capsule_id} {...g} />);
 
     return (
-        <>
-            <h1 className="text-center">Capsules</h1>
-            <Sidebar />
+        <div className='p-5'>
+            <h1 className='text-4xl font-bold pb-5'>Capsules</h1>
             <AddCapsuleForm />
             <br />
-            <div className="hyperloop-grid">
-                {capsules}
-            </div>
-        </>
-    );
+            <div className='hyperloop-grid'>{capsules}</div>
+        </div>
+	);
 };
 
 export default Capsules;

@@ -41,12 +41,14 @@ const TubePage = async ({ params }: { params: { id: string } }) => {
     }
 
     return (
-        <div>
-            <Sidebar />
-            <h1 className="text-center bold">{tubes[0].name}<br />Tube no. {params.id}</h1>
-            {data}
-        </div>
-    );
+		<div className='p-5'>
+			<h1 className='text-4xl font-bold pb-2'>
+				{tubes[0].name}
+			</h1>
+			<h2 className='text-2xl font-semibold text-neutral-600 pb-5'>Tube no. {params.id}</h2>
+			{data}
+		</div>
+	);
 };
 
 export default TubePage;
