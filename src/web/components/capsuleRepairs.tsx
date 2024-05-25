@@ -18,7 +18,7 @@ const getTableContent = (data: any) => {
     return rows;
 }
 
-const CapsuleRepairs = async ({
+const CapsuleRepairs = ({
     id,
     from,
     to
@@ -28,20 +28,15 @@ const CapsuleRepairs = async ({
     to: string;
 }) => {
     const [repairs, setRepairs] = React.useState({data: []});
+    const [tableContent, setTableContent] = React.useState<any>([]);
     React.useEffect(() => {
-        fetch(`/api/getCapsuleRepairs?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
+        fetch(`/api/reports/getCapsuleRepairs?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
             setRepairs(data);
         });
     }, [id, from, to]);
-    const tableContent = getTableContent(repairs.data);
-    if (tableContent.length === 0) {
-        return (
-            <div>
-                <h3>Repair history</h3>
-                <p>No repairs found for this capsule in the selected time period</p>
-            </div>
-        )
-    }
+    React.useEffect(() => {
+        setTableContent(getTableContent(repairs.data));
+    }, [repairs]);
     return (
         <div>
             <h3>Repair history</h3>
