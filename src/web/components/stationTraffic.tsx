@@ -40,7 +40,12 @@ const StationTraffic = async ({
     from: string;
     to: string;
 }) => {
-    const traffic = await (await fetch(`/api/reports/getStationTraffic?id=${id}&from=${from}&to=${to}`)).json();
+    const [traffic, setTraffic] = React.useState({data: []});
+    React.useEffect(() => {
+        fetch(`/api/getStationTraffic?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
+            setTraffic(data);
+        });
+    }, [id, from, to]);
     const tableContent = getTableContent(traffic.data, Number(id));
     if (tableContent.length === 0) {
         return (

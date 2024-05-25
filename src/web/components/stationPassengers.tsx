@@ -25,7 +25,12 @@ const StationPassengers = async ({
     from: string;
     to: string;
 }) => {
-    const passengers = await (await fetch(`/api/reports/getStationPassengers?id=${id}&from=${from}&to=${to}`)).json();
+    const [passengers, setPassengers] = React.useState({data: []});
+    React.useEffect(() => {
+        fetch(`/api/getStationPassengers?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
+            setPassengers(data);
+        });
+    }, [id, from, to]);
     const tableContent = getTableContent(passengers.data);
     if (tableContent.length === 0) {
         return (

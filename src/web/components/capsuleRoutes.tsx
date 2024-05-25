@@ -37,7 +37,12 @@ const CapsuleRoutes = async ({
     from: string;
     to: string;
 }) => {
-    const routes = await (await fetch(`/api/reports/getCapsuleRoutes?id=${id}&from=${from}&to=${to}`)).json();
+    const [routes, setRoutes] = React.useState({data: []});
+    React.useEffect(() => {
+        fetch(`/api/getCapsuleRoutes?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
+            setRoutes(data);
+        });
+    }, [id, from, to]);
     const tableContent = getTableContent(routes.data);
     if (tableContent.length === 0) {
         return (

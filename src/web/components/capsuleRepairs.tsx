@@ -27,7 +27,12 @@ const CapsuleRepairs = async ({
     from: string;
     to: string;
 }) => {
-    const repairs = await (await fetch(`/api/reports/getCapsuleRepairs?id=${id}&from=${from}&to=${to}`)).json();
+    const [repairs, setRepairs] = React.useState({data: []});
+    React.useEffect(() => {
+        fetch(`/api/getCapsuleRepairs?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
+            setRepairs(data);
+        });
+    }, [id, from, to]);
     const tableContent = getTableContent(repairs.data);
     if (tableContent.length === 0) {
         return (

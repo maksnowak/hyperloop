@@ -36,7 +36,16 @@ const TubeTrips = async ({
     from: string;
     to: string;
 }) => {
-    const trips = await (await fetch(`/api/reports/getTubeTrips?id=${id}&from=${from}&to=${to}`)).json();
+    const [trips, setTrips] = React.useState({data: []});
+    const [loading, setLoading] = React.useState(true);
+    React.useEffect(() => {
+        fetch(`/api/getTubeTrips?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
+            setTrips(data);
+        });
+        if (trips.data.length > 0) {
+            setLoading(false);
+        }
+    }, [id, from, to]);
     const tableContent = getTableContent(trips.data);
     if (tableContent.length === 0) {
         return (
