@@ -16,7 +16,7 @@ const getTableContent = (data: any) => {
     return rows;
 }
 
-const StationPassengers = async ({
+const StationPassengers = ({
     id,
     from,
     to
@@ -25,16 +25,16 @@ const StationPassengers = async ({
     from: string;
     to: string;
 }) => {
-    const passengers = await (await fetch(`/api/reports/getStationPassengers?id=${id}&from=${from}&to=${to}`)).json();
-    const tableContent = getTableContent(passengers.data);
-    if (tableContent.length === 0) {
-        return (
-            <div>
-                <h3>Passengers</h3>
-                <p>No passenger data found for this station in the selected time period</p>
-            </div>
-        )
-    }
+    const [passengers, setPassengers] = React.useState({data: []});
+    const [tableContent, setTableContent] = React.useState<any>([]);
+    React.useEffect(() => {
+        fetch(`/api/reports/getStationPassengers?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
+            setPassengers(data);
+        });
+    }, []);
+    React.useEffect(() => {
+        setTableContent(getTableContent(passengers.data));
+    }, [passengers]);
     return (
         <div>
             <h3>Passengers</h3>

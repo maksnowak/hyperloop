@@ -28,7 +28,7 @@ const getTableContent = (data: any) => {
     return rows;
 }
 
-const CapsuleRoutes = async ({
+const CapsuleRoutes = ({
     id,
     from,
     to
@@ -37,16 +37,16 @@ const CapsuleRoutes = async ({
     from: string;
     to: string;
 }) => {
-    const routes = await (await fetch(`/api/reports/getCapsuleRoutes?id=${id}&from=${from}&to=${to}`)).json();
-    const tableContent = getTableContent(routes.data);
-    if (tableContent.length === 0) {
-        return (
-            <div>
-                <h3>Route history</h3>
-                <p>No routes found for this capsule in the selected time period</p>
-            </div>
-        )
-    }
+    const [routes, setRoutes] = React.useState({data: []});
+    const [tableContent, setTableContent] = React.useState<any>([]);
+    React.useEffect(() => {
+        fetch(`/api/reports/getCapsuleRoutes?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
+            setRoutes(data);
+        });
+    }, []);
+    React.useEffect(() => {
+        setTableContent(getTableContent(routes.data));
+    }, [routes]);
     return (
         <div>
             <h3>Route history</h3>

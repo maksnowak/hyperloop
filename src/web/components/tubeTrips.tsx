@@ -27,7 +27,7 @@ const getTableContent = (data: any) => {
     return rows;
 }
 
-const TubeTrips = async ({
+const TubeTrips = ({
     id,
     from,
     to
@@ -36,16 +36,16 @@ const TubeTrips = async ({
     from: string;
     to: string;
 }) => {
-    const trips = await (await fetch(`/api/reports/getTubeTrips?id=${id}&from=${from}&to=${to}`)).json();
-    const tableContent = getTableContent(trips.data);
-    if (tableContent.length === 0) {
-        return (
-            <div>
-                <h3>Trips history</h3>
-                <p>No trips found for this capsule in the selected time period</p>
-            </div>
-        )
-    }
+    const [trips, setTrips] = React.useState({data: []});
+    const [tableContent, setTableContent] = React.useState<any>([]);
+    React.useEffect(() => {
+        fetch(`/api/reports/getTubeTrips?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
+            setTrips(data);
+        });
+    }, []);
+    React.useEffect(() => {
+        setTableContent(getTableContent(trips.data));
+    }, [trips]);
     return (
         <div>
             <h3>Trips history</h3>
