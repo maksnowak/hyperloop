@@ -18,7 +18,7 @@ const GenerateCapsuleReport = ({
         fetch(`/api/capsules/getCapsule?id=${params.id}`).then((response) => response.json()).then((data) => {
             setName(data);
         });
-    }, [params.id]);
+    }, []);
     return (
         <>
             <div className="max-w-2xl mx-auto">

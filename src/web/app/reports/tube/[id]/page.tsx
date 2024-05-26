@@ -14,17 +14,17 @@ const GenerateTubeReport = ({
     searchParams: { [key: string]: string }
 }) => {
     const [name, setName] = React.useState({name: ""});
-    const [avgPassengers, setAvgPassengers] = React.useState<any>({data: []});
+    const [avgPassengers, setAvgPassengers] = React.useState<any>({data: [""]});
     React.useEffect(() => {
         fetch(`/api/tubes/getTube?id=${params.id}`).then((response) => response.json()).then((data) => {
             setName(data);
         });
-    }, [params.id]);
+    }, []);
     React.useEffect(() => {
         fetch(`/api/reports/getAvgPassengers?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`).then((response) => response.json()).then((data) => {
             setAvgPassengers(data);
         });
-    }, [params.id, searchParams.from, searchParams.to]);
+    }, []);
     return (
         <>
             <div className="max-w-2xl mx-auto">

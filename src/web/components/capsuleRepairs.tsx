@@ -33,7 +33,7 @@ const CapsuleRepairs = ({
         fetch(`/api/reports/getCapsuleRepairs?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
             setRepairs(data);
         });
-    }, [id, from, to]);
+    }, []);
     React.useEffect(() => {
         setTableContent(getTableContent(repairs.data));
     }, [repairs]);

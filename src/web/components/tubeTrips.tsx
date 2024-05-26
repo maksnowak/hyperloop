@@ -42,7 +42,7 @@ const TubeTrips = ({
         fetch(`/api/reports/getTubeTrips?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
             setTrips(data);
         });
-    }, [id, from, to]);
+    }, []);
     React.useEffect(() => {
         setTableContent(getTableContent(trips.data));
     }, [trips]);

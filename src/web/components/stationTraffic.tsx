@@ -46,7 +46,7 @@ const StationTraffic = ({
         fetch(`/api/reports/getStationTraffic?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
             setTraffic(data);
         });
-    }, [id, from, to]);
+    }, []);
     React.useEffect(() => {
         setTableContent(getTableContent(traffic.data, Number(id)));
     }, [traffic]);

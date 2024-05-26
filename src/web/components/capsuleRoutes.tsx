@@ -43,7 +43,7 @@ const CapsuleRoutes = ({
         fetch(`/api/reports/getCapsuleRoutes?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
             setRoutes(data);
         });
-    }, [id, from, to]);
+    }, []);
     React.useEffect(() => {
         setTableContent(getTableContent(routes.data));
     }, [routes]);

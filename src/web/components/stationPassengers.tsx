@@ -31,7 +31,7 @@ const StationPassengers = ({
         fetch(`/api/reports/getStationPassengers?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
             setPassengers(data);
         });
-    }, [id, from, to]);
+    }, []);
     React.useEffect(() => {
         setTableContent(getTableContent(passengers.data));
     }, [passengers]);
