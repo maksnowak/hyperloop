@@ -3,7 +3,7 @@ import prisma from "@/client";
 import validateParams from "@/app/api/validateParams";
 
 type ReposnseData = {
-    data: Object[];
+    data: Number;
 }
 
 export async function GET(req: NextRequest) {
@@ -26,8 +26,8 @@ export async function GET(req: NextRequest) {
         }
     });
     console.log(tube_ends, from, to);
-    return await prisma.$queryRaw`SELECT average_passenger_count(${tube_ends!.starting_station_id}::int, ${tube_ends!.ending_station_id}::int, ${from}::timestamp, ${to}::timestamp, 'false'::bool);`.then((data) => {
-        return NextResponse.json({ data });
+    return await prisma.$queryRaw`SELECT average_passenger_count(${tube_ends!.starting_station_id}::int, ${tube_ends!.ending_station_id}::int, ${from}::timestamp, ${to}::timestamp, 'false'::bool);`.then((data: any) => {
+        return NextResponse.json({ data: data[0] });
     }).catch((error) => {
         return NextResponse.error();
     });
