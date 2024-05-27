@@ -17,7 +17,7 @@ CALL add_schedule(ARRAY ['Wrocław']::varchar(32)[], TIME '08:00:00', 'Passenger
 -- nieistniejąca stacja
 CALL add_schedule(ARRAY ['Wrocław', 'Kraków', 'NIEISTNIEJE']::varchar(32)[], TIME '08:00:00', 'Passenger');
 -- niepołączone stacje
-CALL add_schedule(ARRAY ['Wrocław', 'Olsztyn']::varchar(32)[], TIME '08:00:00', 'Passenger');
+CALL add_schedule(ARRAY ['Katowice', 'Wrocław', 'Olsztyn', 'Białystok']::varchar(32)[], TIME '08:00:00', 'Passenger');
 -- stacja sama z sobą
 CALL add_schedule(ARRAY ['Wrocław', 'Wrocław']::varchar(32)[], TIME '08:00:00', 'Passenger');
 
@@ -32,6 +32,8 @@ CALL finish_repair(14);
 CALL start_repair(999);
 -- w naprawie
 CALL start_repair(31);
+-- nie ma na podmianę
+CALL start_repair(37);
 
 -- CREATE_TRIP_HISTORY
 -- nieistniejący rozkład
