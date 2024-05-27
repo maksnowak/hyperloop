@@ -54,7 +54,7 @@ def get_tubes() -> list[Tube]:
 def add_data(data: TubeData):
     with connect() as conn:
         with conn.cursor() as cur:
-            measure_date = datetime.now().strftime('%Y-%m-%d')
+            measure_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
             cur.execute(f"""
                 INSERT INTO tubes_data (time_of_measurement, pressure, generated_power, referred_tube_id)

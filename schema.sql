@@ -88,7 +88,7 @@ ALTER TABLE hyperloop.public.Tubes
 
 CREATE TABLE hyperloop.public.Tubes_data (
                            Data_ID             serial constraint tube_data_pk primary key,
-                           Time_of_measurement DATE NOT NULL,
+                           Time_of_measurement TIMESTAMP NOT NULL,
                            Pressure            NUMERIC(8, 3) check ( pressure >= 0 ),
                            Generated_power     NUMERIC(8, 3) check ( generated_power >= 0 ),
                            Referred_tube_ID    INTEGER NOT NULL
