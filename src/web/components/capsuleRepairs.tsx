@@ -1,4 +1,6 @@
+"use client";
 import React from "react";
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 
 const getTableContent = (data: any) => {
     var rows = [];
@@ -6,17 +8,17 @@ const getTableContent = (data: any) => {
         const start_date = new Date(data[i].date_start);
         const end_date = new Date(data[i].date_end);
         rows.push(
-            <tr key={data[i].repair_id}>
-                <td>{start_date.toLocaleDateString("pl-PL", {timeZone: "UTC"})}</td>
-                <td>{end_date?.toLocaleDateString("pl-PL", {timeZone: "UTC"})}</td>
-                <td>{data[i].performing_depot_id}</td>
-            </tr>
+            <TableRow key={data[i].repair_id}>
+                <TableCell>{start_date.toLocaleDateString("pl-PL", {timeZone: "UTC"})}</TableCell>
+                <TableCell>{end_date?.toLocaleDateString("pl-PL", {timeZone: "UTC"})}</TableCell>
+                <TableCell>{data[i].performing_depot_id}</TableCell>
+            </TableRow>
         );
     }
     return rows;
 }
 
-const CapsuleRepairs = async ({
+const CapsuleRepairs = ({
     id,
     from,
     to
@@ -25,31 +27,29 @@ const CapsuleRepairs = async ({
     from: string;
     to: string;
 }) => {
-    const repairs = await (await fetch(`http://localhost:3000/api/reports/getCapsuleRepairs?id=${id}&from=${from}&to=${to}`)).json();
-    const tableContent = getTableContent(repairs.data);
-    if (tableContent.length === 0) {
-        return (
-            <div>
-                <h3>Repair history</h3>
-                <p>No repairs found for this capsule in the selected time period</p>
-            </div>
-        )
-    }
+    const [repairs, setRepairs] = React.useState({data: []});
+    const [tableContent, setTableContent] = React.useState<any>([]);
+    React.useEffect(() => {
+        fetch(`/api/reports/getCapsuleRepairs?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
+            setRepairs(data);
+        });
+    }, []);
+    React.useEffect(() => {
+        setTableContent(getTableContent(repairs.data));
+    }, [repairs]);
     return (
         <div>
             <h3>Repair history</h3>
-            <table>
-                <thead>
-                    <tr key="head">
-                        <th>Repair start</th>
-                        <th>Repair end</th>
-                        <th>Depot</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <Table>
+                <TableHeader>
+                    <TableColumn>Repair start</TableColumn>
+                    <TableColumn>Repair end</TableColumn>
+                    <TableColumn>Depot</TableColumn>
+                </TableHeader>
+                <TableBody>
                     {tableContent}
-                </tbody>
-            </table>
+                </TableBody>
+            </Table>
         </div>
     )
 };

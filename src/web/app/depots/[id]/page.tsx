@@ -13,18 +13,15 @@ const DepotPage = async ({ params }: { params: { id: string } }) => {
     })).sort((c1, c2) => c1.capsule_id - c2.capsule_id)
         .map((g) => <Capsule key={g.capsule_id} {...g} />);
     return (
-        <div>
-            <Sidebar />
-            <h1 className={"text-center bold"}>Depot {depot!.name}</h1>
-            <p className={"text-center bold"}>Latitude: {Number(depot!.latitude)}</p>
-            <p className={"text-center bold"}>Longitude: {Number(depot!.longitude)}</p>
-            <br />
-            <h1 className={"text-center bold"}>Capsules serviced:</h1>
-            <div className={"hyperloop-grid"}>
-                {capsules}
-            </div>
-        </div>
-    );
+		<div className='p-5'>
+			<h1 className='text-4xl font-bold pb-5'>Depot {depot!.name}</h1>
+			<p className={'text-center bold'}>Latitude: {Number(depot!.latitude)}</p>
+			<p className={'text-center bold'}>Longitude: {Number(depot!.longitude)}</p>
+			<br />
+			<h1 className={'text-center bold'}>Capsules serviced:</h1>
+			<div className={'hyperloop-grid'}>{capsules}</div>
+		</div>
+	);
 }
 
 export default DepotPage;

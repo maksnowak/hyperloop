@@ -74,20 +74,21 @@ const StationPage = ({ params }: { params: { id: string } }) => {
     }
 
     return (
-        <div>
-            <Sidebar />
-            <h1>Station {station.name}</h1>
-            <p>Latitude: {Number(station.latitude)}</p>
-            <p>Longitude: {Number(station.longitude)}</p>
-            <br />
-            <button className={"hyperloop-item"} onClick={() => setView("Arrivals")}>Show arrivals</button>
-            <button className={"hyperloop-item"} onClick={() => setView("Departures")}>Show departures</button>
-            <h1>{gridText}</h1>
-            <div className={"hyperloop-grid"}>
-                {data}
-            </div>
-        </div>
-    );
+		<div className='p-5'>
+			<h1 className='text-4xl font-bold pb-5'>Station {station.name}</h1>
+			<p>Latitude: {Number(station.latitude)}</p>
+			<p>Longitude: {Number(station.longitude)}</p>
+			<br />
+			<button className={'hyperloop-item'} onClick={() => setView('Arrivals')}>
+				Show arrivals
+			</button>
+			<button className={'hyperloop-item'} onClick={() => setView('Departures')}>
+				Show departures
+			</button>
+			<h1>{gridText}</h1>
+			<div className={'hyperloop-grid'}>{data}</div>
+		</div>
+	);
 }
 
 export default StationPage;

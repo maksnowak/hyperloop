@@ -12,14 +12,13 @@ const Tubes = async () => {
         </div >);
 
     return (
-        <>
-            <h1 className="text-center">Tubes</h1>
-            <Sidebar />
+		<div className='p-5'>
+			<h1 className='text-4xl font-bold pb-5'>Tubes</h1>
             <br />
             <div className="hyperloop-grid">
                 {tubes}
             </div>
-        </>
+        </div>
     );
 };
 

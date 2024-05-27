@@ -1,3 +1,5 @@
+"use client";
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import React from "react";
 
 const getTableContent = (data: any) => {
@@ -14,19 +16,19 @@ const getTableContent = (data: any) => {
         minutes %= 60;
         // end of conversion
         rows.push(
-            <tr key={data[i].ride_id}>
-                <td>{start_date.toLocaleString("pl-PL", {timeZone: "UTC"})}</td>
-                <td>{end_date.toLocaleString("pl-PL", {timeZone: "UTC"})}</td>
-                <td>{data[i].tubes.stations_tubes_starting_station_idTostations.name}</td>
-                <td>{data[i].tubes.stations_tubes_ending_station_idTostations.name}</td>
-                <td>{hours !== 0 ? hours+"h " : ""}{minutes}m {seconds}s</td> 
-            </tr>
+            <TableRow key={data[i].ride_id}>
+                <TableCell>{start_date.toLocaleString("pl-PL", {timeZone: "UTC"})}</TableCell>
+                <TableCell>{end_date.toLocaleString("pl-PL", {timeZone: "UTC"})}</TableCell>
+                <TableCell>{data[i].tubes.stations_tubes_starting_station_idTostations.name}</TableCell>
+                <TableCell>{data[i].tubes.stations_tubes_ending_station_idTostations.name}</TableCell>
+                <TableCell>{hours !== 0 ? hours+"h " : ""}{minutes}m {seconds}s</TableCell> 
+            </TableRow>
         ); 
     }
     return rows;
 }
 
-const CapsuleRoutes = async ({
+const CapsuleRoutes = ({
     id,
     from,
     to
@@ -35,33 +37,31 @@ const CapsuleRoutes = async ({
     from: string;
     to: string;
 }) => {
-    const routes = await (await fetch(`http://localhost:3000/api/reports/getCapsuleRoutes?id=${id}&from=${from}&to=${to}`)).json();
-    const tableContent = getTableContent(routes.data);
-    if (tableContent.length === 0) {
-        return (
-            <div>
-                <h3>Route history</h3>
-                <p>No routes found for this capsule in the selected time period</p>
-            </div>
-        )
-    }
+    const [routes, setRoutes] = React.useState({data: []});
+    const [tableContent, setTableContent] = React.useState<any>([]);
+    React.useEffect(() => {
+        fetch(`/api/reports/getCapsuleRoutes?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
+            setRoutes(data);
+        });
+    }, []);
+    React.useEffect(() => {
+        setTableContent(getTableContent(routes.data));
+    }, [routes]);
     return (
         <div>
             <h3>Route history</h3>
-            <table>
-                <thead>
-                    <tr key="head">
-                        <th>Departure time</th>
-                        <th>Arrival time</th>
-                        <th>Start</th>
-                        <th>Destination</th>
-                        <th>Duration</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <Table>
+                <TableHeader>
+                    <TableColumn>Departure time</TableColumn>
+                    <TableColumn>Arrival time</TableColumn>
+                    <TableColumn>Start</TableColumn>
+                    <TableColumn>Destination</TableColumn>
+                    <TableColumn>Duration</TableColumn>
+                </TableHeader>
+                <TableBody>
                     {tableContent}
-                </tbody>
-            </table>
+                </TableBody>
+            </Table>
         </div>
     )
 };

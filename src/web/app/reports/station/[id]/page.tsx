@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import "@/app/globals.css";
 import ReportTopBar from "@/components/reportTopBar";
@@ -6,21 +7,19 @@ import StationTraffic from "@/components/stationTraffic";
 import prisma from "@/client";
 import BarChartComponent from "@/components/barChart";
 
-const GenerateStationReport = async ({
+const GenerateStationReport = ({
     params,
     searchParams,
 }: {
     params: { id: string };
     searchParams: { [key: string]: string }
 }) => {
-    const name = await prisma.stations.findUnique({
-        where: {
-            station_id: Number(params.id)
-        },
-        select: {
-            name: true
-        }
-    });
+    const [name, setName] = React.useState({name: ""});
+    React.useEffect(() => {
+        fetch(`api/stations/getStation?station_id=${params.id}`).then((response) => response.json()).then((data) => {
+            setName(data);
+        });
+    }, []);
     return (
         <>
             <div className="max-w-2xl mx-auto">
