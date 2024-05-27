@@ -16,7 +16,7 @@ const GenerateCapsuleReport = ({
     const [name, setName] = React.useState({producer: "", model: ""});
     React.useEffect(() => {
         fetch(`/api/capsules/getCapsule?id=${params.id}`).then((response) => response.json()).then((data) => {
-            setName(data);
+            setName({producer: data.data.producer, model: data.data.model});
         });
     }, []);
     return (

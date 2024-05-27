@@ -14,16 +14,16 @@ const GenerateStationReport = ({
     params: { id: string };
     searchParams: { [key: string]: string }
 }) => {
-    const [name, setName] = React.useState({name: ""});
+    const [name, setName] = React.useState("");
     React.useEffect(() => {
-        fetch(`api/stations/getStation?station_id=${params.id}`).then((response) => response.json()).then((data) => {
-            setName(data);
+        fetch(`/api/stations/getStation?station_id=${params.id}`).then((response) => response.json()).then((data) => {
+            setName(data.data.name);
         });
     }, []);
     return (
         <>
             <div className="max-w-2xl mx-auto">
-                <ReportTopBar type="station" target={name!.name} />
+                <ReportTopBar type="station" target={name} />
                 <StationPassengers id={params.id} from={searchParams.from} to={searchParams.to}/>
                 <h3>Passenger flow</h3>
                 <BarChartComponent url={`/api/reports/getPassengerFlow?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`} labels={['passengers_in', 'passengers_out']} label_names={['Arriving passengers', 'Departing passengers']} />

@@ -13,23 +13,24 @@ const GenerateTubeReport = ({
     params: { id: string };
     searchParams: { [key: string]: string }
 }) => {
-    const [name, setName] = React.useState({name: ""});
-    const [avgPassengers, setAvgPassengers] = React.useState<any>({data: [""]});
+    const [name, setName] = React.useState("");
+    const [avgPassengers, setAvgPassengers] = React.useState("");
     React.useEffect(() => {
         fetch(`/api/tubes/getTube?id=${params.id}`).then((response) => response.json()).then((data) => {
-            setName(data);
+            setName(data.data.name);
         });
     }, []);
     React.useEffect(() => {
-        fetch(`/api/reports/getAvgPassengers?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`).then((response) => response.json()).then((data) => {
-            setAvgPassengers(data);
+        fetch(`/api/reports/getAveragePassengers?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`).then((response) => response.json()).then((data) => {
+            console.log(data);
+            setAvgPassengers(data.data.average_passenger_count);
         });
     }, []);
     return (
         <>
             <div className="max-w-2xl mx-auto">
-                <ReportTopBar type="tube" target={name!.name} />
-                <h4>Average daily number of passengers: {avgPassengers.data[0].average_passenger_count || "0"}</h4>
+                <ReportTopBar type="tube" target={name} />
+                <h4>Average daily number of passengers: {Number(avgPassengers).toFixed(2)}</h4>
                 <TubeTrips id={params.id} from={searchParams.from} to={searchParams.to}/>
                 <h3>Generated power</h3>
                 <LineChartComponent url={`/api/reports/getPowerStats?id=${params.id}&from=${searchParams.from}&to=${searchParams.to}`} labels_key="time_of_measurement" data_key="generated_power" label_name="Power"/>
