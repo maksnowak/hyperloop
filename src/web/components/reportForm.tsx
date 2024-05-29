@@ -30,7 +30,7 @@ const ReportForm = () => {
                 setReportTarget(tubeNames[0]);
             });
         } else if (reportType === "Capsule") {
-            fetch(`/api/getAllCapsules`).then((response) => response.json()).then((data) => {
+            fetch(`/api/capsules/getAllCapsules`).then((response) => response.json()).then((data) => {
                 let capsuleNames = data.data.map((capsule: any) => capsule.producer+" "+capsule.model+" (ID: "+capsule.capsule_id+")");
                 let capsuleIDs = data.data.map((capsule: any) => capsule.capsule_id);
                 setTargets(capsuleNames);

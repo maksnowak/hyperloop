@@ -22,7 +22,7 @@ const Map = () => {
 
 	React.useEffect(() => {
 		const fetchAll = async () => {
-			setCapsules((await (await fetch('/api/getAllCapsules', { cache: 'no-store' })).json()).data);
+			setCapsules((await (await fetch('/api/capsules/getAllCapsules', { cache: 'no-store' })).json()).data);
 			setDepots((await (await fetch('/api/depots/getDepots', { cache: 'no-store' })).json()).data);
 			setStations((await (await fetch('/api/stations/getStations', { cache: 'no-store' })).json()).data);
 			setTubes((await (await fetch('/api/tubes/getTubes', { cache: 'no-store' })).json()).data);
