@@ -9,12 +9,11 @@ const ReportForm = () => {
     const [targetIDs, setTargetIDs] = React.useState([0] as number[]);
     const [reportFrom, setReportFrom] = React.useState("");
     const [reportTo, setReportTo] = React.useState("");
-
     const router = useRouter();
 
     React.useEffect(() => {
         if (reportType === "Station") {
-            fetch(`/api/getAllStations`).then((response) => response.json()).then((data) => {
+            fetch(`/api/stations/getStations`).then((response) => response.json()).then((data) => {
                 let stationNames = data.data.map((station: any) => station.name);
                 let stationIDs = data.data.map((station: any) => station.station_id);
                 setTargets(stationNames);
@@ -22,7 +21,7 @@ const ReportForm = () => {
                 setReportTarget(stationNames[0]);
             });
         } else if (reportType === "Tube") {
-            fetch(`/api/getAllTubes`).then((response) => response.json()).then((data) => {
+            fetch(`/api/tubes/getTubes`).then((response) => response.json()).then((data) => {
                 let tubeNames = data.data.map((tube: any) => tube.name);
                 let tubeIDs = data.data.map((tube: any) => tube.tube_id);
                 setTargets(tubeNames);
@@ -30,7 +29,7 @@ const ReportForm = () => {
                 setReportTarget(tubeNames[0]);
             });
         } else if (reportType === "Capsule") {
-            fetch(`/api/getAllCapsules`).then((response) => response.json()).then((data) => {
+            fetch(`/api/capsules/getAllCapsules`).then((response) => response.json()).then((data) => {
                 let capsuleNames = data.data.map((capsule: any) => capsule.producer+" "+capsule.model+" (ID: "+capsule.capsule_id+")");
                 let capsuleIDs = data.data.map((capsule: any) => capsule.capsule_id);
                 setTargets(capsuleNames);
