@@ -14,7 +14,7 @@ const ReportForm = () => {
 
     React.useEffect(() => {
         if (reportType === "Station") {
-            fetch(`/api/getAllStations`).then((response) => response.json()).then((data) => {
+            fetch(`/api/stations/getStations`).then((response) => response.json()).then((data) => {
                 let stationNames = data.data.map((station: any) => station.name);
                 let stationIDs = data.data.map((station: any) => station.station_id);
                 setTargets(stationNames);
