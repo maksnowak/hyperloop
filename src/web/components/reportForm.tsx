@@ -22,7 +22,7 @@ const ReportForm = () => {
                 setReportTarget(stationNames[0]);
             });
         } else if (reportType === "Tube") {
-            fetch(`/api/getAllTubes`).then((response) => response.json()).then((data) => {
+            fetch(`/api/tubes/getTubes`).then((response) => response.json()).then((data) => {
                 let tubeNames = data.data.map((tube: any) => tube.name);
                 let tubeIDs = data.data.map((tube: any) => tube.tube_id);
                 setTargets(tubeNames);
