@@ -9,7 +9,6 @@ const ReportForm = () => {
     const [targetIDs, setTargetIDs] = React.useState([0] as number[]);
     const [reportFrom, setReportFrom] = React.useState("");
     const [reportTo, setReportTo] = React.useState("");
-
     const router = useRouter();
 
     React.useEffect(() => {
