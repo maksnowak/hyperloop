@@ -1,5 +1,6 @@
 "use client";
 import React, {useEffect} from "react";
+import { Select, SelectSection, SelectItem, Button } from "@nextui-org/react";
 
 const AddStationConnectionForm = ({ params }: { params: { station_id: number, station_name: string, refreshHandle: Function } }) => {
     const [stations, setStations] = React.useState([]);
@@ -36,15 +37,14 @@ const AddStationConnectionForm = ({ params }: { params: { station_id: number, st
         <div>
             <h3>Connect this station to another station?</h3>
             <form id={"add-connection-form"} onSubmit={handleSubmit}>
-                <label htmlFor="station_id">Station</label>
-                <select required id="station_id" onChange={(e) => {setOtherStationName(e.target.value)}}>
-                    <option value=""></option>
-                    {stations.map((station: any) => (
-                        <option key={station.station_id} value={station.name}>{station.name}</option>
-                    ))}
-                </select>
-                <br/>
-                <button id={"sub"} className={"hyperloop-item"} type={"submit"} disabled={isDisabled}>Add connection</button>
+                <Select required id="station_id" onChange={(e) => {setOtherStationName(e.target.value)}}>
+                    <SelectSection>
+                        {stations.map((station: any) => (
+                            <SelectItem key={station.name} value={station.name}>{station.name}</SelectItem>
+                        ))}
+                    </SelectSection>
+                </Select>
+                <Button id={"sub"} type={"submit"} disabled={isDisabled}>Add connection</Button>
                 <br/>
                 <label htmlFor={"sub"}>{label}</label>
             </form>
