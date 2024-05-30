@@ -1,4 +1,5 @@
 // @ts-nocheck // temporary fix - necessary for the build to pass
+// DEPRECATED
 "use client";
 
 import Repair, { RepairProps } from "@/components/repair";
