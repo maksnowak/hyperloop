@@ -1,11 +1,12 @@
 "use client";
 import React from "react";
-import Chart, { ChartTypeRegistry } from "chart.js/auto";
+import Chart from "chart.js/auto";
 
 type ChartProps = {
-    url: string;
+    url?: string;
     labels: string[];
     label_names?: string[];
+    dataset?: number[];
 }
 
 const randomColor = () => {
@@ -15,22 +16,30 @@ const randomColor = () => {
     return `rgb(${r}, ${g}, ${b})`;
 }
 
-const BarChartComponent = ({url, labels, label_names}: ChartProps) => {
+const BarChartComponent = ({ url, labels, label_names, dataset }: ChartProps) => {
     const [apiData, setApiData] = React.useState<any>();
+    const [datasetData, setDatasetData] = React.useState<number[]>([]);
     React.useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(url);
-            const data = await response.json();
-            setApiData(data.data);
-        };
-        fetchData();
+        if (url !== undefined) {
+            const fetchData = async () => {
+                const response = await fetch(url!);
+                const data = await response.json();
+                setApiData(data.data);
+            };
+            fetchData();
+        } else if (dataset !== undefined) {
+            console.log(dataset);
+            setApiData(null);
+            setDatasetData(dataset);
+            console.log(datasetData);
+        }
     }, [url]);
 
     const data = {
         labels: [""],
         datasets: labels.map((label) => ({
             label: label_names ? label_names[labels.indexOf(label)] : label,
-            data: apiData?.map((item: any) => item[label]),
+            data: apiData != null ? apiData?.map((item: any) => item[label]) : datasetData,
             fill: false,
             backgroundColor: randomColor(),
             borderColor: randomColor(),

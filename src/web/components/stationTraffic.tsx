@@ -1,34 +1,39 @@
 "use client";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import React from "react";
+import BarChartComponent from "./barChart";
 
-const getTableContent = (data: any, s: number) => {
+const getTableContent = (data: any, s: number): [React.JSX.Element[], string[], number[]] => {
     var rows = [];
+    var others = new Map<string, number>();
     for (let i = 0; i < data.length; i++) {
-        let event;
-        let event_date;
+        let event, event_date, stationName: string;
         if (data[i].tubes.stations_tubes_starting_station_idTostations.station_id == s) {
             event = "Departure";
             event_date = data[i].date_start;
+            stationName = data[i].tubes.stations_tubes_ending_station_idTostations.name;
         }
         else if (data[i].tubes.stations_tubes_ending_station_idTostations.station_id == s) {
             event = "Arrival";
             event_date = data[i].date_end;
+            stationName = data[i].tubes.stations_tubes_starting_station_idTostations.name;
         }
         else {
             event = "Unknown";
+            stationName = "";
         }
+        others.set(stationName, others.get(stationName) !== undefined ? others.get(stationName)! + 1 : 1)
         event_date = new Date(event_date);
         rows.push(
             <TableRow key={data[i].ride_id}>
-                <TableCell>{event_date.toLocaleString("pl-PL", {timeZone: "UTC"})}</TableCell>
+                <TableCell>{event_date.toLocaleString("pl-PL", { timeZone: "UTC" })}</TableCell>
                 <TableCell>{data[i].capsules.model} (ID: {data[i].capsules.capsule_id})</TableCell>
                 <TableCell>{data[i].tickets_sold}</TableCell>
                 <TableCell>{event}</TableCell>
             </TableRow>
         );
     }
-    return rows;
+    return [rows, Array.from(others.keys()), Array.from(others.values())];
 }
 
 const StationTraffic = ({
@@ -40,7 +45,9 @@ const StationTraffic = ({
     from: string;
     to: string;
 }) => {
-    const [traffic, setTraffic] = React.useState({data: []});
+    const [labels, setLabels] = React.useState<string[]>(["war", "kie", "byd"]);
+    const [stationTraffic, setStationTraffic] = React.useState<number[]>([1, 2, 3]);
+    const [traffic, setTraffic] = React.useState({ data: [] });
     const [tableContent, setTableContent] = React.useState<any>([]);
     React.useEffect(() => {
         fetch(`/api/reports/getStationTraffic?id=${id}&from=${from}&to=${to}`).then((response) => response.json()).then((data) => {
@@ -48,10 +55,15 @@ const StationTraffic = ({
         });
     }, []);
     React.useEffect(() => {
-        setTableContent(getTableContent(traffic.data, Number(id)));
+        const [rows, l, st] = getTableContent(traffic.data, Number(id));
+        setTableContent(rows);
+        setLabels(l);
+        setStationTraffic(st);
     }, [traffic]);
     return (
         <div>
+            <h3>Station traffic</h3>
+            <BarChartComponent dataset={stationTraffic} labels={labels} />
             <h3>Traffic data</h3>
             <Table>
                 <TableHeader>
