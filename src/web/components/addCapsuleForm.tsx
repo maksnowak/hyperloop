@@ -1,5 +1,6 @@
 // @ts-nocheck // temporary fix - necessary for the build to pass
 "use client";
+import { Button, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
 import React, {useEffect} from "react";
 
 const AddCapsuleForm = () => {
@@ -45,31 +46,23 @@ const AddCapsuleForm = () => {
         <div>
             <h3>Add new capsule</h3>
             <form id={"add-capsule-form"} onSubmit={handleSubmit}>
-                <label htmlFor="model">Model</label>
-                <input required maxLength={32} type="text" id="model" onChange={(e)=>{setModel(e.target.value)}}/>
-                <br/>
-                <label htmlFor="producer">Producer</label>
-                <input required maxLength={32} type="text" id="producer" onChange={(e)=>{setProducer(e.target.value)}}/>
-                <br/>
-                <label htmlFor="type">Type</label>
-                <select required id="type" onChange={(e)=>{setType(e.target.value)}}>
-                    <option value=""></option>
-                    <option value="Passenger">Passenger</option>
-                    <option value="Hybrid">Hybrid</option>
-                    <option value="Cargo">Cargo</option>
-                </select>
-                <br/>
-                <label htmlFor="depot">Depot</label>
-                <select required id="depot" onChange={(e)=>{setDepot(e.target.value)}}>
-                    <option value=""></option>
-                    {depots.map(depot => (
-                        <option key={depot.depot_id} value={depot.depot_id}>
-                            {depot.name}
-                        </option>
-                    ))}
-                </select>
-                <br />
-                <button className={"hyperloop-item"} type={"submit"} disabled={isDisabled}>Add capsule</button>
+                <Input isRequired type="text" label="Model" id="model" onChange={(e) => {setModel(e.target.value)}} />
+                <Input isRequired type="text" label="Producer" id="model" onChange={(e) => {setProducer(e.target.value)}} />
+                <Select isRequired id="type" label="Type" value={type} onChange={(e) => {setType(e.target.value)}}>
+                    <SelectSection>
+                        <SelectItem key={"Passenger"} value="Passenger">Passenger</SelectItem>
+                        <SelectItem key={"Hybrid"}value="Hybrid">Hybrid</SelectItem>
+                        <SelectItem key={"Cargo"} value="Cargo">Cargo</SelectItem>
+                    </SelectSection>
+                </Select>
+                <Select isRequired id="depot" label="Depot" value={depot} onChange={(e) => {setDepot(e.target.value)}}>
+                    <SelectSection>
+                        {depots.map(depot => (
+                            <SelectItem key={depot.depot_id} value={depot.depot_id}>{depot.name}</SelectItem>
+                        ))}
+                    </SelectSection>
+                </Select>
+                <Button type="submit">Add capsule</Button>
                 <br />
                 <label htmlFor="add-capsule-form">{label}</label>
             </form>
