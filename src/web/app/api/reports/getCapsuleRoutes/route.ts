@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/client";
 import validateParams from "@/app/api/validateParams";
-
-type ReposnseData = {
-    data: Object[];
-}
+import { select } from "@nextui-org/react";
 
 export async function GET(req: NextRequest) {
     let id, from, to;
@@ -47,7 +44,8 @@ export async function GET(req: NextRequest) {
                         select: {
                             name: true
                         }
-                    }
+                    },
+                    length: true
                 }
             },
         },
