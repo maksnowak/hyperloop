@@ -45,8 +45,8 @@ const StationTraffic = ({
     from: string;
     to: string;
 }) => {
-    const [labels, setLabels] = React.useState<string[]>(["war", "kie", "byd"]);
-    const [stationTraffic, setStationTraffic] = React.useState<number[]>([1, 2, 3]);
+    const [labels, setLabels] = React.useState<string[]>([]);
+    const [stationTraffic, setStationTraffic] = React.useState<number[]>([]);
     const [traffic, setTraffic] = React.useState({ data: [] });
     const [tableContent, setTableContent] = React.useState<any>([]);
     React.useEffect(() => {
@@ -62,7 +62,7 @@ const StationTraffic = ({
     }, [traffic]);
     return (
         <div>
-            <h3>Station traffic</h3>
+            <h3>Traffic from connected stations</h3>
             <BarChartComponent dataset={stationTraffic} labels={labels} />
             <h3>Traffic data</h3>
             <Table>

@@ -28,23 +28,23 @@ const BarChartComponent = ({ url, labels, label_names, dataset }: ChartProps) =>
             };
             fetchData();
         } else if (dataset !== undefined) {
-            console.log(dataset);
             setApiData(null);
             setDatasetData(dataset);
-            console.log(datasetData);
         }
-    }, [url]);
+        console.log(labels, apiData, datasetData);
+    }, [url, dataset]);
 
     const data = {
         labels: [""],
-        datasets: labels.map((label) => ({
+        datasets: labels.map((label, i) => ({
             label: label_names ? label_names[labels.indexOf(label)] : label,
-            data: apiData != null ? apiData?.map((item: any) => item[label]) : datasetData,
+            data: apiData !== null ? apiData?.map((item: any) => item[label]) : [datasetData[i]],
             fill: false,
             backgroundColor: randomColor(),
             borderColor: randomColor(),
         })),
     };
+    console.log(data);
 
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const chartRef = React.useRef<Chart | null>(null);
@@ -62,7 +62,7 @@ const BarChartComponent = ({ url, labels, label_names, dataset }: ChartProps) =>
                 });
             }
         }
-    }, [apiData]);
+    }, [apiData, datasetData]);
 
     return <canvas ref={canvasRef} />;
 };
