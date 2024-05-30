@@ -5,6 +5,8 @@ import Repair, { RepairProps } from "@/components/repair";
 import { DepotProps } from "@/components/depot";
 import React, { useState } from "react";
 import { CapsuleProps } from "@/components/capsule";
+import { DatePicker, Button, Select, SelectSection, SelectItem, Input } from "@nextui-org/react";
+import { parseDate } from "@internationalized/date";
 
 const FilteredRepairs = (props: {
   repairs: RepairProps[];
@@ -16,6 +18,8 @@ const FilteredRepairs = (props: {
   const [depot, setDepot] = useState(new String());
   const [capsuleNo, setCapsuleNo] = useState(new String());
   const [repairs, setRepairs] = useState(props.repairs);
+  const [fromValue, setFromValue] = useState<Date>();
+  const [toValue, setToValue] = useState<Date>();
 
   const getFilteredRepairs = () => {
     return props.repairs.filter(
@@ -33,40 +37,25 @@ const FilteredRepairs = (props: {
   return (
     <>
       <form>
-        <label>Search for a repair</label>
-        <br />
-        <label>From</label>
-        <input
-          value={from}
-          type="date"
-          id="date_from"
-          onChange={(e) => setFrom(e.target.value)}
-        />
-        <br />
-        <label>To</label>
-        <input
-          value={to}
-          type="date"
-          id="date_to"
-          onChange={(e) => setTo(e.target.value)}
-        />
-        <br />
-        <label>Depot</label>
-        <input
-          value={depot}
-          type="text"
-          id="depot"
-          onChange={(e) => setDepot(e.target.value)}
-        />{" "}
-        <br />
-        <label>Capsule no.</label>
-        <input
-          value={capsuleNo}
-          type="number"
-          id="capsule"
-          onChange={(e) => setCapsuleNo(e.target.value)}
-        />{" "}
-        <br />
+        <h3>Filter repairs</h3>
+        <DatePicker id="date_from" label="From" value={fromValue} onChange={(e) => {
+          setFromValue(e);
+          setFrom(e.toString());
+        }} />
+        <DatePicker id="date_to" label="To" value={toValue} onChange={(e) => {
+          setToValue(e);
+          setTo(e.toString());
+        }} />
+        <Input id="depot" label="Depot" value={depot} onChange={(e) => setDepot(e.target.value)} />
+        <Input id="capsule" label="Capsule no." type="number" value={capsuleNo} onChange={(e) => setCapsuleNo(e.target.value)} />
+        <Button type="reset" onClick={
+          () => {
+            setFrom("");
+            setTo("");
+            setDepot("");
+            setCapsuleNo("");
+          }
+        }>Reset filters</Button>
       </form>
 
       <div className="hyperloop-grid">

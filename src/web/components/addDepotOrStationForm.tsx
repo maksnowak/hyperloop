@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Input, Button, Select, SelectSection, SelectItem } from "@nextui-org/react";
 
 const AddDepotOrStationForm = ({ params }: { params: { lat: number, lon: number, refreshHandle: Function, markerHandle: Function } }) => {
     const [name, setName] = React.useState("");
@@ -27,19 +28,14 @@ const AddDepotOrStationForm = ({ params }: { params: { lat: number, lon: number,
             <p>Latitude: {params.lat}</p>
             <p>Longitude: {params.lon}</p>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="name">Name</label>
-                <br/>
-                <input required maxLength={32} type="text" id="name" onChange={(e) => {setName(e.target.value)}}/>
-                <br/>
-                <br/>
-                <label htmlFor="type">Type</label>
-                <select required id="type" onChange={(e)=>{setType(e.target.value)}}>
-                    <option value=""></option>
-                    <option value="Depot">Depot</option>
-                    <option value="Station">Station</option>
-                </select>
-                <br/>
-                <button id={"sub"} className={"hyperloop-item"} type={"submit"} disabled={isDisabled}>Register facility</button>
+                <Input isRequired maxLength={32} label="Name" onChange={(e) => { setName(e.target.value) }} />
+                <Select isRequired id="type" label="Facility" onChange={(e) => { setType(e.target.value) }}>
+                    <SelectSection>
+                        <SelectItem key="Depot" value="Depot">Depot</SelectItem>
+                        <SelectItem key="Station" value="Station">Station</SelectItem>
+                    </SelectSection>
+                </Select>
+                <Button id={"sub"} type={"submit"} disabled={isDisabled}>Register facility</Button>
                 <br/>
                 <label htmlFor={"sub"}>{label}</label>
             </form>
