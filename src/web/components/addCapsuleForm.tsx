@@ -46,16 +46,16 @@ const AddCapsuleForm = () => {
         <div>
             <h3>Add new capsule</h3>
             <form id={"add-capsule-form"} onSubmit={handleSubmit}>
-                <Input type="text" label="Model" id="model" onChange={(e) => {setModel(e.target.value)}} />
-                <Input type="text" label="Producer" id="model" onChange={(e) => {setProducer(e.target.value)}} />
-                <Select id="type" label="Type" value={type} onChange={(e) => {setType(e.target.value)}}>
+                <Input isRequired type="text" label="Model" id="model" onChange={(e) => {setModel(e.target.value)}} />
+                <Input isRequired type="text" label="Producer" id="model" onChange={(e) => {setProducer(e.target.value)}} />
+                <Select isRequired id="type" label="Type" value={type} onChange={(e) => {setType(e.target.value)}}>
                     <SelectSection>
                         <SelectItem key={"Passenger"} value="Passenger">Passenger</SelectItem>
                         <SelectItem key={"Hybrid"}value="Hybrid">Hybrid</SelectItem>
                         <SelectItem key={"Cargo"} value="Cargo">Cargo</SelectItem>
                     </SelectSection>
                 </Select>
-                <Select id="depot" label="Depot" value={depot} onChange={(e) => {setDepot(e.target.value)}}>
+                <Select isRequired id="depot" label="Depot" value={depot} onChange={(e) => {setDepot(e.target.value)}}>
                     <SelectSection>
                         {depots.map(depot => (
                             <SelectItem key={depot.depot_id} value={depot.depot_id}>{depot.name}</SelectItem>

@@ -45,8 +45,8 @@ const AddScheduleForm = () => {
         <div>
             <h3>Add new schedule</h3>
             <form id={"add-schedule-form"} onSubmit={handleSubmit}>
-                <TimeInput id="departureTime" label="Departure Time" onChange={setDepartureTime} />
-                <Select id="type" label="Capsule Type" value={capsuleType} onChange={(e) => setCapsuleType(e.target.value)}>
+                <TimeInput isRequired id="departureTime" label="Departure Time" onChange={setDepartureTime} />
+                <Select isRequired id="type" label="Capsule Type" value={capsuleType} onChange={(e) => setCapsuleType(e.target.value)}>
                     <SelectSection>
                         <SelectItem key="Passenger" value="Passenger">Passenger</SelectItem>
                         <SelectItem key="Hybrid" value="Hybrid">Hybrid</SelectItem>
@@ -54,7 +54,7 @@ const AddScheduleForm = () => {
                     </SelectSection>
                 </Select>
                 <Checkbox id="bothWays" isSelected={bothWays} onValueChange={setBothWays}>Is it both ways?</Checkbox> 
-                <Select id="station" label="Stations" selectionMode="multiple" onSelectionChange={setSelectedStations}>
+                <Select isRequired id="station" label="Stations" selectionMode="multiple" onSelectionChange={setSelectedStations}>
                     <SelectSection>
                         {stations.map(s => (
                             <SelectItem key={s.name} value={s.name}>

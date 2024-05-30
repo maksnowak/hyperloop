@@ -37,7 +37,7 @@ const AddStationConnectionForm = ({ params }: { params: { station_id: number, st
         <div>
             <h3>Connect this station to another station?</h3>
             <form id={"add-connection-form"} onSubmit={handleSubmit}>
-                <Select required id="station_id" onChange={(e) => {setOtherStationName(e.target.value)}}>
+                <Select isRequired id="station_id" onChange={(e) => {setOtherStationName(e.target.value)}}>
                     <SelectSection>
                         {stations.map((station: any) => (
                             <SelectItem key={station.name} value={station.name}>{station.name}</SelectItem>

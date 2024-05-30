@@ -63,20 +63,20 @@ const ReportForm = () => {
     return (
         <div>
             <form onSubmit={submitReport}>
-                <Select label="Report type" value={reportType} onChange={(e) => setReportType(e.target.value)}>
+                <Select isRequired label="Report type" value={reportType} onChange={(e) => setReportType(e.target.value)}>
                     <SelectSection>
                         <SelectItem key="station" value="Station">Station</SelectItem>
                         <SelectItem key="tube" value="Tube">Tube</SelectItem>
                         <SelectItem key="capsule" value="Capsule">Capsule</SelectItem>
                     </SelectSection>
                 </Select>
-                <Select label="Report target" value={reportTarget} onChange={(e) => setReportTarget(e.target.value)}>
+                <Select isRequired label="Report target" value={reportTarget} onChange={(e) => setReportTarget(e.target.value)}>
                     <SelectSection>
                         {targets.map((target) => <SelectItem key={target} value={target}>{target}</SelectItem>)}
                     </SelectSection>
                 </Select>
                 {/* FIXME: Data końcowa nie działa do końca poprawnie, jakby cały ostatni dzień nie był brany pod uwagę */}
-                <DateRangePicker label="Report range" hideTimeZone value={reportRange} onChange={(e) => {
+                <DateRangePicker isRequired label="Report range" hideTimeZone value={reportRange} onChange={(e) => {
                     setReportRange({
                         start: e.start,
                         end: e.end
