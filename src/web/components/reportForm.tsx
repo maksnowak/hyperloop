@@ -30,7 +30,7 @@ const ReportForm = () => {
             });
         } else if (reportType === "Capsule") {
             fetch(`/api/capsules/getAllCapsules`).then((response) => response.json()).then((data) => {
-                let capsuleNames = data.data.map((capsule: any) => capsule.producer+" "+capsule.model+" (ID: "+capsule.capsule_id+")");
+                let capsuleNames = data.data.map((capsule: any) => capsule.producer + " " + capsule.model + " (ID: " + capsule.capsule_id + ")");
                 let capsuleIDs = data.data.map((capsule: any) => capsule.capsule_id);
                 setTargets(capsuleNames);
                 setTargetIDs(capsuleIDs);
@@ -47,7 +47,14 @@ const ReportForm = () => {
             return;
         }
         let targetID = targetIDs[targets.indexOf(reportTarget)];
-        router.push(`/reports/${reportType.toLowerCase()}/${targetID}?from=${reportFrom}&to=${reportTo}`);
+
+        let from = new Date(reportFrom);
+        from.setHours(from.getHours() + 2);
+
+        let to = new Date(reportTo);
+        to.setHours(to.getHours() + 2);
+
+        router.push(`/reports/${reportType.toLowerCase()}/${targetID}?from=${from.toISOString()}&to=${to.toISOString()}`);
     }
 
     return (
@@ -73,12 +80,12 @@ const ReportForm = () => {
                 <br />
                 <label>
                     From:&nbsp;
-                    <input type="date" value={reportFrom} required onChange={(e) => setReportFrom(e.target.value)} />
+                    <input type="datetime-local" value={reportFrom} required onChange={(e) => setReportFrom(e.target.value)} />
                 </label>
                 <br />
                 <label>
                     To:&nbsp;
-                    <input type="date" value={reportTo} required onChange={(e) => setReportTo(e.target.value)} />
+                    <input type="datetime-local" value={reportTo} required onChange={(e) => setReportTo(e.target.value)} />
                 </label>
                 <br />
                 <br />
