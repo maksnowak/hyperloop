@@ -1,15 +1,16 @@
 "use client";
 import React from "react";
-import Chart, { ChartTypeRegistry } from "chart.js/auto";
+import Chart from "chart.js/auto";
 
 type ChartProps = {
     url: string;
     labels_key: string;
     data_key: string;
     label_name?: string;
+    granularity: number;
 }
 
-const LineChartComponent = ({url, labels_key, data_key, label_name}: ChartProps) => {
+const LineChartComponent = ({ url, labels_key, data_key, label_name, granularity }: ChartProps) => {
     // warning: this is the only way to make charts work with api data
     const [apiData, setApiData] = React.useState<any>();
     React.useEffect(() => {
@@ -19,7 +20,7 @@ const LineChartComponent = ({url, labels_key, data_key, label_name}: ChartProps)
             // if there is date label, convert it to locale string
             try {
                 data.data.forEach((item: any) => {
-                    item[labels_key] = new Date(item[labels_key]).toLocaleString("pl-PL", {timeZone: "UTC"});
+                    item[labels_key] = new Date(item[labels_key]).toLocaleString("pl-PL", { timeZone: "UTC" });
                 });
             } catch (e) {
                 // do nothing
@@ -30,11 +31,11 @@ const LineChartComponent = ({url, labels_key, data_key, label_name}: ChartProps)
     }, [url]);
 
     const data = {
-        labels: apiData?.map((item: any) => item[labels_key]),
+        labels: apiData?.filter((_: any, i: number) => i % granularity === 0).map((item: any) => item[labels_key]),
         datasets: [
             {
                 label: label_name! || "Data",
-                data: apiData?.map((item: any) => item[data_key]),
+                data: apiData?.filter((_: any, i: number) => i % granularity === 0).map((item: any) => item[data_key]),
                 fill: false,
                 backgroundColor: "rgb(0, 0, 0)",
                 borderColor: "rgba(0, 0, 0, 0.2)",

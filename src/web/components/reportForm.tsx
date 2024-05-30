@@ -35,7 +35,7 @@ const ReportForm = () => {
             });
         } else if (reportType === "capsule") {
             fetch(`/api/capsules/getAllCapsules`).then((response) => response.json()).then((data) => {
-                let capsuleNames = data.data.map((capsule: any) => capsule.producer+" "+capsule.model+" (ID: "+capsule.capsule_id+")");
+                let capsuleNames = data.data.map((capsule: any) => capsule.producer + " " + capsule.model + " (ID: " + capsule.capsule_id + ")");
                 let capsuleIDs = data.data.map((capsule: any) => capsule.capsule_id);
                 setTargets(capsuleNames);
                 setTargetIDs(capsuleIDs);
@@ -52,7 +52,14 @@ const ReportForm = () => {
             return;
         }
         let targetID = targetIDs[targets.indexOf(reportTarget)];
-        router.push(`/reports/${reportType.toLowerCase()}/${targetID}?from=${reportFrom}&to=${reportTo}`);
+
+        let from = new Date(reportFrom);
+        from.setHours(from.getHours() + 2);
+
+        let to = new Date(reportTo);
+        to.setHours(to.getHours() + 2);
+
+        router.push(`/reports/${reportType.toLowerCase()}/${targetID}?from=${from.toISOString()}&to=${to.toISOString()}`);
     }
 
     useEffect(() => {

@@ -2,10 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/client";
 import validateParams from "@/app/api/validateParams";
 
-type ReposnseData = {
-    data: Object[];
-}
-
 export async function GET(req: NextRequest) {
     let id, from, to;
     try {
@@ -61,13 +57,15 @@ export async function GET(req: NextRequest) {
                     stations_tubes_starting_station_idTostations: {
                         select: {
                             station_id: true,
+                            name: true,
                         }
                     },
                     stations_tubes_ending_station_idTostations: {
                         select: {
                             station_id: true,
+                            name: true,
                         }
-                    }
+                    },
                 }
             },
         },
@@ -76,7 +74,7 @@ export async function GET(req: NextRequest) {
         }
     }).then((data) => {
         return NextResponse.json({ data });
-    }).catch((error) => {
+    }).catch((_) => {
         return NextResponse.error();
     });
 }
