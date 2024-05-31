@@ -11,14 +11,14 @@ const toTimeString = (time: Date) => `${ensureTwoDigits(time.getHours())}:${ensu
 const toDateString = (time: Date) => `${ensureTwoDigits(time.getDate())} / ${ensureTwoDigits(time.getMonth())} / ${time.getFullYear()}`;
 
 export const Timer = () => {
-    const [dateString, setDateString] = useState(toDateString(getTime()));
-    const [timeString, setTimeString] = useState(toTimeString(getTime()));
+    const [dateString, setDateString] = useState(getTime().toLocaleDateString('en-GB', {timeZone: 'UTC'}));
+    const [timeString, setTimeString] = useState(getTime().toLocaleTimeString('en-GB', {timeZone: 'UTC'}));
 
     useEffect(() => {
         const interval = setInterval(() => {
             const time = getTime();
-            setTimeString(toTimeString(time));
-            setDateString(toDateString(time));
+            setTimeString(getTime().toLocaleTimeString('en-GB', {timeZone: 'UTC'}));
+            setDateString(getTime().toLocaleDateString('en-GB', {timeZone: 'UTC'}));
         }, 100);
 
         return () => clearInterval(interval);

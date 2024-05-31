@@ -33,6 +33,8 @@ const TubePage = async ({ params }: { params: { id: string } }) => {
             {tubes.map(t => <>
                 <div className="hyperloop-item w-2/3">
                     <h3>Data id: [{t.data_id}]</h3>
+                    <p>Date of measurement: {t.time_of_measurement?.toLocaleDateString('en-GB', {timeZone: 'UTC'})}</p>
+                    <p>Time of measurement: {t.time_of_measurement?.toLocaleTimeString('en-GB', {timeZone: 'UTC'})}</p>
                     <p>Pressure: {t.pressure}</p>
                     <p>Generated solar power: {t.generated_power}</p>
                 </div>
