@@ -21,7 +21,21 @@ class CapsulesContainer(metaclass=SingletonMeta):
             self.fetch()
 
     def fetch(self):
-        self.capsules = get_capsules()
+        owned_capsules = self.capsules if self.capsules else []
+        owned_capsules_ids = [capsule.capsule_id for capsule in owned_capsules]
+        
+        current_capsules = get_capsules()
+        current_capsules_ids = [capsule.capsule_id for capsule in current_capsules]
+
+        # remove capsules that are not owned anymore
+        owned_capsules = [capsule for capsule in owned_capsules if capsule.capsule_id in current_capsules_ids]
+
+        # add new capsules
+        for capsule in current_capsules:
+            if capsule.capsule_id not in owned_capsules_ids:
+                owned_capsules.append(capsule)
+
+        self.capsules = owned_capsules
 
     def get_capsule(self, capsule_id: int):
         for capsule in self.capsules:

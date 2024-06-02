@@ -10,6 +10,8 @@ import { default as TubeContainer } from '../tube';
 import AddStationConnectionForm from '@/components/addStationConnectionForm';
 import { NewDepotOrStationMarker } from './newDepotOrStationMarker';
 
+const getDepotPostion = (depot: Depot | undefined) : [number, number] | null => depot ? [Number(depot.latitude), Number(depot.longitude)] : null;
+
 const Map = () => {
 	const [capsules, setCapsules] = useState<Capsule[]>([]);
 	const [depots, setDepots] = useState<Depot[]>([]);
@@ -87,7 +89,11 @@ const Map = () => {
 				/>
 				<MapEventHandler />
 				{capsules.map((capsule) => (
-					<CapsuleMarker key={capsule.capsule_id} capsule={capsule} />
+					<CapsuleMarker
+						key={capsule.capsule_id}
+						capsule={capsule}
+						initialPosition={getDepotPostion(depots.find((x) => x.depot_id === capsule.servicing_depot_id))}
+					/>
 				))}
 				{depots.map((depot) => {
 					return (

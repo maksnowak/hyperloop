@@ -13,10 +13,11 @@ const clampText = (text: string, maxLength: number) => text.slice(0, maxLength);
 
 interface CapsuleMakerProps {
 	capsule: Capsule;
+	initialPosition?: [number, number] | null;
 }
 
-export const CapsuleMarker = ({ capsule }: CapsuleMakerProps) => {
-	const [position, setPosition] = useState([0.0, 0.0]);
+export const CapsuleMarker = ({ capsule, initialPosition }: CapsuleMakerProps) => {
+	const [position, setPosition] = useState(initialPosition);
 
 	useEffect(() => {
 		socket.on('events', handlePositionChange);
@@ -26,6 +27,8 @@ export const CapsuleMarker = ({ capsule }: CapsuleMakerProps) => {
 		if (event.referredCapsuleId !== capsule.capsule_id) return;
 		setPosition([event.latitude, event.longitude]);
 	};
+
+	if (!position) return null;
 
 	return (
 		<Marker
