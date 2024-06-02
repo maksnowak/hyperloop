@@ -41,9 +41,11 @@ export const CapsuleMarker = ({ capsule, initialPosition }: CapsuleMakerProps) =
 		>
 			<Popup>
 				<div>
-					<h3>Capsule number {capsule.capsule_id}</h3>
-					<div>Lat: {clampText(position[0].toString(), 15)}</div>
-					<div>Lon: {clampText(position[1].toString(), 15)}</div>
+					<h3 className='text-medium font-semibold mb-2'>Capsule #{capsule.capsule_id}</h3>
+					<div className='text-small'>Model: {capsule.model}</div>
+					<div className='text-small'>Producer: {capsule.producer}</div>
+					<div className='text-small'>Lat: {clampText(position[0].toString(), 15)}</div>
+					<div className='text-small'>Lon: {clampText(position[1].toString(), 15)}</div>
 				</div>
 			</Popup>
 		</Marker>
