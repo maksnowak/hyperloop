@@ -11,6 +11,7 @@ export async function GET() {
             capsule_id: true,
             model: true,
             producer: true,
+            servicing_depot_id: true,
         },
         orderBy: [
             {

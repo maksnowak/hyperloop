@@ -45,4 +45,5 @@ def simulate():
             measurement_thread = threading.Thread(target=lambda t: simulate_measurement(t), args=(tube,))
             measurement_thread.start()
 
+        CapsulesContainer().fetch()
         time.sleep(check_interval)

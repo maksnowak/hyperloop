@@ -47,31 +47,26 @@ def simulate_ride(schedule: Schedule):
 
     print(f'Simulating ride for schedule {schedule.schedule_id} with capsule {schedule.capsule_id} from {start_station.name} to {end_station.name}')
 
-    start_position = [start_station.latitude, start_station.longitude]
-    end_position = [end_station.latitude, end_station.longitude]
+    sample_time = 100  # 100 milliseconds
+    route_duration_in_ms = (arrival_datetime - departure_datetime).total_seconds() * 1000
 
-    trace_distance = distance(start_position, end_position)
-    trace_duration = (arrival_datetime - departure_datetime).total_seconds()
+    now = datetime.now()
+    while now < arrival_datetime:
+        time.sleep(sample_time / 1000)
 
-    sample_time = 0.1 # 100 milliseconds
-    speed = trace_distance / trace_duration if trace_duration != 0 else 0
+        route_elapsed_in_ms = (now - departure_datetime).total_seconds() * 1000
+        progress = route_elapsed_in_ms / route_duration_in_ms
 
-    sampled_speed = speed * sample_time
+        current_position = [
+            start_station.latitude + (end_station.latitude - start_station.latitude) * progress,
+            start_station.longitude + (end_station.longitude - start_station.longitude) * progress
+        ]
+        container.update_capsule(schedule.capsule_id, current_position)
 
-    direction = [
-        (end_position[0] - start_position[0]) / trace_distance, 
-        (end_position[1] - start_position[1]) / trace_distance
-    ]
+        now = datetime.now()
 
-    next_position = start_position
-    while distance(next_position, end_position) > sampled_speed:
-        time.sleep(sample_time)
-
-        container.update_capsule(schedule.capsule_id, next_position)
-        next_position = [next_position[0] + direction[0] * sampled_speed, next_position[1] + direction[1] * sampled_speed]
-
-    next_position = end_position
-    container.update_capsule(schedule.capsule_id, next_position)
+    current_position = [end_station.latitude, end_station.longitude]
+    container.update_capsule(schedule.capsule_id, current_position)
 
     print(f'Ride simulation for schedule {schedule.schedule_id} with capsule {schedule.capsule_id} from {start_station.name} to {end_station.name} completed')
 

@@ -21,6 +21,16 @@ def get_capsules():
 
             capsules = cur.fetchall()
 
+            # select capsule_id and service depot position
+            cur.execute(f"""
+                SELECT c.capsule_id, d.latitude, d.longitude
+                FROM capsules c
+                INNER JOIN depots d ON c.servicing_depot_id = d.depot_id;
+            """)
+
+            initial_positions = cur.fetchall()
+            initial_positions = {capsule_id: [latitude, longitude] for capsule_id, latitude, longitude in initial_positions}
+            
             # select capsule_id and last known position
             cur.execute(f"""
                 SELECT sc.referred_capsule_id, st.latitude, st.longitude
@@ -34,8 +44,9 @@ def get_capsules():
                 );
             """)
 
-            initial_positions = cur.fetchall()
-            initial_positions = {capsule_id: [latitude, longitude] for capsule_id, latitude, longitude in initial_positions}
+            initial_schedule_positions = cur.fetchall()
+            for capsule_id, latitude, longitude in initial_schedule_positions:
+                initial_positions[capsule_id] = [latitude, longitude]
 
             if not capsules:
                 return []

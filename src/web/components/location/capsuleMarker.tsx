@@ -9,12 +9,15 @@ const socket = io('/capsules');
 
 const getIconUrl = (capsuleId: number) => `https://ui-avatars.com/api/?rounded=true&background=2F6DE6&color=FFFFFF&name=${capsuleId}`;
 
+const clampText = (text: string, maxLength: number) => text.slice(0, maxLength);
+
 interface CapsuleMakerProps {
 	capsule: Capsule;
+	initialPosition?: [number, number] | null;
 }
 
-export const CapsuleMarker = ({ capsule }: CapsuleMakerProps) => {
-	const [position, setPosition] = useState([0.0, 0.0]);
+export const CapsuleMarker = ({ capsule, initialPosition }: CapsuleMakerProps) => {
+	const [position, setPosition] = useState(initialPosition);
 
 	useEffect(() => {
 		socket.on('events', handlePositionChange);
@@ -25,6 +28,8 @@ export const CapsuleMarker = ({ capsule }: CapsuleMakerProps) => {
 		setPosition([event.latitude, event.longitude]);
 	};
 
+	if (!position) return null;
+
 	return (
 		<Marker
 			key={capsule.capsule_id}
@@ -34,7 +39,15 @@ export const CapsuleMarker = ({ capsule }: CapsuleMakerProps) => {
 				iconSize: [30, 30],
 			})}
 		>
-			<Popup>Capsule number {capsule.capsule_id}</Popup>
+			<Popup>
+				<div>
+					<h3 className='text-medium font-semibold mb-2'>Capsule #{capsule.capsule_id}</h3>
+					<div className='text-small'>Model: {capsule.model}</div>
+					<div className='text-small'>Producer: {capsule.producer}</div>
+					<div className='text-small'>Lat: {clampText(position[0].toString(), 15)}</div>
+					<div className='text-small'>Lon: {clampText(position[1].toString(), 15)}</div>
+				</div>
+			</Popup>
 		</Marker>
 	);
 };
