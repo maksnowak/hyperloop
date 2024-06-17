@@ -12,6 +12,8 @@ It is a general purpose dashboard for hypothetical Hyperloop staff, in which the
 - schedule repairs for the pods,
 - generate reports for selected parts of the infrastructure in given time period.
 
+![App screenshot](https://github.com/maksnowak/hyperloop/assets/59841779/6d75c83f-ed32-4912-9dac-cce3d84b131e)
+
 ## Pre-requisites
 
 - Node.js
